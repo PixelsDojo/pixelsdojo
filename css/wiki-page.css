@@ -1,0 +1,441 @@
+/* Wiki Page Specific Styles */
+
+.page-header {
+    background: linear-gradient(135deg, var(--secondary-bg) 0%, white 100%);
+    padding: 30px 0 20px;
+    border-bottom: 3px solid var(--purple);
+}
+
+.breadcrumb {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: var(--text-medium);
+}
+
+.breadcrumb a {
+    color: var(--purple);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.page-header h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.page-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 14px;
+}
+
+.meta-item {
+    color: var(--text-medium);
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.badge.beginner {
+    background: var(--green);
+    color: white;
+}
+
+.badge.intermediate {
+    background: var(--yellow);
+    color: var(--text-dark);
+}
+
+.badge.advanced {
+    background: var(--purple);
+    color: white;
+}
+
+/* Content Grid */
+.wiki-content {
+    padding: 40px 0;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+}
+
+/* Sidebar */
+.sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.toc-card, .action-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+.toc-card h3, .action-card h4 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: var(--purple);
+}
+
+.toc {
+    list-style: none;
+}
+
+.toc li {
+    margin-bottom: 10px;
+}
+
+.toc a {
+    color: var(--text-medium);
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    padding: 5px 0;
+    transition: color 0.2s;
+}
+
+.toc a:hover {
+    color: var(--purple);
+    padding-left: 5px;
+}
+
+.action-card p {
+    font-size: 14px;
+    color: var(--text-medium);
+    margin-bottom: 15px;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.action-btn:hover {
+    background: #6b00cc;
+}
+
+/* Wiki Article */
+.wiki-article {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 2px 12px var(--shadow);
+}
+
+.wiki-article h2 {
+    font-size: 24px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 10px;
+}
+
+.wiki-article h2:first-child {
+    margin-top: 0;
+}
+
+.wiki-article h3 {
+    font-size: 20px;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    color: var(--text-dark);
+}
+
+.wiki-article h4 {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.wiki-article p {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.wiki-article ul, .wiki-article ol {
+    margin-left: 25px;
+    margin-bottom: 15px;
+}
+
+.wiki-article li {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 8px;
+}
+
+.wiki-article a {
+    color: var(--purple);
+    text-decoration: none;
+}
+
+.wiki-article a:hover {
+    text-decoration: underline;
+}
+
+/* Special Boxes */
+.summary-box {
+    background: linear-gradient(135deg, rgba(133, 0, 255, 0.05) 0%, rgba(133, 0, 255, 0.02) 100%);
+    border-left: 4px solid var(--purple);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.summary-box h2 {
+    margin-top: 0;
+    border: none;
+    padding: 0;
+}
+
+.pro-tip {
+    background: linear-gradient(135deg, rgba(237, 255, 132, 0.2) 0%, rgba(237, 255, 132, 0.05) 100%);
+    border-left: 4px solid var(--yellow);
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.pro-tip h4 {
+    margin-top: 0;
+    color: #c4a000;
+}
+
+.info-box {
+    background: linear-gradient(135deg, rgba(183, 235, 5, 0.15) 0%, rgba(183, 235, 5, 0.05) 100%);
+    border-left: 4px solid var(--green);
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.info-box h4 {
+    margin-top: 0;
+    color: #6b8000;
+}
+
+.screenshot-placeholder {
+    background: var(--secondary-bg);
+    border: 2px dashed var(--border);
+    padding: 60px 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin: 20px 0;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* Key Takeaways */
+.takeaways {
+    list-style: none;
+    margin-left: 0;
+}
+
+.takeaways li {
+    background: var(--secondary-bg);
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border-left: 4px solid var(--green);
+}
+
+/* Related Links */
+.related-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.related-card {
+    background: var(--secondary-bg);
+    padding: 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid var(--border);
+}
+
+.related-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px var(--shadow);
+    border-color: var(--purple);
+}
+
+.related-card h4 {
+    font-size: 16px;
+    color: var(--text-dark);
+    margin: 0 0 8px 0;
+}
+
+.related-card p {
+    font-size: 14px;
+    color: var(--text-medium);
+    margin: 0;
+}
+
+/* Community Section */
+.community-section {
+    background: var(--secondary-bg);
+    padding: 30px;
+    border-radius: 12px;
+    margin-top: 40px;
+}
+
+.tip-item {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--purple);
+}
+
+.tip-author {
+    font-weight: 600;
+    color: var(--purple);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.tip-item p {
+    margin: 0;
+    font-size: 15px;
+}
+
+/* Engagement Section */
+.engagement-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid var(--border);
+}
+
+.engagement-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.engage-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: 2px solid var(--border);
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.engage-btn:hover {
+    border-color: var(--purple);
+    background: var(--secondary-bg);
+    transform: translateY(-2px);
+}
+
+.upvote-btn:hover {
+    border-color: var(--green);
+}
+
+.comment-btn:hover {
+    border-color: var(--yellow);
+}
+
+.share-btn:hover {
+    border-color: var(--purple);
+}
+
+.questions-box {
+    background: linear-gradient(135deg, var(--purple) 0%, #6b00cc 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.questions-box h3 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+}
+
+.questions-box p {
+    margin: 0;
+    font-size: 15px;
+}
+
+.questions-box a {
+    color: var(--yellow);
+    text-decoration: none;
+}
+
+.questions-box a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar {
+        position: static;
+        order: 2;
+    }
+    
+    .wiki-article {
+        padding: 25px;
+    }
+    
+    .page-header h1 {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 640px) {
+    .wiki-article {
+        padding: 20px;
+    }
+    
+    .page-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .engagement-actions {
+        flex-direction: column;
+    }
+    
+    .engage-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
