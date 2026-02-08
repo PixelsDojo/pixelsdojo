@@ -5,6 +5,10 @@
 }
 
 :root {
+    --neon-purple: #6500ff;
+    --cyan: #00ffff;
+    --lime: #edff84;
+    --bg-color: #0a0a15;
     --purple: #8500ff;
     --yellow: #edff84;
     --green: #b7eb05;
