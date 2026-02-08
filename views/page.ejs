@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= page.title %> - Pixels Dojo Wiki</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo-section">
+                <a href="/"><img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo"></a>
+                <h1><a href="/" style="color:white;text-decoration:none">PIXELS DOJO</a></h1>
+            </div>
+            <div class="user-nav">
+                <% if (user) { %>
+                    <span>Welcome, <%= user.username %>!</span>
+                    <a href="/logout">Logout</a>
+                <% } else { %>
+                    <a href="/login">Login</a>
+                <% } %>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/#new">I'm New</a></li>
+            <li><a href="/#earn">Earn $PIXEL</a></li>
+            <li><a href="/#master">Become Master</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="content-section">
+            <h2><%= page.title %></h2>
+            <div style="color:#888;margin-bottom:2rem">Category: <%= page.category %></div>
+            
+            <div class="interaction-bar">
+                <% if (user) { %>
+                    <button class="like-btn <%= userReaction === 'like' ? 'liked' : '' %>" onclick="react('<%= page.id %>', 'like')">
+                        👍 Like (<span id="like-count"><%= likes %></span>)
+                    </button>
+                    <button class="dislike-btn <%= userReaction === 'dislike' ? 'disliked' : '' %>" onclick="react('<%= page.id %>', 'dislike')">
+                        👎 Dislike (<span id="dislike-count"><%= dislikes %></span>)
+                    </button>
+                <% } else { %>
+                    <span>👍 <%= likes %> likes • 👎 <%= dislikes %> dislikes</span>
+                    <span style="color:#888">(Login to react)</span>
+                <% } %>
+            </div>
+
+            <div style="white-space:pre-wrap;line-height:1.8"><%= page.content %></div>
+
+            <% if (page.author_id) { %>
+                <div class="author-card" style="margin-top:3rem">
+                    <img src="<%= page.profile_image %>" alt="<%= page.display_name %>">
+                    <div class="author-info">
+                        <h3>Written by <%= page.display_name %></h3>
+                        <p><%= page.bio %></p>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="question-form">
+            <h3>❓ Have a Question?</h3>
+            <form onsubmit="submitQuestion(event)">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <textarea name="question" placeholder="Ask your question..." required></textarea>
+                <button type="submit" class="btn btn-purple">Submit Question</button>
+            </form>
+            <div id="question-result"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Pixels Dojo Wiki</p>
+    </footer>
+
+    <script>
+    async function react(pageId, type) {
+        const res = await fetch('/react/' + pageId, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({type})
+        });
+        if (res.ok) location.reload();
+    }
+
+    async function submitQuestion(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = {
+            name: form.name.value,
+            email: form.email.value,
+            question: form.question.value,
+            page_slug: '<%= page.slug %>'
+        };
+        
+        const res = await fetch('/submit-question', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        
+        document.getElementById('question-result').innerHTML = 
+            '<div class="alert alert-success">Question submitted! We\'ll respond via email.</div>';
+        form.reset();
+    }
+    </script>
+</body>
+</html>

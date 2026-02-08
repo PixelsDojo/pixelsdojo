@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixels Dojo Wiki - Master Pixels Online</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo-section">
+                <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo">
+                <h1>PIXELS DOJO</h1>
+            </div>
+            <div class="user-nav">
+                <% if (user) { %>
+                    <span>Welcome, <%= user.username %>!</span>
+                    <% if (user.is_admin) { %><a href="/admin">Admin</a><% } %>
+                    <a href="/logout">Logout</a>
+                <% } else { %>
+                    <a href="/login">Login</a>
+                <% } %>
+            </div>
+        </div>
+        <p class="tagline">🎮 Master TerraVilla • Earn $PIXEL • Join the Community</p>
+        
+        <div class="price-widget">
+            <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
+            <coingecko-coin-price-marquee-widget coin-ids="pixels" currency="usd" background-color="transparent" font-color="#edff84"></coingecko-coin-price-marquee-widget>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="/npcs">NPCs</a></li>
+            <li><a href="#new">I'm New</a></li>
+            <li><a href="#earn">Earn $PIXEL</a></li>
+            <li><a href="#master">Become Master</a></li>
+            <li><a href="#community">Community</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero-section" id="home">
+        <div class="hero-intro">
+            <h2>Welcome to Pixels Online & TerraVilla</h2>
+            <p>A wonderfully creative, immersive, social farming and crafting game where you can earn real cryptocurrency ($PIXEL) while having fun!</p>
+        </div>
+
+        <div class="main-buttons">
+            <a href="/page/getting-started" class="main-button">
+                <span class="icon">🎮</span>
+                <h3>I'm New - Help Me!</h3>
+                <p>Complete beginner tutorial, NPC quests, map guide, and essential tips to start your journey in TerraVilla</p>
+            </a>
+
+            <a href="/page/earn-pixel" class="main-button">
+                <span class="icon">💰</span>
+                <h3>How to Earn $PIXEL</h3>
+                <p>Task board strategies, earning methods, financial calculations, and optimization tips to maximize your income</p>
+            </a>
+
+            <a href="/page/become-master" class="main-button">
+                <span class="icon">⚡</span>
+                <h3>Become a Pixels Master</h3>
+                <p>VIP membership, NFT lands, pets, advanced tools, guilds, and everything you need to dominate the game</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <section id="new" class="content-section">
+            <h2>🎯 Getting Started - Your First Steps</h2>
+            <p><strong>Before You Start:</strong> Join the Pixels Discord and follow on X/Twitter! Time-limited events, giveaways, energy parties, and exclusive collectibles are announced there. The social side is HUGE in Pixels!</p>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h3>📱 Connect</h3>
+                    <p><strong>Discord:</strong> Most active, daily events<br>
+                    <strong>X/Twitter:</strong> @pixels_online<br>
+                    <strong>Substack:</strong> The Pixels Post</p>
+                </div>
+                <div class="card">
+                    <h3>🎮 Tutorial Quests</h3>
+                    <p>Start with Barney, Margaret, and Jack. Learn farming, crafting, mining, and the task board. Don't skip the tutorial!</p>
+                </div>
+                <div class="card">
+                    <h3>🗺️ Explore TerraVilla</h3>
+                    <p>Main fountain is your hub. Buck's Galore for tasks, Sauna for energy, Neon Zone for games, and NFT lands via Infiniportal.</p>
+                </div>
+            </div>
+
+            <h3>The Aim of the Game</h3>
+            <ul>
+                <li>🏆 Earn $PIXEL tokens (real cryptocurrency)</li>
+                <li>📈 Level up your skills and reputation</li>
+                <li>🎯 Develop keen strategies</li>
+                <li>🖼️ Invest in limited items and NFTs</li>
+                <li>👑 Climb leaderboards and immortalize yourself in TerraVilla</li>
+            </ul>
+        </section>
+
+        <section id="earn" class="content-section">
+            <h2>💰 How to Earn $PIXEL - Complete Guide</h2>
+            
+            <h3>Primary Method: The Task Board ⭐</h3>
+            <p>Complete orders from the Infinifunnel task board in your house to earn $PIXEL. Your earnings increase based on skill level, VIP status, land ownership, and reputation.</p>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>📋 Task Board</h3>
+                    <p>8-10 orders available. Simple orders = Coins. Complex orders = $PIXEL. VIP members get MORE orders!</p>
+                </div>
+                <div class="card">
+                    <h3>🔥 Hearth System</h3>
+                    <p>Join Wildgroves, Seedwrights, or Reapers. Power up your faction's Hearth or sabotage enemies for $PIXEL rewards.</p>
+                </div>
+                <div class="card">
+                    <h3>🎮 Neon Zone</h3>
+                    <p>Play ranked arcade games for $PIXEL. No energy needed! Perfect for waiting periods.</p>
+                </div>
+                <div class="card">
+                    <h3>📊 Staking</h3>
+                    <p>Stake your $PIXEL for passive income. Currently 25-79% APR - much better than banks!</p>
+                </div>
+            </div>
+
+            <h3>Best Strategies to Maximize Earnings</h3>
+            <ul>
+                <li>✅ Focus on Task Board (most reliable income)</li>
+                <li>✅ Level ALL skills evenly (more task variety)</li>
+                <li>✅ Get VIP membership (more tasks, better rewards)</li>
+                <li>✅ Manage energy strategically (your limiting factor)</li>
+                <li>✅ Build reputation for market access</li>
+                <li>✅ Stake your $PIXEL for passive income</li>
+            </ul>
+        </section>
+
+        <section id="master" class="content-section">
+            <h2>⚡ Become a Pixels Master</h2>
+            
+            <h3>VIP Membership</h3>
+            <p>VIP costs $PIXEL but provides huge benefits: more task orders, market access, Sauna energy boosts (1000 energy 2-3x daily), and reputation points.</p>
+
+            <h3>NFT Land & Ownership</h3>
+            <p><strong>You DON'T need land to play!</strong> But it provides advantages: earn from sharecroppers, access higher-tier resources, Tier 2 & 3 crafting stations, and customize your space.</p>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>🏡 NFT Lands</h3>
+                    <p>Own land, earn from visitors, access premium resources, and build your community. Available on Mavis Market.</p>
+                </div>
+                <div class="card">
+                    <h3>🐾 Pets</h3>
+                    <p>Pets extend your reach and add carry capacity. Essential for efficiency, especially in Neon Zone!</p>
+                </div>
+                <div class="card">
+                    <h3>🎨 UGCs</h3>
+                    <p>Create and sell custom decorative items for $PIXEL. Design skills + marketplace savvy = profit!</p>
+                </div>
+                <div class="card">
+                    <h3>🛠️ Tools & Add-Ons</h3>
+                    <p>PGA (Pixels Game Assistant) and Voxels add-ons provide inventory tracking, timers, and land finders.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="community" class="content-section">
+            <h2>👥 Community & Resources</h2>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Discord</h3>
+                    <p>250k+ members. Daily events, energy parties, giveaways, and announcements. Most active community hub.</p>
+                </div>
+                <div class="card">
+                    <h3>Twitter/X</h3>
+                    <p>@pixels_online - 280k+ followers. Quick updates, announcements, and community highlights.</p>
+                </div>
+                <div class="card">
+                    <h3>The Pixels Post</h3>
+                    <p>Weekly AMAs on Substack. Developer insights, roadmap updates, and detailed patch notes.</p>
+                </div>
+                <div class="card">
+                    <h3>Helper Tools</h3>
+                    <p>pixels.tips for profitability tracking. PGA browser extension. Ronin blockchain explorer.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="author-card">
+            <img src="/images/lizzysims_profile_1.png" alt="Lizzy Sims">
+            <div class="author-info">
+                <h3>About the Founder: Lizzy Sims</h3>
+                <p>Lizzy Sims hailing from Lovely Lalaland, loves her family, her dire-bunny Buck and excellent coffee. An avid reader, artist, designer, carpenter and pixel player, she hopes to tame a crow before the end of the year.</p>
+                <p style="margin-top: 1rem; color: var(--cyan);">This wiki is community-driven. We welcome contributions, strategies, and guides from all players!</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Pixels Dojo Wiki - Community Resource for Pixels Online</p>
+        <p>Not affiliated with Pixels or Animoca Brands | Built with ❤️ by the community</p>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+// Admin Panel JavaScript
+
+function showAddModal() {
+    document.getElementById('addModal').style.display = 'block';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function editNPC(id, name, location, description, displayOrder) {
+    document.getElementById('edit_id').value = id;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_location').value = location;
+    document.getElementById('edit_description').value = description;
+    document.getElementById('edit_display_order').value = displayOrder;
+    document.getElementById('editModal').style.display = 'block';
+}
+
+function deleteNPC(id, name) {
+    if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+        return;
+    }
+    
+    fetch(`/admin/npc/delete/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert('NPC deleted successfully!');
+            location.reload();
+        } else {
+            alert('Error deleting NPC');
+        }
+    });
+}
+
+// Add NPC Form
+document.getElementById('addForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch('/admin/npc/add', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert('NPC added successfully!');
+            location.reload();
+        } else {
+            alert('Error adding NPC');
+        }
+    });
+});
+
+// Edit NPC Form
+document.getElementById('editForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const id = document.getElementById('edit_id').value;
+    const formData = new FormData(this);
+    
+    fetch(`/admin/npc/edit/${id}`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert('NPC updated successfully!');
+            location.reload();
+        } else {
+            alert('Error updating NPC');
+        }
+    });
+});
+
+// Close modals on outside click
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+}

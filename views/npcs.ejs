@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPCs - Pixels Dojo Wiki</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/npcs.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo-section">
+                <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo">
+                <h1>PIXELS DOJO</h1>
+            </div>
+            <div class="user-nav">
+                <% if (user) { %>
+                    <span>Welcome, <%= user.username %>!</span>
+                    <% if (user.is_admin) { %><a href="/admin">Admin</a><% } %>
+                    <a href="/logout">Logout</a>
+                <% } else { %>
+                    <a href="/login">Login</a>
+                <% } %>
+            </div>
+        </div>
+        <p class="tagline">🎮 Master TerraVilla • Earn $PIXEL • Join the Community</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/npcs" class="active">NPCs</a></li>
+            <li><a href="#community">Community</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="npc-header">
+            <h1>🎭 NPC Directory</h1>
+            <p class="subtitle">Your complete guide to all the friendly faces in TerraVilla</p>
+        </div>
+
+        <div class="npc-grid">
+            <% npcs.forEach(npc => { %>
+                <div class="npc-card">
+                    <div class="npc-image">
+                        <img src="<%= npc.image_path %>" alt="<%= npc.name %>" 
+                             onerror="this.src='/images/npcs/default-npc.png'">
+                    </div>
+                    <div class="npc-info">
+                        <h3 class="npc-name"><%= npc.name %></h3>
+                        <p class="npc-location">📍 <%= npc.location %></p>
+                        <% if (npc.description) { %>
+                            <p class="npc-description"><%= npc.description %></p>
+                        <% } %>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+
+        <% if (npcs.length === 0) { %>
+            <div class="no-npcs">
+                <p>No NPCs have been added yet. Check back soon!</p>
+            </div>
+        <% } %>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Pixels Dojo Wiki - Community Resource for Pixels Online</p>
+        <p>Not affiliated with Pixels or Animoca Brands | Built with ❤️ by the community</p>
+    </footer>
+</body>
+</html>
