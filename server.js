@@ -166,15 +166,41 @@ app.post('/admin/pages', (req, res) => {
 });
 
 // View page (unchanged for now)
+// View a single wiki page (public)
 app.get('/pages/:slug', (req, res) => {
   db.get('SELECT * FROM pages WHERE slug = ?', [req.params.slug], (err, page) => {
-    if (err || !page) return res.status(404).send('Page not found');
-    res.render('page', {
-      page: page,
-      user: req.session.user || null
+    if (err || !page) {
+      return res.status(404).send('Page not found');
+    }
+
+    let likes = 0;
+    let userReaction = null;
+
+    // Count likes
+    db.get('SELECT COUNT(*) as count FROM likes WHERE page_id = ? AND type = "like"', [page.id], (err, row) => {
+      if (!err) likes = row ? row.count : 0;
+
+      // If logged in, get user's reaction
+      if (req.session.user) {
+        db.get('SELECT type FROM likes WHERE page_id = ? AND user_id = ?', [page.id, req.session.user.id], (err, reaction) => {
+          if (!err && reaction) userReaction = reaction.type;
+          render();
+        });
+      } else {
+        render();
+      }
     });
+
+    function render() {
+      res.render('page', {
+        page: page,
+        user: req.session.user || null,
+        likes: likes,
+        userReaction: userReaction
+      });
+    }
   });
-});
+});                             
 
 // FIXED: Update NPC with image upload
 app.post('/admin/npcs/:id', upload.single('image'), (req, res) => {
