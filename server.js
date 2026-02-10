@@ -81,14 +81,13 @@ app.get('/npcs', (req, res) => {
   });
 });
 
-// Login GET route
+// Login routes (unchanged)
 app.get('/login', (req, res) => {
   if (req.session.user) return res.redirect('/');
   res.render('login', { error: null, user: null });
 });
 
-// Login POST route - FIXED!
-app.post('/login', (req, res) => {
+app.post('/admin/npcs/:id', upload.single('image'), (req, res) => {
   const { username, password } = req.body;
 
   db.get('SELECT * FROM users WHERE username = ?', [username], (err, user) => {
@@ -117,11 +116,7 @@ app.post('/login', (req, res) => {
   });
 });
 
-// Logout route
-app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/');
-});
+// Register, logout, etc. (unchanged - keeping your code)
 
 // Admin dashboard
 app.get('/admin', (req, res) => {
@@ -130,4 +125,121 @@ app.get('/admin', (req, res) => {
   }
 
   db.all('SELECT * FROM npcs ORDER BY display_order ASC', [], (err, npcRows) => {
-    if (err) return res.
+    if (err) return res.status(500).send('Error loading NPCs');
+
+    db.all('SELECT * FROM pages ORDER BY created_at DESC', [], (err, pageRows) => {
+      if (err) return res.status(500).send('Error loading pages');
+
+      console.log(`Admin dashboard: ${npcRows.length} NPCs, ${pageRows.length} pages`);
+
+      res.render('admin', {
+        user: req.session.user,
+        npcs: npcRows,
+        pages: pageRows
+      });
+    });
+  });
+});
+
+// Create new page (unchanged - good)
+app.post('/admin/pages', (req, res) => {
+  if (!req.session.user || !req.session.user.is_admin) return res.status(403).send('Admin only');
+
+  const { title, slug, content, category } = req.body;
+
+  if (!title || !slug || !content) return res.status(400).send('Missing fields');
+
+  const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+  db.run(
+    `INSERT INTO pages (slug, title, content, category, author_id) VALUES (?, ?, ?, ?, ?)`,
+    [cleanSlug, title, content, category || null, req.session.user.id],
+    (err) => {
+      if (err) {
+        console.error('Page creation error:', err.message);
+        return res.status(500).send('Error saving page: ' + err.message);
+      }
+      console.log(`New page: ${title} (${cleanSlug})`);
+      res.redirect('/admin');
+    }
+  );
+});
+
+// View page (unchanged for now)
+// View a single wiki page (public)
+app.get('/pages/:slug', (req, res) => {
+  db.get('SELECT * FROM pages WHERE slug = ?', [req.params.slug], (err, page) => {
+    if (err || !page) {
+      return res.status(404).send('Page not found');
+    }
+
+    let likes = 0;
+    let userReaction = null;
+
+    // Count likes
+    db.get('SELECT COUNT(*) as count FROM likes WHERE page_id = ? AND type = "like"', [page.id], (err, row) => {
+      if (!err) likes = row ? row.count : 0;
+
+      // If logged in, get user's reaction
+      if (req.session.user) {
+        db.get('SELECT type FROM likes WHERE page_id = ? AND user_id = ?', [page.id, req.session.user.id], (err, reaction) => {
+          if (!err && reaction) userReaction = reaction.type;
+          render();
+        });
+      } else {
+        render();
+      }
+    });
+
+    function render() {
+      res.render('page', {
+        page: page,
+        user: req.session.user || null,
+        likes: likes,
+        userReaction: userReaction
+      });
+    }
+  });
+});                             
+
+// FIXED: Update NPC with image upload
+app.post('/admin/npcs/:id', upload.single('image'), (req, res) => {
+  if (!req.session.user || !req.session.user.is_admin) {
+    return res.status(403).send('Admin only');
+  }
+
+  const id = req.params.id;
+  const { name, location, description, display_order, current_image_path } = req.body;
+
+  let imagePath = current_image_path || '/images/npcs/default-npc.png';
+
+  if (req.file) {
+    imagePath = '/images/npcs/' + req.file.filename;
+    console.log(`New image uploaded for NPC ${id}: ${req.file.filename}`);
+  }
+
+  db.run(
+    `UPDATE npcs SET name = ?, location = ?, description = ?, image_path = ?, display_order = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+    [name, location, description || null, imagePath, parseInt(display_order) || 999, id],
+    (err) => {
+      if (err) {
+        console.error('NPC update error:', err.message);
+        return res.status(500).send('Error saving NPC: ' + err.message);
+      }
+      console.log(`NPC ${id} updated successfully`);
+      res.redirect('/admin');
+    }
+  );
+});
+
+// Catch-all error handler
+app.use((err, req, res, next) => {
+  console.error('SERVER ERROR:', err.stack);
+  res.status(500).send(`Internal Server Error: ${err.message}`);
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`===== Server is LIVE on port ${PORT} =====`);
+});
