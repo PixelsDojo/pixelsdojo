@@ -37,17 +37,13 @@
             <div style="color:#888;margin-bottom:2rem">Category: <%= page.category %></div>
             
             <div class="interaction-bar">
-                <% if (user) { %>
-                    <button class="like-btn <%= userReaction === 'like' ? 'liked' : '' %>" onclick="react('<%= page.id %>', 'like')">
-                        👍 Like (<span id="like-count"><%= likes %></span>)
-                    </button>
-                    <button class="dislike-btn <%= userReaction === 'dislike' ? 'disliked' : '' %>" onclick="react('<%= page.id %>', 'dislike')">
-                        👎 Dislike (<span id="dislike-count"><%= dislikes %></span>)
-                    </button>
-                <% } else { %>
-                    <span>👍 <%= likes %> likes • 👎 <%= dislikes %> dislikes</span>
-                    <span style="color:#888">(Login to react)</span>
-                <% } %>
+                <% if (typeof user !== 'undefined' && user) { %>
+  👍 Like (<%= likes || 0 %>)
+  <!-- your like button code -->
+  <% if (userReaction === 'like') { %> Liked <% } %>
+<% } else { %>
+  <p>Log in to like or react</p>
+<% } %>
             </div>
 
             <div style="white-space:pre-wrap;line-height:1.8"><%= page.content %></div>
