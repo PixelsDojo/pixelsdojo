@@ -129,6 +129,25 @@ app.get('/logout', (req, res) => {
   });
 });
 
+// Profile page
+app.get('/profile', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  res.render('profile', { user: req.session.user });
+});
+
+// Delete account (basic - add confirmation later)
+app.post('/profile/delete', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+
+  db.run('DELETE FROM users WHERE id = ?', [req.session.user.id], (err) => {
+    if (err) {
+      console.error('Delete user error:', err);
+      return res.status(500).send('Error deleting account');
+    }
+    req.session.destroy(() => res.redirect('/'));
+  });
+});
+
 // Admin dashboard
 app.get('/admin', (req, res) => {
   if (!req.session.user || !req.session.user.is_admin) {
