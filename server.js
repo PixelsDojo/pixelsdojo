@@ -187,31 +187,29 @@ app.get('/pages/:slug', (req, res) => {
     let likes = 0;
     let userReaction = null;
 
-    // Count likes
     db.get('SELECT COUNT(*) as count FROM likes WHERE page_id = ? AND type = "like"', [page.id], (err, row) => {
-      if (!err) likes = row ? row.count : 0;
+      if (!err && row) likes = row.count || 0;
 
-      // If logged in, get user's reaction
       if (req.session.user) {
         db.get('SELECT type FROM likes WHERE page_id = ? AND user_id = ?', [page.id, req.session.user.id], (err, reaction) => {
           if (!err && reaction) userReaction = reaction.type;
-          render();
+          renderPage();
         });
       } else {
-        render();
+        renderPage();
       }
     });
 
-    function render() {
+    function renderPage() {
       res.render('page', {
         page: page,
         user: req.session.user || null,
         likes: likes,
-        userReaction: userReaction
+        userReaction: userReaction || null  // safe default
       });
     }
   });
-});                             
+});
 
 // FIXED: Update NPC with image upload
 app.post('/admin/npcs/:id', upload.single('image'), (req, res) => {
