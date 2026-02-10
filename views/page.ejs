@@ -37,12 +37,12 @@
             <div style="color:#888;margin-bottom:2rem">Category: <%= page.category %></div>
             
             <div class="interaction-bar">
-                <% if (typeof user !== 'undefined' && user) { %>
+               <% if (typeof user !== 'undefined' && user) { %>
   👍 Like (<%= likes || 0 %>)
-  <!-- your like button code -->
-  <% if (userReaction === 'like') { %> Liked <% } %>
+  <!-- your like button or reaction code -->
+  <% if (userReaction === 'like') { %> (You liked this) <% } %>
 <% } else { %>
-  <p>Log in to like or react</p>
+  <p>Log in to like/react</p>
 <% } %>
             </div>
 
