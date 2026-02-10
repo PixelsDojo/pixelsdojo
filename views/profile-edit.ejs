@@ -6,31 +6,31 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div class="container" style="max-width:600px; margin:4rem auto;">
+  <div class="container" style="max-width:600px;margin:4rem auto;padding:2rem;background:#1a1a2e;border-radius:12px;color:white;">
     <h1>Edit Profile</h1>
 
     <form method="POST" action="/profile/update" enctype="multipart/form-data">
       <div style="margin-bottom:1.5rem;">
         <label>Display Name</label><br>
-        <input type="text" name="display_name" value="<%= user.display_name %>" style="width:100%;padding:0.8rem;">
+        <input type="text" name="display_name" value="<%= user.display_name || user.username %>" style="width:100%;padding:0.8rem;background:#0f0f1a;border:1px solid #444;color:white;border-radius:6px;">
       </div>
 
       <div style="margin-bottom:1.5rem;">
         <label>Bio / About Me</label><br>
-        <textarea name="bio" rows="6" style="width:100%;padding:0.8rem;"><%= user.bio || '' %></textarea>
-        <small>Add your creator code, favorite games, etc.</small>
+        <textarea name="bio" rows="6" style="width:100%;padding:0.8rem;background:#0f0f1a;border:1px solid #444;color:white;border-radius:6px;"><%= user.bio || '' %></textarea>
+        <small style="color:#aaa;">Add your creator code, favorite games, or fun facts.</small>
       </div>
 
       <div style="margin-bottom:1.5rem;">
         <label>Profile Picture</label><br>
         <input type="file" name="profile_image" accept="image/*">
-        <small>Current: <img src="<%= user.profile_image %>" alt="Current PFP" style="width:60px; height:60px; border-radius:50%;"></small>
+        <br><small>Current: <img src="<%= user.profile_image %>" alt="Current PFP" style="width:60px;height:60px;border-radius:50%;margin-top:0.5rem;"></small>
       </div>
 
-      <button type="submit" class="btn-primary" style="width:100%;padding:1rem;">Save Changes</button>
+      <button type="submit" style="width:100%;padding:1rem;background:#6a0dad;color:white;border:none;border-radius:8px;font-weight:bold;">Save Changes</button>
     </form>
 
-    <a href="/profile" style="display:block;text-align:center;margin-top:1.5rem;">Cancel</a>
+    <a href="/profile" style="display:block;text-align:center;margin-top:1.5rem;color:#00ffff;">Cancel</a>
   </div>
 </body>
 </html>
