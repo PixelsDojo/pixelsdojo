@@ -216,18 +216,17 @@
         }
 
         function editNPC(id, name, location, description, display_order, currentImagePath) {
-            document.getElementById('edit_id').value = id;
-            document.getElementById('edit_name').value = name;
-            document.getElementById('edit_location').value = location;
-            document.getElementById('edit_description').value = description;
-            document.getElementById('edit_display_order').value = display_order;
-            document.getElementById('edit_current_image_path').value = currentImagePath || '/images/npcs/default-npc.png';
+  document.getElementById('edit_id').value = id;
+  document.getElementById('edit_name').value = name;
+  document.getElementById('edit_location').value = location;
+  document.getElementById('edit_description').value = description;
+  document.getElementById('edit_display_order').value = display_order;
+  document.getElementById('edit_current_image_path').value = currentImagePath;
 
-            // Set form action dynamically with the NPC ID
-            document.getElementById('editForm').action = '/admin/npcs/' + id;
+  document.getElementById('editForm').action = '/admin/npcs/' + id;
 
-            document.getElementById('editModal').style.display = 'block';
-        }
+  document.getElementById('editModal').style.display = 'block';
+}
 
         // deleteNPC function can stay as-is if it works
     </script>
