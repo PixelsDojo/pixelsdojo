@@ -197,11 +197,15 @@ app.get('/profile', (req, res) => {
   });
 });
 
-//Profile Edit
+// Profile Edit - show form
 app.get('/profile/edit', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   res.render('profile-edit', { user: req.session.user });
 });
+
+// Save profile changes
+app.post('/profile/update', upload.single('profile_image'), (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
 
   const { display_name, bio } = req.body;
   let profileImage = req.session.user.profile_image;
@@ -214,12 +218,16 @@ app.get('/profile/edit', (req, res) => {
     `UPDATE users SET display_name = ?, bio = ?, profile_image = ? WHERE id = ?`,
     [display_name || req.session.user.username, bio || null, profileImage, req.session.user.id],
     (err) => {
-      if (err) return res.status(500).send('Error updating profile');
+      if (err) {
+        console.error('Profile update error:', err);
+        return res.status(500).send('Error updating profile');
+      }
       req.session.user.display_name = display_name;
       req.session.user.profile_image = profileImage;
       res.redirect('/profile');
-    });
-
+    }
+  );
+});
 
 // Delete account (basic - add confirmation later)
 app.post('/profile/delete', (req, res) => {
@@ -257,7 +265,7 @@ app.get('/admin', (req, res) => {
   });
 });
 
-// Create new page (unchanged - good)
+// Create new page
 app.post('/admin/pages', (req, res) => {
   if (!req.session.user || !req.session.user.is_admin) return res.status(403).send('Admin only');
 
@@ -281,13 +289,10 @@ app.post('/admin/pages', (req, res) => {
   );
 });
 
-// View page (unchanged for now)
-// View a single wiki page (public)
+// View page
 app.get('/pages/:slug', (req, res) => {
   db.get('SELECT * FROM pages WHERE slug = ?', [req.params.slug], (err, page) => {
-    if (err || !page) {
-      return res.status(404).send('Page not found');
-    }
+    if (err || !page) return res.status(404).send('Page not found');
 
     let likes = 0;
     let userReaction = null;
@@ -310,13 +315,13 @@ app.get('/pages/:slug', (req, res) => {
         page: page,
         user: req.session.user || null,
         likes: likes,
-        userReaction: userReaction || null  // safe default
+        userReaction: userReaction || null
       });
     }
   });
 });
 
-// FIXED: Update NPC with image upload
+// Update NPC
 app.post('/admin/npcs/:id', upload.single('image'), (req, res) => {
   if (!req.session.user || !req.session.user.is_admin) {
     return res.status(403).send('Admin only');
