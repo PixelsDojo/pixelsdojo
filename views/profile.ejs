@@ -2,26 +2,100 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Profile - Pixels Dojo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= profileUser.display_name || profileUser.username %> - Pixels Dojo</title>
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .profile-container {
+      max-width: 700px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background: #1a1a2e;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      text-align: center;
+      color: white;
+    }
+    .profile-avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--cyan, #00ffff);
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 20px rgba(0,255,255,0.3);
+    }
+    .profile-name {
+      font-size: 2.5rem;
+      margin: 0.5rem 0;
+      color: var(--cyan, #00ffff);
+    }
+    .profile-username {
+      font-size: 1.3rem;
+      color: #aaa;
+      margin-bottom: 1rem;
+    }
+    .profile-info {
+      background: rgba(255,255,255,0.05);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+    }
+    .profile-bio {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #ddd;
+    }
+    .profile-joined {
+      color: #888;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+    }
+    .btn-edit-profile {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.8rem 1.8rem;
+      background: var(--purple, #6a0dad);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .btn-edit-profile:hover {
+      background: #8a2be2;
+    }
+  </style>
 </head>
 <body>
-  <h1>My Profile</h1>
+  <header>
+    <!-- your normal header here -->
+  </header>
 
-  <% if (user) { %>
-    <p><strong>Username:</strong> <%= user.username %></p>
-    <p><strong>Email:</strong> (hidden for privacy)</p>
-    <p><strong>Display Name:</strong> <%= user.display_name || user.username %></p>
-    <p><strong>Bio:</strong> (not implemented yet)</p>
-    <p><strong>Profile Picture:</strong> (coming soon)</p>
+  <div class="profile-container">
+    <img 
+      src="<%= profileUser.profile_image || '/images/default-avatar.png' %>" 
+      alt="<%= profileUser.display_name || profileUser.username %>"
+      class="profile-avatar"
+      onerror="this.src='/images/default-avatar.png'"
+    >
 
-    <form action="/profile/delete" method="POST" onsubmit="return confirm('Delete account forever?');">
-      <button type="submit" style="background:red;color:white;">Delete My Account</button>
-    </form>
-  <% } else { %>
-    <p>Please <a href="/login">log in</a> to view your profile.</p>
-  <% } %>
+    <h1 class="profile-name"><%= profileUser.display_name || profileUser.username %></h1>
+    <p class="profile-username">@<%= profileUser.username %></p>
 
-  <a href="/">Back to Home</a>
+    <div class="profile-info">
+      <h3>About</h3>
+      <p class="profile-bio">
+        <%= profileUser.bio || 'No bio yet — tell us about yourself! Add creator codes, favorite games, or fun facts here.' %>
+      </p>
+      <p class="profile-joined">
+        Joined Pixels Dojo on <%= new Date(profileUser.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) %>
+      </p>
+    </div>
+
+    <% if (currentUser && currentUser.username === profileUser.username) { %>
+      <a href="/profile/edit" class="btn-edit-profile">Edit Profile</a>
+    <% } %>
+  </div>
 </body>
 </html>
