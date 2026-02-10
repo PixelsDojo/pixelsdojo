@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Profile - Pixels Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container" style="max-width:600px; margin:4rem auto;">
+    <h1>Edit Profile</h1>
+
+    <form method="POST" action="/profile/update" enctype="multipart/form-data">
+      <div style="margin-bottom:1.5rem;">
+        <label>Display Name</label><br>
+        <input type="text" name="display_name" value="<%= user.display_name %>" style="width:100%;padding:0.8rem;">
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <label>Bio / About Me</label><br>
+        <textarea name="bio" rows="6" style="width:100%;padding:0.8rem;"><%= user.bio || '' %></textarea>
+        <small>Add your creator code, favorite games, etc.</small>
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <label>Profile Picture</label><br>
+        <input type="file" name="profile_image" accept="image/*">
+        <small>Current: <img src="<%= user.profile_image %>" alt="Current PFP" style="width:60px; height:60px; border-radius:50%;"></small>
+      </div>
+
+      <button type="submit" class="btn-primary" style="width:100%;padding:1rem;">Save Changes</button>
+    </form>
+
+    <a href="/profile" style="display:block;text-align:center;margin-top:1.5rem;">Cancel</a>
+  </div>
+</body>
+</html>
