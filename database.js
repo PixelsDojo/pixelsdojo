@@ -25,6 +25,8 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
+  console.log('NPCs and tables seeded OK!');
+
   // Wiki Pages
   db.run(`CREATE TABLE IF NOT EXISTS pages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
