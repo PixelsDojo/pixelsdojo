@@ -143,23 +143,33 @@ app.get('/logout', (req, res) => {
   });
 });
 
-// Admin dashboard - load NPCs
+// Admin dashboard - load NPCs AND pages
 app.get('/admin', (req, res) => {
   if (!req.session.user || !req.session.user.is_admin) {
     return res.status(403).send('Access denied - admin only');
   }
 
-  db.all('SELECT * FROM npcs ORDER BY display_order ASC', [], (err, rows) => {
+  // Load NPCs
+  db.all('SELECT * FROM npcs ORDER BY display_order ASC', [], (err, npcRows) => {
     if (err) {
       console.error('Admin NPCs query error:', err.message);
-      return res.status(500).send('Error loading NPCs for admin dashboard');
+      return res.status(500).send('Error loading NPCs');
     }
 
-    console.log(`Admin dashboard loaded with ${rows.length} NPCs`);
+    // Load pages (this is the missing part)
+    db.all('SELECT * FROM pages ORDER BY created_at DESC', [], (err, pageRows) => {
+      if (err) {
+        console.error('Admin pages query error:', err.message);
+        return res.status(500).send('Error loading pages');
+      }
 
-    res.render('admin', {
-      user: req.session.user,
-      npcs: rows
+      console.log(`Admin dashboard loaded with ${npcRows.length} NPCs and ${pageRows.length} pages`);
+
+      res.render('admin', {
+        user: req.session.user,
+        npcs: npcRows,
+        pages: pageRows   // ← this fixes "pages is not defined"
+      });
     });
   });
 });
