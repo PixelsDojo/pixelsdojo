@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile - Pixels Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <h1>My Profile</h1>
+
+  <% if (user) { %>
+    <p><strong>Username:</strong> <%= user.username %></p>
+    <p><strong>Email:</strong> (hidden for privacy)</p>
+    <p><strong>Display Name:</strong> <%= user.display_name || user.username %></p>
+    <p><strong>Bio:</strong> (not implemented yet)</p>
+    <p><strong>Profile Picture:</strong> (coming soon)</p>
+
+    <form action="/profile/delete" method="POST" onsubmit="return confirm('Delete account forever?');">
+      <button type="submit" style="background:red;color:white;">Delete My Account</button>
+    </form>
+  <% } else { %>
+    <p>Please <a href="/login">log in</a> to view your profile.</p>
+  <% } %>
+
+  <a href="/">Back to Home</a>
+</body>
+</html>
