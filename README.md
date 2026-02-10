@@ -37,13 +37,6 @@ A beautiful, feature-rich community wiki for Pixels Online with NPC management, 
    - Admin panel: `http://localhost:3000/admin`
    - NPCs page: `http://localhost:3000/npcs`
 
-## 🔐 Default Admin Login
-
-- **Email**: `lizzylizzysims@gmail.com`
-- **Password**: `changeme123`
-
-⚠️ **IMPORTANT**: Change this password immediately after first login!
-
 ## 📸 Adding NPC Images
 
 You have **two options** for adding NPC images:
