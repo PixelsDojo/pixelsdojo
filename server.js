@@ -12,6 +12,15 @@ process.on('unhandledRejection', (reason, promise) => {
 
 console.log('Starting server.js - logging enabled');
 
+const multer = require('multer');
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, 'public/images/npcs/'),
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage: storage });
+
 // Required imports
 const express = require('express');
 const path = require('path');
@@ -216,6 +225,38 @@ app.get('/pages/:slug', (req, res) => {
       user: req.session.user || null
     });
   });
+});
+
+// Update existing NPC (including image upload)
+app.post('/admin/npcs/:id', (req, res) => {
+  if (!req.session.user || !req.session.user.is_admin) {
+    return res.status(403).send('Admin only');
+  }
+
+  const id = req.params.id;
+  const { name, location, description, display_order } = req.body;
+
+  // If no new image, keep existing
+  let imagePath = req.body.current_image_path || '/images/npcs/default-npc.png';
+
+  // If new image uploaded (multer should handle file in req.file)
+  if (req.file) {
+    imagePath = '/images/npcs/' + req.file.filename;
+  }
+
+  db.run(
+    `UPDATE npcs SET name = ?, location = ?, description = ?, image_path = ?, display_order = ?, updated_at = CURRENT_TIMESTAMP
+     WHERE id = ?`,
+    [name, location, description || null, imagePath, parseInt(display_order) || 999, id],
+    (err) => {
+      if (err) {
+        console.error('NPC update error:', err.message);
+        return res.status(500).send('Error saving NPC changes');
+      }
+      console.log(`NPC ${id} updated`);
+      res.redirect('/admin');
+    }
+  );
 });
 
 // Catch-all error handler (shows better 500 messages)
