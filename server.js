@@ -173,36 +173,30 @@ app.get('/logout', (req, res) => {
 
 // Profile page
 app.get('/profile', (req, res) => {
-  if (!req.session.user) return res.redirect('/login');
-  res.render('profile', { user: req.session.user });
-});
-
-app.get('/profile/edit', (req, res) => {
-  if (!req.session.user) return res.redirect('/login');
-  res.render('profile-edit', { user: req.session.user });
-});
-
-app.post('/profile/update', upload.single('profile_image'), (req, res) => {
-  if (!req.session.user) return res.redirect('/login');
-
-  const { display_name, bio } = req.body;
-  let profileImage = req.session.user.profile_image;
-
-  if (req.file) {
-    profileImage = '/images/profiles/' + req.file.filename;
+  if (!req.session.user) {
+    return res.redirect('/login');
   }
 
-  db.run(
-    `UPDATE users SET display_name = ?, bio = ?, profile_image = ? WHERE id = ?`,
-    [display_name || req.session.user.username, bio || null, profileImage, req.session.user.id],
-    (err) => {
-      if (err) return res.status(500).send('Error updating profile');
-      req.session.user.display_name = display_name;
-      req.session.user.profile_image = profileImage;
-      res.redirect('/profile');
+  // Fetch fresh user data from DB (in case session is stale)
+  db.get('SELECT * FROM users WHERE id = ?', [req.session.user.id], (err, freshUser) => {
+    if (err || !freshUser) {
+      req.session.destroy();
+      return res.redirect('/login');
     }
-  );
+
+    req.session.user = {
+      id: freshUser.id,
+      username: freshUser.username,
+      display_name: freshUser.display_name,
+      bio: freshUser.bio,
+      profile_image: freshUser.profile_image,
+      is_admin: !!freshUser.is_admin
+    };
+
+    res.render('profile', { user: req.session.user });
+  });
 });
+
 // Delete account (basic - add confirmation later)
 app.post('/profile/delete', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
