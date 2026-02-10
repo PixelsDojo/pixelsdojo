@@ -116,7 +116,11 @@ app.post('/login', (req, res) => {
   });
 });
 
-// Register, logout, etc. (unchanged - keeping your code)
+// Register
+app.get('/register', (req, res) => {
+  if (req.session.user) return res.redirect('/');
+  res.render('register', { error: null, user: null });
+});
 
 // Logout
 app.get('/logout', (req, res) => {
