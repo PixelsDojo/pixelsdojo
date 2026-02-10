@@ -143,12 +143,26 @@ app.get('/logout', (req, res) => {
   });
 });
 
-// Admin stub (expand later)
+// FIXED ADMIN ROUTE — now passes npcs to admin.ejs
 app.get('/admin', (req, res) => {
   if (!req.session.user || !req.session.user.is_admin) {
     return res.status(403).send('Access denied - admin only');
   }
-  res.render('admin', { user: req.session.user });
+
+  // Load NPCs so the loop in admin.ejs can work
+  db.all('SELECT * FROM npcs ORDER BY display_order ASC', [], (err, rows) => {
+    if (err) {
+      console.error('Admin NPCs query error:', err.message);
+      return res.status(500).send('Error loading NPCs for admin dashboard');
+    }
+
+    console.log(`Admin dashboard loaded with ${rows.length} NPCs`);
+
+    res.render('admin', {
+      user: req.session.user,
+      npcs: rows  // ← this fixes "npcs is not defined"
+    });
+  });
 });
 
 // Catch-all error handler (shows better 500 messages)
