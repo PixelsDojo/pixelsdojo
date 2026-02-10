@@ -87,7 +87,7 @@ app.get('/login', (req, res) => {
   res.render('login', { error: null, user: null });
 });
 
-app.post('/admin/npcs/:id', upload.single('image'), (req, res) => {
+app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
   db.get('SELECT * FROM users WHERE username = ?', [username], (err, user) => {
