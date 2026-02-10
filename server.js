@@ -122,6 +122,44 @@ app.get('/register', (req, res) => {
   res.render('register', { error: null, user: null });
 });
 
+app.post('/register', (req, res) => {
+  console.log('Register attempt received:', req.body); // ← debug log
+
+  const { username, email, password, display_name } = req.body;
+
+  if (!username || !email || !password) {
+    console.log('Missing fields');
+    return res.render('register', { error: 'All fields required', user: null });
+  }
+
+  db.get('SELECT * FROM users WHERE username = ? OR email = ?', [username, email], (err, existing) => {
+    if (err) {
+      console.error('Register check error:', err.message);
+      return res.render('register', { error: 'Server error - try again', user: null });
+    }
+
+    if (existing) {
+      console.log('User/email already taken');
+      return res.render('register', { error: 'Username or email already taken', user: null });
+    }
+
+    const hashedPw = bcrypt.hashSync(password, 10);
+    db.run(
+      `INSERT INTO users (username, email, password, display_name) VALUES (?, ?, ?, ?)`,
+      [username, email, hashedPw, display_name || username],
+      function (err) {
+        if (err) {
+          console.error('Register insert error:', err.message);
+          return res.render('register', { error: 'Registration failed - try again', user: null });
+        }
+
+        console.log(`New user registered: ${username}`);
+        res.redirect('/login');
+      }
+    );
+  });
+});
+
 // Logout
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
