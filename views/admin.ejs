@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - NPC Management</title>
+    <title>Admin - Pixels Dojo Dashboard</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/admin.css">
 </head>
@@ -12,7 +12,7 @@
         <div class="header-container">
             <div class="logo-section">
                 <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo">
-                <h1>PIXELS DOJO - ADMIN</h1>
+                <h1>PIXELS DOJO - ADMIN DASHBOARD</h1>
             </div>
             <div class="user-nav">
                 <span>Welcome, <%= user.username %>!</span>
@@ -24,47 +24,95 @@
     </header>
 
     <div class="admin-container">
-        <h1>🛠️ NPC Management</h1>
-        
-        <div class="admin-actions">
-            <button onclick="showAddModal()" class="btn-primary">➕ Add New NPC</button>
-        </div>
+        <h1>🛠️ Admin Dashboard</h1>
 
-        <div class="npc-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Image</th>
-                        <th>Name</th>
-                        <th>Location</th>
-                        <th>Description</th>
-                        <th>Order</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% npcs.forEach(npc => { %>
+        <!-- NPC Management Section -->
+        <section>
+            <h2>NPC Management</h2>
+            <div class="admin-actions">
+                <button onclick="showAddModal()" class="btn-primary">➕ Add New NPC</button>
+            </div>
+
+            <div class="npc-table">
+                <table>
+                    <thead>
                         <tr>
-                            <td><img src="<%= npc.image_path %>" alt="<%= npc.name %>" class="npc-thumb" onerror="this.src='/images/npcs/default-npc.png'"></td>
-                            <td><%= npc.name %></td>
-                            <td><%= npc.location %></td>
-                            <td><%= npc.description ? npc.description.substring(0, 50) + '...' : 'No description' %></td>
-                            <td><%= npc.display_order %></td>
-                            <td class="actions">
-                                <button onclick="editNPC(<%= npc.id %>, '<%= npc.name %>', '<%= npc.location %>', '<%= npc.description || '' %>', <%= npc.display_order %>)" class="btn-edit">✏️ Edit</button>
-                                <button onclick="deleteNPC(<%= npc.id %>, '<%= npc.name %>')" class="btn-delete">🗑️ Delete</button>
-                            </td>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>Description</th>
+                            <th>Order</th>
+                            <th>Actions</th>
                         </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        <% npcs.forEach(npc => { %>
+                            <tr>
+                                <td>
+                                    <img src="<%= npc.image_path %>" alt="<%= npc.name %>" 
+                                         class="npc-thumb" style="max-width:160px; height:auto; object-fit:contain;"
+                                         onerror="this.src='/images/npcs/default-npc.png'">
+                                </td>
+                                <td><%= npc.name %></td>
+                                <td><%= npc.location %></td>
+                                <td><%= npc.description ? npc.description.substring(0, 50) + '...' : 'No description' %></td>
+                                <td><%= npc.display_order %></td>
+                                <td class="actions">
+                                    <button onclick="editNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>', '<%= npc.location.replace(/'/g, "\\'") %>', '<%= (npc.description || '').replace(/'/g, "\\'") %>', <%= npc.display_order %>)" class="btn-edit">✏️ Edit</button>
+                                    <button onclick="deleteNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>')" class="btn-delete">🗑️ Delete</button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- NEW: Wiki Pages Management Section -->
+        <section style="margin-top: 3rem;">
+            <h2>Wiki Pages Management</h2>
+            <div class="admin-actions">
+                <button onclick="showAddPageModal()" class="btn-primary">➕ Add New Page</button>
+            </div>
+
+            <div class="page-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Slug</th>
+                            <th>Category</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (pages && pages.length > 0) { %>
+                            <% pages.forEach(page => { %>
+                                <tr>
+                                    <td><%= page.title %></td>
+                                    <td><%= page.slug %></td>
+                                    <td><%= page.category || '—' %></td>
+                                    <td><%= new Date(page.created_at).toLocaleDateString() %></td>
+                                    <td class="actions">
+                                        <a href="/pages/<%= page.slug %>" target="_blank" class="btn-view">View</a>
+                                        <!-- Edit/Delete buttons can be added later -->
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr><td colspan="5">No pages yet — add one above!</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
 
-    <!-- Add NPC Modal -->
+    <!-- Add NPC Modal (unchanged except image note) -->
     <div id="addModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('addModal')">&times;</span>
+            <span class="close" onclick="closeModal('addModal')">×</span>
             <h2>Add New NPC</h2>
             <form id="addForm" enctype="multipart/form-data">
                 <div class="form-group">
@@ -82,7 +130,7 @@
                 <div class="form-group">
                     <label>Image</label>
                     <input type="file" name="image" accept="image/*">
-                    <small>Recommended: 200x200px PNG or JPG</small>
+                    <small>Any size/shape OK (portrait 160×200 works great). Max 2MB. Will display full aspect ratio.</small>
                 </div>
                 <div class="form-group">
                     <label>Display Order</label>
@@ -93,10 +141,10 @@
         </div>
     </div>
 
-    <!-- Edit NPC Modal -->
+    <!-- Edit NPC Modal (updated image note) -->
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('editModal')">&times;</span>
+            <span class="close" onclick="closeModal('editModal')">×</span>
             <h2>Edit NPC</h2>
             <form id="editForm" enctype="multipart/form-data">
                 <input type="hidden" id="edit_id" name="id">
@@ -115,7 +163,7 @@
                 <div class="form-group">
                     <label>Image (leave empty to keep current)</label>
                     <input type="file" name="image" accept="image/*">
-                    <small>Recommended: 200x200px PNG or JPG</small>
+                    <small>Any size/shape OK (portrait 160×200 works great). Will display full aspect ratio.</small>
                 </div>
                 <div class="form-group">
                     <label>Display Order</label>
@@ -126,6 +174,40 @@
         </div>
     </div>
 
+    <!-- NEW: Add Page Modal -->
+    <div id="addPageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addPageModal')">×</span>
+            <h2>Add New Wiki Page</h2>
+            <form id="addPageForm" method="POST" action="/admin/pages">
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" name="title" required placeholder="e.g. Farming Guide">
+                </div>
+                <div class="form-group">
+                    <label>Slug (URL-friendly) *</label>
+                    <input type="text" name="slug" required placeholder="e.g. farming-guide">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text" name="category" placeholder="e.g. Farming, Housing, Quests">
+                </div>
+                <div class="form-group">
+                    <label>Content (paste your full page text here)</label>
+                    <textarea name="content" rows="15" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Create Page</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showAddModal() { document.getElementById('addModal').style.display = 'block'; }
+        function showAddPageModal() { document.getElementById('addPageModal').style.display = 'block'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // Your existing editNPC, deleteNPC, form submit logic in /js/admin.js should still work
+    </script>
     <script src="/js/admin.js"></script>
 </body>
 </html>
