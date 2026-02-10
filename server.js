@@ -143,13 +143,12 @@ app.get('/logout', (req, res) => {
   });
 });
 
-// FIXED ADMIN ROUTE — now passes npcs to admin.ejs
+// Admin dashboard - load NPCs
 app.get('/admin', (req, res) => {
   if (!req.session.user || !req.session.user.is_admin) {
     return res.status(403).send('Access denied - admin only');
   }
 
-  // Load NPCs so the loop in admin.ejs can work
   db.all('SELECT * FROM npcs ORDER BY display_order ASC', [], (err, rows) => {
     if (err) {
       console.error('Admin NPCs query error:', err.message);
@@ -160,7 +159,51 @@ app.get('/admin', (req, res) => {
 
     res.render('admin', {
       user: req.session.user,
-      npcs: rows  // ← this fixes "npcs is not defined"
+      npcs: rows
+    });
+  });
+});
+
+// Create new wiki page from admin form
+app.post('/admin/pages', (req, res) => {
+  if (!req.session.user || !req.session.user.is_admin) {
+    return res.status(403).send('Access denied - admin only');
+  }
+
+  const { title, slug, content, category } = req.body;
+
+  if (!title || !slug || !content) {
+    return res.status(400).send('Missing required fields: title, slug, content');
+  }
+
+  // Clean slug (make it URL-safe)
+  const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+  db.run(
+    `INSERT INTO pages (slug, title, content, category, author_id) 
+     VALUES (?, ?, ?, ?, ?)`,
+    [cleanSlug, title, content, category || null, req.session.user.id],
+    (err) => {
+      if (err) {
+        console.error('Page creation error:', err.message);
+        return res.status(500).send('Error saving page: ' + err.message);
+      }
+
+      console.log(`New page created: ${title} (${cleanSlug})`);
+      res.redirect('/admin');
+    }
+  );
+});
+
+// View a single wiki page (public)
+app.get('/pages/:slug', (req, res) => {
+  db.get('SELECT * FROM pages WHERE slug = ?', [req.params.slug], (err, page) => {
+    if (err || !page) {
+      return res.status(404).send('Page not found');
+    }
+    res.render('page', {
+      page: page,
+      user: req.session.user || null
     });
   });
 });
