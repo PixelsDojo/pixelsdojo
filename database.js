@@ -35,7 +35,7 @@ db.serialize(() => {
     content TEXT,
     category TEXT,
     author_id INTEGER,
-    created_at DATETIME DEFAULT CURRENT TIMESTAMP,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(author_id) REFERENCES users(id)
   )`);
 
@@ -148,3 +148,5 @@ db.serialize(() => {
 });
 
 module.exports = db;
+
+console.log('All tables created without errors');
