@@ -177,6 +177,32 @@ app.get('/profile', (req, res) => {
   res.render('profile', { user: req.session.user });
 });
 
+app.get('/profile/edit', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  res.render('profile-edit', { user: req.session.user });
+});
+
+app.post('/profile/update', upload.single('profile_image'), (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+
+  const { display_name, bio } = req.body;
+  let profileImage = req.session.user.profile_image;
+
+  if (req.file) {
+    profileImage = '/images/profiles/' + req.file.filename;
+  }
+
+  db.run(
+    `UPDATE users SET display_name = ?, bio = ?, profile_image = ? WHERE id = ?`,
+    [display_name || req.session.user.username, bio || null, profileImage, req.session.user.id],
+    (err) => {
+      if (err) return res.status(500).send('Error updating profile');
+      req.session.user.display_name = display_name;
+      req.session.user.profile_image = profileImage;
+      res.redirect('/profile');
+    }
+  );
+});
 // Delete account (basic - add confirmation later)
 app.post('/profile/delete', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
