@@ -3,99 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= profileUser.display_name || profileUser.username %> - Pixels Dojo</title>
+  <title>My Profile - Pixels Dojo</title>
   <link rel="stylesheet" href="/css/style.css">
   <style>
     .profile-container {
       max-width: 700px;
       margin: 4rem auto;
-      padding: 2rem;
+      padding: 2.5rem;
       background: #1a1a2e;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-      text-align: center;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
       color: white;
+      text-align: center;
     }
     .profile-avatar {
-      width: 140px;
-      height: 140px;
+      width: 160px;
+      height: 160px;
       border-radius: 50%;
       object-fit: cover;
-      border: 4px solid var(--cyan, #00ffff);
+      border: 5px solid #00ffff;
       margin-bottom: 1.5rem;
-      box-shadow: 0 0 20px rgba(0,255,255,0.3);
     }
     .profile-name {
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       margin: 0.5rem 0;
-      color: var(--cyan, #00ffff);
+      color: #00ffff;
     }
     .profile-username {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       color: #aaa;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
     .profile-info {
-      background: rgba(255,255,255,0.05);
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin: 1.5rem 0;
-    }
-    .profile-bio {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: #ddd;
-    }
-    .profile-joined {
-      color: #888;
-      font-size: 0.95rem;
-      margin-top: 1rem;
-    }
-    .btn-edit-profile {
-      display: inline-block;
-      margin-top: 2rem;
-      padding: 0.8rem 1.8rem;
-      background: var(--purple, #6a0dad);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .btn-edit-profile:hover {
-      background: #8a2be2;
+      background: rgba(255,255,255,0.06);
+      padding: 2rem;
+      border-radius: 12px;
+      margin: 2rem 0;
+      text-align: left;
     }
   </style>
 </head>
 <body>
-  <header>
-    <!-- your normal header here -->
-  </header>
-
   <div class="profile-container">
     <img 
-      src="<%= profileUser.profile_image || '/images/default-avatar.png' %>" 
-      alt="<%= profileUser.display_name || profileUser.username %>"
+      src="<%= user && user.profile_image ? user.profile_image : '/images/default-avatar.png' %>" 
+      alt="Profile picture" 
       class="profile-avatar"
       onerror="this.src='/images/default-avatar.png'"
     >
 
-    <h1 class="profile-name"><%= profileUser.display_name || profileUser.username %></h1>
-    <p class="profile-username">@<%= profileUser.username %></p>
+    <h1 class="profile-name"><%= user && user.display_name ? user.display_name : (user && user.username ? user.username : 'Guest') %></h1>
+    <p class="profile-username">@<%= user && user.username ? user.username : 'not logged in' %></p>
 
     <div class="profile-info">
-      <h3>About</h3>
-      <p class="profile-bio">
-        <%= profileUser.bio || 'No bio yet — tell us about yourself! Add creator codes, favorite games, or fun facts here.' %>
-      </p>
-      <p class="profile-joined">
-        Joined Pixels Dojo on <%= new Date(profileUser.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) %>
-      </p>
+      <h3>About Me</h3>
+      <p><%= user && user.bio ? user.bio : 'No bio yet — edit your profile to add one!' %></p>
+      <p><strong>Joined:</strong> <%= user && user.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Unknown' %></p>
     </div>
 
-    <% if (currentUser && currentUser.username === profileUser.username) { %>
-      <a href="/profile/edit" class="btn-edit-profile">Edit Profile</a>
-    <% } %>
+    <a href="/profile/edit" class="btn" style="display:inline-block;margin-top:2rem;padding:0.9rem 2rem;background:#6a0dad;color:white;border-radius:8px;text-decoration:none;">Edit Profile</a>
   </div>
 </body>
 </html>
