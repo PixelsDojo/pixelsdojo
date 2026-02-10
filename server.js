@@ -218,8 +218,7 @@ app.get('/profile/edit', (req, res) => {
       req.session.user.display_name = display_name;
       req.session.user.profile_image = profileImage;
       res.redirect('/profile');
-    }
-  );
+    });
 });
 
 // Delete account (basic - add confirmation later)
