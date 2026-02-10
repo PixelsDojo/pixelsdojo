@@ -2,20 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register - Pixels Dojo</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <h1>Register</h1>
-  <% if (error) { %><p style="color:red;"><%= error %></p><% } %>
+  <div class="container" style="max-width:500px; margin:4rem auto;">
+    <h1>Register</h1>
 
-  <form method="POST" action="/register">
-    <label>Username: <input type="text" name="username" required></label><br>
-    <label>Email: <input type="email" name="email" required></label><br>
-    <label>Password: <input type="password" name="password" required></label><br>
-    <label>Display Name: <input type="text" name="display_name"></label><br>
-    <button type="submit">Register</button>
-  </form>
-  <p>Already have an account? <a href="/login">Login</a></p>
+    <% if (error) { %>
+      <p style="color:red; font-weight:bold;"><%= error %></p>
+    <% } %>
+
+    <form method="POST" action="/register">
+      <div style="margin-bottom:1rem;">
+        <label>Username *</label><br>
+        <input type="text" name="username" required style="width:100%; padding:0.8rem;">
+      </div>
+
+      <div style="margin-bottom:1rem;">
+        <label>Email *</label><br>
+        <input type="email" name="email" required style="width:100%; padding:0.8rem;">
+      </div>
+
+      <div style="margin-bottom:1rem;">
+        <label>Password *</label><br>
+        <input type="password" name="password" required style="width:100%; padding:0.8rem;">
+      </div>
+
+      <div style="margin-bottom:1rem;">
+        <label>Display Name</label><br>
+        <input type="text" name="display_name" style="width:100%; padding:0.8rem;">
+      </div>
+
+      <button type="submit" style="width:100%; padding:1rem; background:#6a0dad; color:white; border:none; border-radius:5px;">
+        Create Account
+      </button>
+    </form>
+
+    <p style="text-align:center; margin-top:1.5rem;">
+      Already have an account? <a href="/login">Login here</a>
+    </p>
+  </div>
 </body>
 </html>
