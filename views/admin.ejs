@@ -96,7 +96,7 @@
                                     <td><%= new Date(page.created_at).toLocaleDateString() %></td>
                                     <td class="actions">
                                         <a href="/pages/<%= page.slug %>" target="_blank" class="btn-view">View</a>
-                                        <!-- Edit/Delete buttons can be added later -->
+                                        <button onclick="deletePage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'") %>')" class="btn-delete">🗑️ Delete</button>
                                     </td>
                                 </tr>
                             <% }); %>
@@ -141,7 +141,7 @@
         </div>
     </div>
 
-    <!-- Edit NPC Modal - FIXED -->
+    <!-- Edit NPC Modal -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('editModal')">×</span>
@@ -216,19 +216,32 @@
         }
 
         function editNPC(id, name, location, description, display_order, currentImagePath) {
-  document.getElementById('edit_id').value = id;
-  document.getElementById('edit_name').value = name;
-  document.getElementById('edit_location').value = location;
-  document.getElementById('edit_description').value = description;
-  document.getElementById('edit_display_order').value = display_order;
-  document.getElementById('edit_current_image_path').value = currentImagePath;
+            document.getElementById('edit_id').value = id;
+            document.getElementById('edit_name').value = name;
+            document.getElementById('edit_location').value = location;
+            document.getElementById('edit_description').value = description;
+            document.getElementById('edit_display_order').value = display_order;
+            document.getElementById('edit_current_image_path').value = currentImagePath || '/images/npcs/default-npc.png';
 
-  document.getElementById('editForm').action = '/admin/npcs/' + id;
+            document.getElementById('editForm').action = '/admin/npcs/' + id;
+            document.getElementById('editModal').style.display = 'block';
+        }
 
-  document.getElementById('editModal').style.display = 'block';
-}
-
-        // deleteNPC function can stay as-is if it works
+        function deletePage(id, title) {
+            if (confirm('Delete page "' + title + '"? This cannot be undone.')) {
+                fetch('/admin/pages/' + id, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete page');
+                    }
+                }).catch(err => {
+                    alert('Error: ' + err);
+                });
+            }
+        }
     </script>
     <script src="/js/admin.js"></script>
 </body>
