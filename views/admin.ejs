@@ -58,7 +58,7 @@
                                 <td><%= npc.description ? npc.description.substring(0, 50) + '...' : 'No description' %></td>
                                 <td><%= npc.display_order %></td>
                                 <td class="actions">
-                                    <button onclick="editNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>', '<%= npc.location.replace(/'/g, "\\'") %>', '<%= (npc.description || '').replace(/'/g, "\\'") %>', <%= npc.display_order %>)" class="btn-edit">✏️ Edit</button>
+                                    <button onclick="editNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>', '<%= npc.location.replace(/'/g, "\\'") %>', '<%= (npc.description || '').replace(/'/g, "\\'") %>', <%= npc.display_order %>, '<%= npc.image_path.replace(/'/g, "\\'") %>')" class="btn-edit">✏️ Edit</button>
                                     <button onclick="deleteNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>')" class="btn-delete">🗑️ Delete</button>
                                 </td>
                             </tr>
@@ -68,7 +68,7 @@
             </div>
         </section>
 
-        <!-- NEW: Wiki Pages Management Section -->
+        <!-- Wiki Pages Management Section -->
         <section style="margin-top: 3rem;">
             <h2>Wiki Pages Management</h2>
             <div class="admin-actions">
@@ -109,7 +109,7 @@
         </section>
     </div>
 
-    <!-- Add NPC Modal (unchanged except image note) -->
+    <!-- Add NPC Modal -->
     <div id="addModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('addModal')">×</span>
@@ -141,13 +141,14 @@
         </div>
     </div>
 
-    <!-- Edit NPC Modal (updated image note) -->
+    <!-- Edit NPC Modal - FIXED -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('editModal')">×</span>
             <h2>Edit NPC</h2>
-            <form id="editForm" enctype="multipart/form-data">
+            <form id="editForm" action="" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="edit_id" name="id">
+                <input type="hidden" id="edit_current_image_path" name="current_image_path">
                 <div class="form-group">
                     <label>Name *</label>
                     <input type="text" id="edit_name" name="name" required>
@@ -174,7 +175,7 @@
         </div>
     </div>
 
-    <!-- NEW: Add Page Modal -->
+    <!-- Add Page Modal -->
     <div id="addPageModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('addPageModal')">×</span>
@@ -202,11 +203,33 @@
     </div>
 
     <script>
-        function showAddModal() { document.getElementById('addModal').style.display = 'block'; }
-        function showAddPageModal() { document.getElementById('addPageModal').style.display = 'block'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function showAddModal() { 
+            document.getElementById('addModal').style.display = 'block'; 
+        }
 
-        // Your existing editNPC, deleteNPC, form submit logic in /js/admin.js should still work
+        function showAddPageModal() { 
+            document.getElementById('addPageModal').style.display = 'block'; 
+        }
+
+        function closeModal(id) { 
+            document.getElementById(id).style.display = 'none'; 
+        }
+
+        function editNPC(id, name, location, description, display_order, currentImagePath) {
+            document.getElementById('edit_id').value = id;
+            document.getElementById('edit_name').value = name;
+            document.getElementById('edit_location').value = location;
+            document.getElementById('edit_description').value = description;
+            document.getElementById('edit_display_order').value = display_order;
+            document.getElementById('edit_current_image_path').value = currentImagePath || '/images/npcs/default-npc.png';
+
+            // Set form action dynamically with the NPC ID
+            document.getElementById('editForm').action = '/admin/npcs/' + id;
+
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        // deleteNPC function can stay as-is if it works
     </script>
     <script src="/js/admin.js"></script>
 </body>
