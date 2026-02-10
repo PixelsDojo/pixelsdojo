@@ -198,8 +198,10 @@ app.get('/profile', (req, res) => {
 });
 
 //Profile Edit
-app.post('/profile/update', upload.single('profile_image'), (req, res) => {
+app.get('/profile/edit', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
+  res.render('profile-edit', { user: req.session.user });
+});
 
   const { display_name, bio } = req.body;
   let profileImage = req.session.user.profile_image;
