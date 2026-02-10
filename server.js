@@ -118,6 +118,17 @@ app.post('/login', (req, res) => {
 
 // Register, logout, etc. (unchanged - keeping your code)
 
+// Logout
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Logout error:', err);
+    }
+    res.clearCookie('connect.sid');  // clear session cookie
+    res.redirect('/');
+  });
+});
+
 // Admin dashboard
 app.get('/admin', (req, res) => {
   if (!req.session.user || !req.session.user.is_admin) {
