@@ -27,6 +27,46 @@
     <div class="admin-container">
         <h1>🛠️ Admin Dashboard</h1>
 
+<!-- Wiki Pages Management Section -->
+        <section style="margin-top: 2rem;">
+            <h2>Wiki Pages Management</h2>
+            <div class="admin-actions">
+                <button onclick="showAddPageModal()" class="btn-primary">➕ Add New Page</button>
+            </div>
+
+            <div class="page-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Slug</th>
+                            <th>Category</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (pages && pages.length > 0) { %>
+                            <% pages.forEach(page => { %>
+                                <tr>
+                                    <td><%= page.title %></td>
+                                    <td><%= page.slug %></td>
+                                    <td><%= page.category || '—' %></td>
+                                    <td><%= new Date(page.created_at).toLocaleDateString() %></td>
+                                    <td class="actions">
+                                        <a href="/pages/<%= page.slug %>" target="_blank" class="btn-view">View</a>
+                                        <button onclick="deletePage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'") %>')" class="btn-delete">🗑️ Delete</button>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr><td colspan="5">No pages yet — add one above!</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- NPC Management Section -->
         <section>
             <h2>NPC Management</h2>
@@ -69,45 +109,7 @@
             </div>
         </section>
 
-        <!-- Wiki Pages Management Section -->
-        <section style="margin-top: 3rem;">
-            <h2>Wiki Pages Management</h2>
-            <div class="admin-actions">
-                <button onclick="showAddPageModal()" class="btn-primary">➕ Add New Page</button>
-            </div>
-
-            <div class="page-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Slug</th>
-                            <th>Category</th>
-                            <th>Created</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% if (pages && pages.length > 0) { %>
-                            <% pages.forEach(page => { %>
-                                <tr>
-                                    <td><%= page.title %></td>
-                                    <td><%= page.slug %></td>
-                                    <td><%= page.category || '—' %></td>
-                                    <td><%= new Date(page.created_at).toLocaleDateString() %></td>
-                                    <td class="actions">
-                                        <a href="/pages/<%= page.slug %>" target="_blank" class="btn-view">View</a>
-                                        <button onclick="deletePage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'") %>')" class="btn-delete">🗑️ Delete</button>
-                                    </td>
-                                </tr>
-                            <% }); %>
-                        <% } else { %>
-                            <tr><td colspan="5">No pages yet — add one above!</td></tr>
-                        <% } %>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        
     </div>
 
     
