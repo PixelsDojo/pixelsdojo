@@ -1,14 +1,15 @@
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 
-// Use in-memory DB on Render free tier to avoid file crash
-const dbPath = process.env.NODE_ENV === 'production' ? ':memory:' : './pixels-dojo.db';
+// Use persistent file on Railway (/app/data is our mounted volume)
+const dbPath = process.env.NODE_ENV === 'production' ? '/app/data/pixels-dojo.db' : './pixels-dojo.db';
+
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Database open failed:', err.message);
     process.exit(1);
   }
-  console.log(`Connected to DB (${dbPath === ':memory:' ? 'in-memory (Render free)' : 'file'})`);
+  console.log(`Connected to DB (${dbPath === '/app/data/pixels-dojo.db' ? 'persistent file on Railway' : 'local file'})`);
 });
 
 db.serialize(() => {
