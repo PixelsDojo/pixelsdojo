@@ -47,7 +47,6 @@ db.run(`CREATE TABLE IF NOT EXISTS pages (
 
   // Add missing columns if they don't exist yet (safe to run multiple times)
 db.run(`ALTER TABLE pages ADD COLUMN summary TEXT`);
-db.run(`ALTER TABLE pages ADD COLUMN pro_tips TEXT`);
   
   // Likes
   db.run(`CREATE TABLE IF NOT EXISTS likes (
