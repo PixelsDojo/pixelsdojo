@@ -355,10 +355,22 @@ app.post('/admin/pages', upload.array('screenshots', 15), (req, res) => {
   );
 });
 
-// View page
+// View a single wiki page (with author info)
 app.get('/pages/:slug', (req, res) => {
-  db.get('SELECT * FROM pages WHERE slug = ?', [req.params.slug], (err, page) => {
-    if (err || !page) return res.status(404).send('Page not found');
+  db.get(`
+    SELECT p.*, 
+           u.username AS author_username,
+           u.display_name AS author_display_name,
+           u.profile_image AS author_profile_image
+    FROM pages p
+    LEFT JOIN users u ON p.author_id = u.id
+    WHERE p.slug = ?
+  `, [req.params.slug], (err, page) => {
+    if (err) {
+      console.error('Page view error:', err.message);
+      return res.status(500).send('Database error');
+    }
+    if (!page) return res.status(404).send('Page not found');
 
     let likes = 0;
     let userReaction = null;
