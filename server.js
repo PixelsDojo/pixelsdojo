@@ -350,21 +350,6 @@ app.post('/admin/pages', upload.array('screenshots', 15), (req, res) => {
   );
 });
 
-// Temporary cleanup route - access via browser (remove after use!)
-app.get('/debug/clean-npcs', (req, res) => {
-  if (!req.session.user || !req.session.user.is_admin) {
-    return res.status(403).send('Admin only');
-  }
-
-  db.run(`DELETE FROM npcs WHERE id > 54`, function(err) {
-    if (err) {
-      return res.send('Error: ' + err.message);
-    }
-    db.run(`VACUUM`);
-    res.send(`Cleaned up NPCs! Kept first 54. New count: check /admin. <a href="/admin">Back to admin</a>`);
-  });
-});
-
 // View a single wiki page (with author info)
 app.get('/pages/:slug', (req, res) => {
   db.get(`
@@ -457,6 +442,38 @@ app.post('/admin/npcs/:id', upload.single('image'), (req, res) => {
         return res.status(500).send('Error saving NPC: ' + err.message);
       }
       console.log(`NPC ${id} updated successfully`);
+      res.redirect('/admin');
+    }
+  );
+});
+
+// Add new NPC
+app.post('/admin/npcs', upload.single('image'), (req, res) => {
+  if (!req.session.user || !req.session.user.is_admin) {
+    return res.status(403).send('Admin only');
+  }
+
+  const { name, location, description, display_order } = req.body;
+
+  if (!name) {
+    return res.status(400).send('Name is required');
+  }
+
+  let imagePath = '/images/npcs/default-npc.png';
+  if (req.file) {
+    imagePath = '/images/npcs/' + req.file.filename;
+  }
+
+  db.run(
+    `INSERT INTO npcs (name, location, description, image_path, display_order) 
+     VALUES (?, ?, ?, ?, ?)`,
+    [name, location || null, description || null, imagePath, parseInt(display_order) || 999],
+    function (err) {
+      if (err) {
+        console.error('NPC add error:', err.message);
+        return res.status(500).send('Error adding NPC');
+      }
+      console.log(`New NPC added: ${name} (ID ${this.lastID})`);
       res.redirect('/admin');
     }
   );
