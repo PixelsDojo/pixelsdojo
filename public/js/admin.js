@@ -25,18 +25,26 @@ function editNPC(id, name, location, description, displayOrder) {
 }
 
     function deleteNPC(id, name) {
-  if (confirm(`Delete "${name}" forever?`)) {
+  if (confirm(`Are you sure you want to delete "${name}"?`)) {
     fetch(`/admin/npcs/${id}`, {
-      method: 'DELETE'
-    })
-    .then(res => {
-      if (res.ok) {
-        location.reload();
-      } else {
-        alert('Failed to delete');
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
       }
     })
-    .catch(err => alert('Error: ' + err));
+    .then(response => {
+      if (response.ok) {
+        alert('NPC deleted!');
+        location.reload(); // refresh admin page
+      } else {
+        return response.json().then(err => {
+          alert('Unable to delete: ' + (err.error || 'Unknown error'));
+        });
+      }
+    })
+    .catch(err => {
+      alert('Error connecting to server: ' + err);
+    });
   }
 }
 
