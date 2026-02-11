@@ -1,110 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title><%= page.title %> - Pixels Dojo Wiki</title>
-    <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= page.title %> - Pixels Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .page-container { max-width: 900px; margin: 2rem auto; padding: 1rem; }
+    .metadata { color: #aaa; margin-bottom: 1rem; font-size: 0.95rem; }
+    .screenshot-gallery img { max-width: 350px; height: auto; margin: 0.5rem; border-radius: 8px; }
+    .pro-tips { background: #1e2a3a; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <div class="logo-section">
-                <a href="/"><img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo"></a>
-                <h1><a href="/" style="color:white;text-decoration:none">PIXELS DOJO</a></h1>
-            </div>
-            <div class="user-nav">
-                <% if (user) { %>
-                    <span>Welcome, <%= user.username %>!</span>
-                    <a href="/logout">Logout</a>
-                <% } else { %>
-                    <a href="/login">Login</a>
-                <% } %>
-            </div>
-        </div>
-    </header>
+  <header><!-- your header --></header>
 
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/#new">I'm New</a></li>
-            <li><a href="/#earn">Earn $PIXEL</a></li>
-            <li><a href="/#master">Become Master</a></li>
-        </ul>
-    </nav>
+  <div class="page-container">
+    <h1><%= page.title %></h1>
 
-    <div class="container">
-        <div class="content-section">
-            <h2><%= page.title %></h2>
-            <div style="color:#888;margin-bottom:2rem">Category: <%= page.category %></div>
-            
-            <div class="interaction-bar">
-               <% if (typeof user !== 'undefined' && user) { %>
-  👍 Like (<%= likes || 0 %>)
-  <!-- your like button or reaction code -->
-  <% if (userReaction === 'like') { %> (You liked this) <% } %>
-<% } else { %>
-  <p>Log in to like/react</p>
-<% } %>
-            </div>
-
-            <div style="white-space:pre-wrap;line-height:1.8"><%= page.content %></div>
-
-            <% if (page.author_id) { %>
-                <div class="author-card" style="margin-top:3rem">
-                    <img src="<%= page.profile_image %>" alt="<%= page.display_name %>">
-                    <div class="author-info">
-                        <h3>Written by <%= page.display_name %></h3>
-                        <p><%= page.bio %></p>
-                    </div>
-                </div>
-            <% } %>
-        </div>
-
-        <div class="question-form">
-            <h3>❓ Have a Question?</h3>
-            <form onsubmit="submitQuestion(event)">
-                <input type="text" name="name" placeholder="Your Name" required>
-                <input type="email" name="email" placeholder="Your Email" required>
-                <textarea name="question" placeholder="Ask your question..." required></textarea>
-                <button type="submit" class="btn btn-purple">Submit Question</button>
-            </form>
-            <div id="question-result"></div>
-        </div>
+    <div class="metadata">
+      <strong>Last Updated:</strong> <%= new Date(page.updated_at || page.created_at).toLocaleDateString() %><br>
+      <strong>Difficulty:</strong> <%= page.difficulty || 'Beginner' %><br>
+      <strong>Author:</strong> <a href="/u/<%= page.author_username || 'unknown' %>"><%= page.author_display_name || 'Unknown' %></a>
     </div>
 
-    <footer>
-        <p>&copy; 2026 Pixels Dojo Wiki</p>
-    </footer>
+    <!-- Quick Summary -->
+    <h2>Quick Summary</h2>
+    <p>[Add 2–3 sentence TL;DR here — you can extract first paragraph or write manually later]</p>
 
-    <script>
-    async function react(pageId, type) {
-        const res = await fetch('/react/' + pageId, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({type})
-        });
-        if (res.ok) location.reload();
-    }
+    <!-- Table of Contents (optional – can be generated later) -->
+    <h2>Table of Contents</h2>
+    <ul>
+      <li><a href="#introduction">Introduction</a></li>
+      <!-- add more as needed -->
+    </ul>
 
-    async function submitQuestion(e) {
-        e.preventDefault();
-        const form = e.target;
-        const data = {
-            name: form.name.value,
-            email: form.email.value,
-            question: form.question.value,
-            page_slug: '<%= page.slug %>'
-        };
-        
-        const res = await fetch('/submit-question', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        });
-        
-        document.getElementById('question-result').innerHTML = 
-            '<div class="alert alert-success">Question submitted! We\'ll respond via email.</div>';
-        form.reset();
-    }
-    </script>
+    <!-- Main Content -->
+    <div dangerouslySetInnerHTML={{ __html: page.content }}></div>
+
+    <!-- Screenshots -->
+    <% if (page.screenshots && page.screenshots.length > 0) { %>
+      <h2>Screenshots</h2>
+      <div class="screenshot-gallery">
+        <% JSON.parse(page.screenshots).forEach(path => { %>
+          <img src="<%= path %>" alt="Screenshot">
+        <% }) %>
+      </div>
+    <% } %>
+
+    <!-- Pro Tips / Hints -->
+    <div class="pro-tips">
+      <h3>Pro Tips / Hacks</h3>
+      <p>[Add tips section later — can be a separate DB field if needed]</p>
+    </div>
+
+    <!-- Likes / Comments / Upvotes -->
+    <div style="margin:2rem 0;">
+      <button>👍 Upvote (<%= likes || 0 %>)</button>
+      <button>💬 Comment</button>
+    </div>
+
+    <!-- Related Pages / Community -->
+    <p>See also: [related links]</p>
+  </div>
 </body>
 </html>
