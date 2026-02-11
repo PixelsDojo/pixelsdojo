@@ -1,1 +1,18 @@
-
+<header>
+  <div class="logo-section">
+    <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo">
+    <h1>PIXELS DOJO</h1>
+  </div>
+  <nav class="user-nav">
+    <a href="/">Home</a>
+    <a href="/pages/starter-quests">Starter Quests</a>
+    <a href="/wiki">All Wiki</a>
+    <% if (user) { %>
+      <a href="/profile">My Account</a>
+      <a href="/logout">Logout</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    <% } %>
+  </nav>
+</header>
