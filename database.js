@@ -88,7 +88,7 @@ db.run(`CREATE TABLE IF NOT EXISTS npcs (
      'Lizzy Sims hailing from Lovely Lalaland, loves her family, her dire-bunny Buck and excellent coffee. An avid reader, artist, designer, carpenter and pixel player, she hopes to tame a crow before the end of the year.',
      '/images/lizzysims_profile_1.png']
   );
-
+});
   
 module.exports = db;
 console.log('NPCs and tables seeded OK!');
