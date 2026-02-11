@@ -66,10 +66,10 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // NPCs
-  db.run(`CREATE TABLE IF NOT EXISTS npcs (
+ // NPCs table - added UNIQUE on name to prevent duplicates
+db.run(`CREATE TABLE IF NOT EXISTS npcs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT UNIQUE NOT NULL,  // ← added UNIQUE here
+  name TEXT UNIQUE NOT NULL,
   location TEXT,
   description TEXT,
   image_path TEXT DEFAULT '/images/npcs/default-npc.png',
