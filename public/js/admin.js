@@ -39,6 +39,30 @@ function editNPC(id, name, location, description, displayOrder) {
     .catch(err => alert('Error: ' + err));
   }
 }
+
+    function deletePage(id, title) {
+  if (confirm(`Are you sure you want to delete "${title}"?`)) {
+    fetch(`/admin/pages/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('Page deleted!');
+        location.reload(); // refresh admin to show updated list
+      } else {
+        response.json().then(err => {
+          alert('Unable to delete: ' + (err.error || 'Server error'));
+        });
+      }
+    })
+    .catch(err => {
+      alert('Error: ' + err);
+    });
+  }
+}
     
 // Close modals on outside click
 window.onclick = function(event) {
