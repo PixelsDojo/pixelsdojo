@@ -209,7 +209,9 @@ app.post('/profile/update', upload.single('profile_image'), (req, res) => {
 
   const { display_name, bio } = req.body;
   let profileImage = req.session.user.profile_image;
-
+  
+console.log('Upload folder path:', path.join(__dirname, 'public/images/npcs'));
+  
   if (req.file) {
   profileImage = '/images/profiles/' + req.file.filename;
   console.log('Profile pic saved:', req.file.path);
