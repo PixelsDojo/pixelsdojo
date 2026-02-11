@@ -18,11 +18,10 @@ const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
-const fs = require('fs');  // ← added for folder creation
-const db = require('./database.js');  // Your DB module
-const fs = require('fs');
+const fs = require('fs');           // only once
+const db = require('./database.js');
 
-// Auto-create persistent folders on startup
+// Auto-create persistent folders on startup (only once)
 const uploadDirs = [
   '/app/data/images/npcs',
   '/app/data/images/profiles',
@@ -34,21 +33,8 @@ uploadDirs.forEach(dir => {
     console.log(`Created persistent upload folder: ${dir}`);
   }
 });
+
 const app = express();
-const fs = require('fs');
-
-// Auto-create persistent folders on startup
-const uploadDirs = [
-  '/app/data/images/npcs',
-  '/app/data/images/profiles',
-  '/app/data/images/pages'
-];
-uploadDirs.forEach(dir => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-    console.log(`Created persistent upload folder: ${dir}`);
-  }
-});
 
 // Multer setup - persistent storage on Railway volume
 const storage = multer.diskStorage({
@@ -71,6 +57,13 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 2 * 1024 * 1024 } // 2MB max
 });
+
+// Basic middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ... rest of your code (session, user middleware, routes, etc.) continues here
 
 // Basic middleware
 app.use(express.json());
