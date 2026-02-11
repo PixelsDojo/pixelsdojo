@@ -211,8 +211,9 @@ app.post('/profile/update', upload.single('profile_image'), (req, res) => {
   let profileImage = req.session.user.profile_image;
 
   if (req.file) {
-    profileImage = '/images/profiles/' + req.file.filename;
-  }
+  profileImage = '/images/profiles/' + req.file.filename;
+  console.log('Profile pic saved:', req.file.path);
+}
 
   db.run(
     `UPDATE users SET display_name = ?, bio = ?, profile_image = ? WHERE id = ?`,
