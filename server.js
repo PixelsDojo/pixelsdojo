@@ -389,6 +389,23 @@ app.post('/admin/npcs/:id', upload.single('image'), (req, res) => {
   );
 });
 
+app.delete('/admin/npcs/:id', (req, res) => {
+  if (!req.session.user || !req.session.user.is_admin) {
+    return res.status(403).json({ error: 'Admin only' });
+  }
+
+  const id = req.params.id;
+
+  db.run('DELETE FROM npcs WHERE id = ?', [id], (err) => {
+    if (err) {
+      console.error('Delete NPC error:', err.message);
+      return res.status(500).json({ error: 'Delete failed' });
+    }
+    console.log(`NPC ${id} deleted`);
+    res.json({ success: true });
+  });
+});
+
 // Catch-all error handler
 app.use((err, req, res, next) => {
   console.error('SERVER ERROR:', err.stack);
