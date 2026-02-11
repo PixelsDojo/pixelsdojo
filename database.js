@@ -44,9 +44,6 @@ db.run(`CREATE TABLE IF NOT EXISTS pages (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(author_id) REFERENCES users(id)
 )`);
-
-  // Add missing columns if they don't exist yet (safe to run multiple times)
-db.run(`ALTER TABLE pages ADD COLUMN summary TEXT`);
   
   // Likes
   db.run(`CREATE TABLE IF NOT EXISTS likes (
