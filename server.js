@@ -63,12 +63,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve persistent uploaded images publicly
-app.use('/images/npcs', express.static('/app/data/images/npcs'));
-app.use('/images/profiles', express.static('/app/data/images/profiles'));
-app.use('/images/pages', express.static('/app/data/images/pages'));
-
-// Serve persistent images publicly (from Railway volume)
+// Serve persistent uploaded images publicly from Railway volume
 app.use('/images/npcs', express.static('/app/data/images/npcs'));
 app.use('/images/profiles', express.static('/app/data/images/profiles'));
 app.use('/images/pages', express.static('/app/data/images/pages'));
