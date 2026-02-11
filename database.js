@@ -144,11 +144,6 @@ db.serialize(() => {
     { name: 'The Giraffe', location: 'Neon Zone', order: 53 },
     { name: 'Winona', location: 'Wine Press', order: 54 }
   ];
-
-  // One-time cleanup: keep only the first (original) NPCs
-db.run(`DELETE FROM npcs WHERE id > 54`, () => {
-  console.log('Cleaned up duplicate NPCs – kept first 54 originals');
-});
   
   npcs.forEach(npc => {
     db.run(`INSERT OR IGNORE INTO npcs (name, location, display_order) VALUES (?, ?, ?)`,
