@@ -176,32 +176,51 @@
         </div>
     </div>
 
-    <!-- Add Page Modal -->
-    <div id="addPageModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('addPageModal')">×</span>
-            <h2>Add New Wiki Page</h2>
-            <form id="addPageForm" method="POST" action="/admin/pages">
-                <div class="form-group">
-                    <label>Title *</label>
-                    <input type="text" name="title" required placeholder="e.g. Farming Guide">
-                </div>
-                <div class="form-group">
-                    <label>Slug (URL-friendly) *</label>
-                    <input type="text" name="slug" required placeholder="e.g. farming-guide">
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <input type="text" name="category" placeholder="e.g. Farming, Housing, Quests">
-                </div>
-                <div class="form-group">
-                    <label>Content (paste your full page text here)</label>
-                    <textarea name="content" rows="15" required></textarea>
-                </div>
-                <button type="submit" class="btn-primary">Create Page</button>
-            </form>
-        </div>
-    </div>
+<!-- Add Page Modal -->
+<div id="addPageModal" class="modal">
+  <div class="modal-content" style="max-height: 85vh; overflow-y: auto; padding-bottom: 2rem;">
+    <span class="close" onclick="closeModal('addPageModal')">×</span>
+    <h2>Add New Wiki Page</h2>
+    <form id="addPageForm" method="POST" action="/admin/pages" enctype="multipart/form-data">
+      <div class="form-group">
+        <label>Title *</label>
+        <input type="text" name="title" required placeholder="e.g. Farming Guide">
+      </div>
+
+      <div class="form-group">
+        <label>Slug (URL-friendly) *</label>
+        <input type="text" name="slug" required placeholder="e.g. farming-guide">
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <input type="text" name="category" placeholder="e.g. Farming, Housing, Quests">
+      </div>
+
+      <div class="form-group">
+        <label>Difficulty Level *</label>
+        <select name="difficulty" required style="width:100%; padding:0.8rem;">
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Screenshots (up to 15 – any aspect ratio OK)</label>
+        <input type="file" name="screenshots" accept="image/*" multiple>
+        <small>Max 350×350 recommended per image, but any size is fine. Will be resized/displayed responsively.</small>
+      </div>
+
+      <div class="form-group">
+        <label>Content (main article text)</label>
+        <textarea name="content" rows="15" required placeholder="Paste or type your full guide here..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-primary" style="width:100%; margin-top:1rem;">Create Page</button>
+    </form>
+  </div>
+</div>
 
     <script>
         function showAddModal() { 
