@@ -9,12 +9,20 @@ function closeModal(modalId) {
 }
 
 function editNPC(id, name, location, description, displayOrder) {
-    document.getElementById('edit_id').value = id;
-    document.getElementById('edit_name').value = name;
-    document.getElementById('edit_location').value = location;
-    document.getElementById('edit_description').value = description;
-    document.getElementById('edit_display_order').value = displayOrder;
-    document.getElementById('editModal').style.display = 'block';
+    function editNPC(id, name, location, description, display_order, currentImagePath) {
+  document.getElementById('edit_id').value = id;
+  document.getElementById('edit_name').value = name;
+  document.getElementById('edit_location').value = location;
+  document.getElementById('edit_description').value = description || '';
+  document.getElementById('edit_display_order').value = display_order;
+  document.getElementById('edit_current_image_path').value = currentImagePath || '/images/npcs/default-npc.png';
+
+  // Set the form action to the correct route
+  document.getElementById('editForm').action = '/admin/npcs/' + id;
+
+  // Show the modal
+  document.getElementById('editModal').style.display = 'block';
+}
 }
 
 function deleteNPC(id, name) {
