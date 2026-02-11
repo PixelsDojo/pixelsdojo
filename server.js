@@ -22,8 +22,9 @@ const fs = require('fs');  // ← added for folder creation
 const db = require('./database.js');  // Your DB module
 
 const app = express();
+const fs = require('fs');
 
-// Auto-create persistent upload folders on startup
+// Auto-create persistent folders on startup
 const uploadDirs = [
   '/app/data/images/npcs',
   '/app/data/images/profiles',
