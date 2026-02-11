@@ -39,7 +39,6 @@ uploadDirs.forEach(dir => {
 // Multer setup - persistent storage on Railway volume
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Determine folder based on field name
     let destFolder = '/app/data/images/npcs/';
     if (file.fieldname === 'profile_image') {
       destFolder = '/app/data/images/profiles/';
