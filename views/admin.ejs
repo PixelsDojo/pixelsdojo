@@ -143,38 +143,38 @@
     </div>
 
     <!-- Edit NPC Modal -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('editModal')">×</span>
-            <h2>Edit NPC</h2>
-            <form id="editForm" action="" method="POST" enctype="multipart/form-data">
-                <input type="hidden" id="edit_id" name="id">
-                <input type="hidden" id="edit_current_image_path" name="current_image_path">
-                <div class="form-group">
-                    <label>Name *</label>
-                    <input type="text" id="edit_name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label>Location *</label>
-                    <input type="text" id="edit_location" name="location" required>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="edit_description" name="description" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Image (leave empty to keep current)</label>
-                    <input type="file" name="image" accept="image/*">
-                    <small>Any size/shape OK (portrait 160×200 works great). Will display full aspect ratio.</small>
-                </div>
-                <div class="form-group">
-                    <label>Display Order</label>
-                    <input type="number" id="edit_display_order" name="display_order">
-                </div>
-                <button type="submit" class="btn-primary">Update NPC</button>
-            </form>
-        </div>
-    </div>
+        <div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('editModal')">×</span>
+    <h2>Edit NPC</h2>
+    <form id="editForm" method="POST" enctype="multipart/form-data">
+      <input type="hidden" id="edit_id" name="id">
+      <input type="hidden" id="edit_current_image_path" name="current_image_path">
+      <div class="form-group">
+        <label>Name *</label>
+        <input type="text" id="edit_name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label>Location *</label>
+        <input type="text" id="edit_location" name="location" required>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="edit_description" name="description" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Image (leave empty to keep current)</label>
+        <input type="file" name="image" accept="image/*">
+        <small>Any size/shape OK (portrait 160×200 works great).</small>
+      </div>
+      <div class="form-group">
+        <label>Display Order</label>
+        <input type="number" id="edit_display_order" name="display_order">
+      </div>
+      <button type="submit" class="btn-primary">Update NPC</button>
+    </form>
+  </div>
+</div>
 
 <!-- Add Page Modal -->
 <div id="addPageModal" class="modal">
