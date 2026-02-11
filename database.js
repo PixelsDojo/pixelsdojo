@@ -89,75 +89,7 @@ db.run(`CREATE TABLE IF NOT EXISTS npcs (
      '/images/lizzysims_profile_1.png']
   );
 
-  // Seed NPC data
-  const npcs = [
-    { name: 'Albus', location: 'Hearth Hall quest', order: 1 },
-    { name: 'Alina the Witch', location: 'Theatre (hidden)', order: 2 },
-    { name: 'Allison', location: 'Neon Zone', order: 3 },
-    { name: 'Amy', location: 'Apiary (Animal Care)', order: 4 },
-    { name: 'Bart', location: 'Neon Zone', order: 5 },
-    { name: 'Ben', location: 'Pet incubator', order: 6 },
-    { name: 'Bitsy', location: 'Ministry of Innovation', order: 7 },
-    { name: 'Buck', location: "Buck's Galore front counter", order: 8 },
-    { name: 'Buffy', location: 'Neon Zone', order: 9 },
-    { name: 'Byron', location: 'Bank upstairs (deposit/withdraw)', order: 10 },
-    { name: 'Captain McKelpy', location: 'Musty Lobster Ship', order: 11 },
-    { name: 'Cod Stewart', location: 'Sushi station', order: 12 },
-    { name: 'Cooper', location: 'Chickens (Animal Care)', order: 13 },
-    { name: 'Dave', location: 'Bank middle floor (buy coins)', order: 14 },
-    { name: 'Derek', location: 'Neon Zone', order: 15 },
-    { name: 'Ed', location: 'Silk slugs (Animal Care)', order: 16 },
-    { name: 'Elon', location: 'Bank middle floor (buy Pixel)', order: 17 },
-    { name: 'Fuy Geiri', location: 'BBQ station', order: 18 },
-    { name: 'Gabby Dizon', location: 'Guild Castle', order: 19 },
-    { name: 'Gamemaster Flaster', location: 'Neon Zone', order: 20 },
-    { name: 'Gianno', location: 'Choose Harvest Union', order: 21 },
-    { name: 'Gill', location: 'Windmill', order: 22 },
-    { name: 'Glint', location: 'Guild Castle Gardens (FableBourne)', order: 23 },
-    { name: 'Goose', location: 'Drunken Goose', order: 24 },
-    { name: 'Gurney', location: 'Sauna', order: 25 },
-    { name: 'Harbourmaster', location: 'Shipping contracts', order: 26 },
-    { name: 'Honor', location: 'Decor shop (farm items)', order: 27 },
-    { name: 'Jack', location: 'Woodworking station', order: 28 },
-    { name: 'Jerome', location: 'Decor shop (limited items)', order: 29 },
-    { name: 'Jill', location: 'Forestry station', order: 30 },
-    { name: 'Jolt', location: 'Spore Sport Cave', order: 31 },
-    { name: 'Karen', location: 'Old Pixels HQ', order: 32 },
-    { name: 'Kathleen', location: 'Old Pixels HQ', order: 33 },
-    { name: 'Kiko', location: 'Guild Castle Gardens', order: 34 },
-    { name: 'Kirby', location: 'Pet Store front desk', order: 35 },
-    { name: 'Lauren', location: 'Bank upstairs (create wallet)', order: 36 },
-    { name: 'Lucia', location: 'Hearth Hall (buy offerings/recipes)', order: 37 },
-    { name: 'Luke', location: 'Guild Castle', order: 38 },
-    { name: 'Manager Artie', location: 'Neon Zone', order: 39 },
-    { name: 'Margaret', location: 'Bank reception (buy coins)', order: 40 },
-    { name: 'Marina', location: 'Seaside Stash', order: 41 },
-    { name: 'Mitchell', location: 'Hearth Hall (union info)', order: 42 },
-    { name: 'Neon Leon', location: "Leon's Hold'em", order: 43 },
-    { name: 'Peach', location: "Buck's Galore back counter (market)", order: 44 },
-    { name: 'Penny', location: 'Pet Store potion table', order: 45 },
-    { name: 'Pixelia', location: 'Decor shop (UGCs)', order: 46 },
-    { name: 'Player W3', location: 'Guild Castle', order: 47 },
-    { name: 'Priya', location: 'Post Office', order: 48 },
-    { name: 'Regis', location: 'Bank middle floor (buy Quicksilver)', order: 49 },
-    { name: 'Sandy', location: 'Stoneshaping Kiln', order: 50 },
-    { name: 'Smith', location: 'Metalworking station', order: 51 },
-    { name: 'Tex', location: 'Textile station', order: 52 },
-    { name: 'Nellie', location: 'Neon Zone', order: 53 },
-    { name: 'Winona', location: 'Wine Press', order: 54 }
-  ];
-
-  // One-time cleanup (remove this line after next deploy if you want)
-  db.run(`DELETE FROM npcs WHERE id > 56`, () => {
-    console.log('Cleaned up duplicate NPCs – kept first 56 originals');
-  });
   
-  npcs.forEach(npc => {
-    db.run(`INSERT OR IGNORE INTO npcs (name, location, display_order) VALUES (?, ?, ?)`,
-      [npc.name, npc.location, npc.order]);
-  });
-});
-
 module.exports = db;
 console.log('NPCs and tables seeded OK!');
 console.log('All tables created without errors');
