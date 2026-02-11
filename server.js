@@ -24,7 +24,7 @@ const app = express();
 
 // Multer setup for image uploads
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'public/images/npcs/'),
+  destination: (req, file, cb) => cb(null, '/app/data/images/npcs/'),
   filename: (req, file, cb) => {
     const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
     cb(null, uniqueName);
