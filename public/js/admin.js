@@ -24,6 +24,22 @@ function editNPC(id, name, location, description, displayOrder) {
   document.getElementById('editModal').style.display = 'block';
 }
 
+    function deleteNPC(id, name) {
+  if (confirm(`Delete "${name}" forever?`)) {
+    fetch(`/admin/npcs/${id}`, {
+      method: 'DELETE'
+    })
+    .then(res => {
+      if (res.ok) {
+        location.reload();
+      } else {
+        alert('Failed to delete');
+      }
+    })
+    .catch(err => alert('Error: ' + err));
+  }
+}
+    
 // Close modals on outside click
 window.onclick = function(event) {
     if (event.target.classList.contains('modal')) {
