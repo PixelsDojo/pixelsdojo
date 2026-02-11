@@ -7,7 +7,29 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <% include partials/header %>
+    <header>
+        <div class="header-container">
+            <div class="logo-section">
+                <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo">
+                <h1>PIXELS DOJO</h1>
+            </div>
+         <div class="user-nav">
+    <% if (typeof user !== 'undefined' && user) { %>
+        <span>Welcome, <%= user.username %>!</span>
+        <% if (user.is_admin) { %><a href="/admin">Admin</a><% } %>
+        <a href="/logout">Logout</a>
+    <% } else { %>
+        <a href="/login">Login</a> | <a href="/register">Register</a>
+    <% } %>
+</div>
+        </div>
+        <p class="tagline">🎮 Master TerraVilla • Earn $PIXEL • Join the Community</p>
+        
+        <div class="price-widget">
+            <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
+            <coingecko-coin-price-marquee-widget coin-ids="pixels" currency="usd" background-color="transparent" font-color="#edff84"></coingecko-coin-price-marquee-widget>
+        </div>
+    </header>
 
     <nav>
         <ul>
