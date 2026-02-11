@@ -20,7 +20,20 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 const fs = require('fs');  // ← added for folder creation
 const db = require('./database.js');  // Your DB module
+const fs = require('fs');
 
+// Auto-create persistent folders on startup
+const uploadDirs = [
+  '/app/data/images/npcs',
+  '/app/data/images/profiles',
+  '/app/data/images/pages'
+];
+uploadDirs.forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+    console.log(`Created persistent upload folder: ${dir}`);
+  }
+});
 const app = express();
 const fs = require('fs');
 
