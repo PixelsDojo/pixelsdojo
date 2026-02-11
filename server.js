@@ -399,6 +399,29 @@ app.get('/pages/:slug', (req, res) => {
   });
 });
 
+// Delete wiki page
+app.delete('/admin/pages/:id', (req, res) => {
+  if (!req.session.user || !req.session.user.is_admin) {
+    return res.status(403).json({ error: 'Admin only' });
+  }
+
+  const id = req.params.id;
+
+  db.run('DELETE FROM pages WHERE id = ?', [id], function(err) {
+    if (err) {
+      console.error('Delete page error:', err.message);
+      return res.status(500).json({ error: 'Database error - could not delete' });
+    }
+
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Page not found' });
+    }
+
+    console.log(`Page ${id} deleted successfully`);
+    res.json({ success: true });
+  });
+});
+
 // Update NPC
 app.post('/admin/npcs/:id', upload.single('image'), (req, res) => {
   if (!req.session.user || !req.session.user.is_admin) {
