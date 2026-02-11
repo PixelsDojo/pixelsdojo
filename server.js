@@ -18,18 +18,42 @@ const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
+const fs = require('fs');  // ← added for folder creation
 const db = require('./database.js');  // Your DB module
 
 const app = express();
 
-// Multer setup for image uploads
+// Auto-create persistent upload folders on startup
+const uploadDirs = [
+  '/app/data/images/npcs',
+  '/app/data/images/profiles',
+  '/app/data/images/pages'
+];
+uploadDirs.forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+    console.log(`Created persistent upload folder: ${dir}`);
+  }
+});
+
+// Multer setup - persistent storage on Railway volume
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, '/app/data/images/npcs/'),
+  destination: (req, file, cb) => {
+    // Determine folder based on field name
+    let destFolder = '/app/data/images/npcs/';
+    if (file.fieldname === 'profile_image') {
+      destFolder = '/app/data/images/profiles/';
+    } else if (file.fieldname === 'screenshots') {
+      destFolder = '/app/data/images/pages/';
+    }
+    cb(null, destFolder);
+  },
   filename: (req, file, cb) => {
     const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
     cb(null, uniqueName);
   }
 });
+
 const upload = multer({
   storage: storage,
   limits: { fileSize: 2 * 1024 * 1024 } // 2MB max
@@ -81,7 +105,7 @@ app.get('/npcs', (req, res) => {
   });
 });
 
-// Login routes (unchanged)
+// Login routes
 app.get('/login', (req, res) => {
   if (req.session.user) return res.redirect('/');
   res.render('login', { error: null, user: null });
@@ -123,7 +147,7 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  console.log('Register attempt received:', req.body); // ← debug log
+  console.log('Register attempt received:', req.body);
 
   const { username, email, password, display_name } = req.body;
 
@@ -166,7 +190,7 @@ app.get('/logout', (req, res) => {
     if (err) {
       console.error('Logout error:', err);
     }
-    res.clearCookie('connect.sid');  // clear session cookie
+    res.clearCookie('connect.sid');
     res.redirect('/');
   });
 });
@@ -177,7 +201,6 @@ app.get('/profile', (req, res) => {
     return res.redirect('/login');
   }
 
-  // Fetch fresh user data from DB (in case session is stale)
   db.get('SELECT * FROM users WHERE id = ?', [req.session.user.id], (err, freshUser) => {
     if (err || !freshUser) {
       req.session.destroy();
@@ -209,13 +232,11 @@ app.post('/profile/update', upload.single('profile_image'), (req, res) => {
 
   const { display_name, bio } = req.body;
   let profileImage = req.session.user.profile_image;
-  
-console.log('Upload folder path:', path.join(__dirname, 'public/images/npcs'));
-  
+
   if (req.file) {
-  profileImage = '/images/profiles/' + req.file.filename;
-  console.log('Profile pic saved:', req.file.path);
-}
+    profileImage = '/images/profiles/' + req.file.filename;
+    console.log('Profile pic saved:', req.file.path);
+  }
 
   db.run(
     `UPDATE users SET display_name = ?, bio = ?, profile_image = ? WHERE id = ?`,
@@ -232,7 +253,7 @@ console.log('Upload folder path:', path.join(__dirname, 'public/images/npcs'));
   );
 });
 
-// Delete account (basic - add confirmation later)
+// Delete account
 app.post('/profile/delete', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
@@ -282,7 +303,6 @@ app.post('/admin/pages', upload.array('screenshots', 15), (req, res) => {
 
   const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
-  // Save screenshot paths as JSON array
   let screenshots = [];
   if (req.files && req.files.length > 0) {
     screenshots = req.files.map(file => '/images/pages/' + file.filename);
