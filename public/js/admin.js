@@ -35,7 +35,7 @@ function editNPC(id, name, location, description, displayOrder) {
     .then(response => {
       if (response.ok) {
         alert('NPC deleted!');
-        location.reload(); // refresh admin page
+        location.reload();
       } else {
         return response.json().then(err => {
           alert('Unable to delete: ' + (err.error || 'Unknown error'));
@@ -43,7 +43,7 @@ function editNPC(id, name, location, description, displayOrder) {
       }
     })
     .catch(err => {
-      alert('Error connecting to server: ' + err);
+      alert('Error: ' + err);
     });
   }
 }
