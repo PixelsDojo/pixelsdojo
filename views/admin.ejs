@@ -257,6 +257,30 @@
             document.getElementById('editModal').style.display = 'block';
         }
 
+function deleteNPC(id, name) {
+  if (confirm(`Are you sure you want to delete "${name}"?`)) {
+    fetch(`/admin/npcs/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('NPC deleted!');
+        location.reload();
+      } else {
+        return response.json().then(err => {
+          alert('Unable to delete: ' + (err.error || 'Unknown error'));
+        });
+      }
+    })
+    .catch(err => {
+      alert('Error: ' + err);
+    });
+  }
+}
+
         function deletePage(id, title) {
   if (confirm(`Are you sure you want to delete "${title}"?`)) {
     fetch(`/admin/pages/${id}`, {
