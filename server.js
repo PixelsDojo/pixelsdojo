@@ -315,7 +315,7 @@ app.post('/admin/pages', upload.array('screenshots', 15), (req, res) => {
     return res.status(403).send('Admin only');
   }
 
-const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
+  const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
 
   if (!title || !slug || !content) {
     return res.status(400).send('Missing required fields: title, slug, content');
@@ -323,6 +323,7 @@ const { title, slug, content, category, difficulty, summary, pro_tips } = req.bo
 
   const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
+  // Handle screenshots
   let screenshots = [];
   if (req.files && req.files.length > 0) {
     screenshots = req.files.map(file => '/images/pages/' + file.filename);
@@ -330,9 +331,19 @@ const { title, slug, content, category, difficulty, summary, pro_tips } = req.bo
   const screenshotsJson = JSON.stringify(screenshots);
 
   db.run(
-    `INSERT INTO pages (slug, title, content, category, difficulty, screenshots, author_id) 
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    [cleanSlug, title, content, category || null, difficulty || 'Beginner', screenshotsJson, req.session.user.id],
+    `INSERT INTO pages (slug, title, content, category, difficulty, screenshots, summary, pro_tips, author_id, created_at, updated_at) 
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+    [
+      cleanSlug,
+      title,
+      content,
+      category || null,
+      difficulty || 'Beginner',
+      screenshotsJson,
+      summary || null,
+      pro_tips || null,
+      req.session.user.id
+    ],
     (err) => {
       if (err) {
         console.error('Page creation error:', err.message);
