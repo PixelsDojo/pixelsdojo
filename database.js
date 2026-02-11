@@ -68,15 +68,15 @@ db.serialize(() => {
 
   // NPCs
   db.run(`CREATE TABLE IF NOT EXISTS npcs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    location TEXT,
-    description TEXT,
-    image_path TEXT DEFAULT '/images/npcs/default-npc.png',
-    display_order INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )`);
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT UNIQUE NOT NULL,  // ← added UNIQUE here
+  location TEXT,
+  description TEXT,
+  image_path TEXT DEFAULT '/images/npcs/default-npc.png',
+  display_order INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)`);
 
   // Create admin user (Lizzy)
   const adminPassword = bcrypt.hashSync('changeme123', 10);
