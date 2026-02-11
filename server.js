@@ -303,7 +303,7 @@ app.post('/admin/pages', upload.array('screenshots', 15), (req, res) => {
     return res.status(403).send('Admin only');
   }
 
-  const { title, slug, content, category, difficulty } = req.body;
+const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
 
   if (!title || !slug || !content) {
     return res.status(400).send('Missing required fields: title, slug, content');
