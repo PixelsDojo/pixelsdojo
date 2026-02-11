@@ -54,6 +54,14 @@
     <p><%- page.pro_tips || '[No tips yet]' %></p>
   </div>
 
+<p>
+  <strong>Author:</strong> 
+  <a href="/u/<%= page.author_username || 'unknown' %>">
+    <img src="<%= page.author_profile_image || '/images/default-avatar.png' %>" alt="Avatar" style="width:32px; height:32px; border-radius:50%; vertical-align:middle; margin-right:8px;">
+    <%= page.author_display_name || page.author_username || 'Unknown' %>
+  </a>
+</p>
+
     <!-- Likes / Comments / Upvotes -->
     <div style="margin:2rem 0;">
       <button>👍 Upvote (<%= likes || 0 %>)</button>
