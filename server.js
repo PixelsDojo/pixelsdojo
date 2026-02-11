@@ -355,6 +355,21 @@ app.post('/admin/pages', upload.array('screenshots', 15), (req, res) => {
   );
 });
 
+// Temporary cleanup route - access via browser (remove after use!)
+app.get('/debug/clean-npcs', (req, res) => {
+  if (!req.session.user || !req.session.user.is_admin) {
+    return res.status(403).send('Admin only');
+  }
+
+  db.run(`DELETE FROM npcs WHERE id > 54`, function(err) {
+    if (err) {
+      return res.send('Error: ' + err.message);
+    }
+    db.run(`VACUUM`);
+    res.send(`Cleaned up NPCs! Kept first 54. New count: check /admin. <a href="/admin">Back to admin</a>`);
+  });
+});
+
 // View a single wiki page (with author info)
 app.get('/pages/:slug', (req, res) => {
   db.get(`
