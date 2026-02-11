@@ -92,9 +92,21 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Homepage
 app.get('/', (req, res) => {
-  res.render('index', { 
-    message: 'Pixels Online Wiki is live!',
-    user: req.session.user || null 
+  db.all(`
+    SELECT p.*, u.display_name as author_display_name
+    FROM pages p
+    LEFT JOIN users u ON p.author_id = u.id
+    ORDER BY created_at DESC LIMIT 5
+  `, [], (err, recentPages) => {
+    if (err) {
+      console.error('Recent pages error:', err);
+      recentPages = [];
+    }
+
+    res.render('index', {
+      user: req.session.user || null,
+      recentPages: recentPages || []
+    });
   });
 });
 
