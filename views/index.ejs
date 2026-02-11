@@ -41,6 +41,7 @@
             <li><a href="#community">Community</a></li>
         </ul>
     </nav>
+
 <div class="hero">
   <img src="/images/banner_with_pixels_dojo_in_white.png" alt="Dojo Banner" style="width:100%; height:auto;">
   <div class="hero-buttons">
@@ -54,6 +55,11 @@
   <input type="text" placeholder="Search wiki articles..." id="wiki-search">
   <button onclick="searchWiki()">Search</button>
 </div>
+
+<h2>Recent Scrolls</h2>
+<% recentPages.forEach(page => { %>
+  <a href="/pages/<%= page.slug %>"><%= page.title %></a><br>
+<% }) %>
 
     <div class="hero-section" id="home">
         <div class="hero-intro">
