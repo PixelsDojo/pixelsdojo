@@ -269,24 +269,36 @@ app.get('/admin', (req, res) => {
 });
 
 // Create new page
-app.post('/admin/pages', (req, res) => {
-  if (!req.session.user || !req.session.user.is_admin) return res.status(403).send('Admin only');
+app.post('/admin/pages', upload.array('screenshots', 15), (req, res) => {
+  if (!req.session.user || !req.session.user.is_admin) {
+    return res.status(403).send('Admin only');
+  }
 
-  const { title, slug, content, category } = req.body;
+  const { title, slug, content, category, difficulty } = req.body;
 
-  if (!title || !slug || !content) return res.status(400).send('Missing fields');
+  if (!title || !slug || !content) {
+    return res.status(400).send('Missing required fields: title, slug, content');
+  }
 
   const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
+  // Save screenshot paths as JSON array
+  let screenshots = [];
+  if (req.files && req.files.length > 0) {
+    screenshots = req.files.map(file => '/images/pages/' + file.filename);
+  }
+  const screenshotsJson = JSON.stringify(screenshots);
+
   db.run(
-    `INSERT INTO pages (slug, title, content, category, author_id) VALUES (?, ?, ?, ?, ?)`,
-    [cleanSlug, title, content, category || null, req.session.user.id],
+    `INSERT INTO pages (slug, title, content, category, difficulty, screenshots, author_id) 
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [cleanSlug, title, content, category || null, difficulty || 'Beginner', screenshotsJson, req.session.user.id],
     (err) => {
       if (err) {
         console.error('Page creation error:', err.message);
         return res.status(500).send('Error saving page: ' + err.message);
       }
-      console.log(`New page: ${title} (${cleanSlug})`);
+      console.log(`New page created: ${title} (${cleanSlug})`);
       res.redirect('/admin');
     }
   );
