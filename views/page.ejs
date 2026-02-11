@@ -28,13 +28,6 @@
     <h2>Quick Summary</h2>
     <p><%- page.summary || '[No summary yet]' %></p>
 
-    <!-- Table of Contents (optional – can be generated later) -->
-    <h2>Table of Contents</h2>
-    <ul>
-      <li><a href="#introduction">Introduction</a></li>
-      <!-- add more as needed -->
-    </ul>
-
     <!-- Main Content -->
     <div dangerouslySetInnerHTML={{ __html: page.content }}></div>
 
