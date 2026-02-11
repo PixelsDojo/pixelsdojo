@@ -206,11 +206,21 @@
         </select>
       </div>
 
-      <div class="form-group">
-        <label>Screenshots (up to 15 – any aspect ratio OK)</label>
-        <input type="file" name="screenshots" accept="image/*" multiple>
-        <small>Max 350×350 recommended per image, but any size is fine. Will be resized/displayed responsively.</small>
-      </div>
+        <div class="form-group">
+          <label>Quick Summary (2-3 sentences TL;DR)</label>
+          <textarea name="summary" rows="3" placeholder="Quick overview of the guide..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Pro Tips / Hacks</label>
+          <textarea name="pro_tips" rows="5" placeholder="Advanced tricks, shortcuts, player discoveries..."></textarea>
+        </div>
+
+          <div class="form-group">
+            <label>Screenshots (up to 15 – any aspect ratio OK)</label>
+            <input type="file" name="screenshots" accept="image/*" multiple>
+            <small>Max 350×350 recommended per image, but any size is fine. Will be resized/displayed responsively.</small>
+          </div>
 
       <div class="form-group">
         <label>Content (main article text)</label>
