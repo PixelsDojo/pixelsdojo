@@ -143,13 +143,13 @@ db.run(`CREATE TABLE IF NOT EXISTS npcs (
     { name: 'Sandy', location: 'Stoneshaping Kiln', order: 50 },
     { name: 'Smith', location: 'Metalworking station', order: 51 },
     { name: 'Tex', location: 'Textile station', order: 52 },
-    { name: 'The Giraffe', location: 'Neon Zone', order: 53 },
+    { name: 'Nellie', location: 'Neon Zone', order: 53 },
     { name: 'Winona', location: 'Wine Press', order: 54 }
   ];
 
   // One-time cleanup (remove this line after next deploy if you want)
-  db.run(`DELETE FROM npcs WHERE id > 54`, () => {
-    console.log('Cleaned up duplicate NPCs – kept first 54 originals');
+  db.run(`DELETE FROM npcs WHERE id > 56`, () => {
+    console.log('Cleaned up duplicate NPCs – kept first 56 originals');
   });
   
   npcs.forEach(npc => {
