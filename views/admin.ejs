@@ -110,37 +110,7 @@
         </section>
     </div>
 
-    <!-- Add NPC Modal -->
-<div id="addNpcModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('addNpcModal')">×</span>
-    <h2>Add New NPC</h2>
-    <form id="addNpcForm" method="POST" action="/admin/npcs" enctype="multipart/form-data">
-      <div class="form-group">
-        <label>Name *</label>
-        <input type="text" name="name" required>
-      </div>
-      <div class="form-group">
-        <label>Location</label>
-        <input type="text" name="location">
-      </div>
-      <div class="form-group">
-        <label>Description</label>
-        <textarea name="description" rows="3"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Image</label>
-        <input type="file" name="image" accept="image/*">
-      </div>
-      <div class="form-group">
-        <label>Display Order</label>
-        <input type="number" name="display_order" value="999">
-      </div>
-      <button type="submit" class="btn-primary">Add NPC</button>
-    </form>
-  </div>
-</div>
-
+    
     <!-- Edit NPC Modal -->
         <div id="editModal" class="modal">
   <div class="modal-content">
@@ -227,6 +197,37 @@
       </div>
 
       <button type="submit" class="btn-primary" style="width:100%; margin-top:1rem;">Create Page</button>
+    </form>
+  </div>
+</div>
+
+<!-- Add NPC Modal -->
+<div id="addNpcModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('addNpcModal')">×</span>
+    <h2>Add New NPC</h2>
+    <form id="addNpcForm" method="POST" action="/admin/npcs" enctype="multipart/form-data">
+      <div class="form-group">
+        <label>Name *</label>
+        <input type="text" name="name" required>
+      </div>
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" name="location">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Image</label>
+        <input type="file" name="image" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label>Display Order</label>
+        <input type="number" name="display_order" value="999">
+      </div>
+      <button type="submit" class="btn-primary">Add NPC</button>
     </form>
   </div>
 </div>
