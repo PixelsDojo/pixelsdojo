@@ -26,7 +26,7 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  console.log('NPCs and tables seeded OK!');
+ 
 
   // Wiki Pages
   db.run(`CREATE TABLE IF NOT EXISTS pages (
@@ -144,6 +144,11 @@ db.run(`CREATE TABLE IF NOT EXISTS npcs (
     { name: 'The Giraffe', location: 'Neon Zone', order: 53 },
     { name: 'Winona', location: 'Wine Press', order: 54 }
   ];
+
+  // One-time cleanup (remove this line after next deploy if you want)
+  db.run(`DELETE FROM npcs WHERE id > 54`, () => {
+    console.log('Cleaned up duplicate NPCs – kept first 54 originals');
+  });
   
   npcs.forEach(npc => {
     db.run(`INSERT OR IGNORE INTO npcs (name, location, display_order) VALUES (?, ?, ?)`,
@@ -152,5 +157,5 @@ db.run(`CREATE TABLE IF NOT EXISTS npcs (
 });
 
 module.exports = db;
-
+console.log('NPCs and tables seeded OK!');
 console.log('All tables created without errors');
