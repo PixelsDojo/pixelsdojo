@@ -26,7 +26,7 @@
 
     <!-- Quick Summary -->
     <h2>Quick Summary</h2>
-    <p>[Add 2–3 sentence TL;DR here — you can extract first paragraph or write manually later]</p>
+    <p><%- page.summary || '[No summary yet]' %></p>
 
     <!-- Table of Contents (optional – can be generated later) -->
     <h2>Table of Contents</h2>
@@ -50,9 +50,9 @@
 
     <!-- Pro Tips / Hints -->
     <div class="pro-tips">
-      <h3>Pro Tips / Hacks</h3>
-      <p>[Add tips section later — can be a separate DB field if needed]</p>
-    </div>
+    <h3>Pro Tips / Hacks</h3>
+    <p><%- page.pro_tips || '[No tips yet]' %></p>
+  </div>
 
     <!-- Likes / Comments / Upvotes -->
     <div style="margin:2rem 0;">
