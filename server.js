@@ -63,12 +63,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ... rest of your code (session, user middleware, routes, etc.) continues here
-
-// Basic middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve persistent images publicly (from Railway volume)
+app.use('/images/npcs', express.static('/app/data/images/npcs'));
+app.use('/images/profiles', express.static('/app/data/images/profiles'));
+app.use('/images/pages', express.static('/app/data/images/pages'));
 
 // Session for login state
 app.use(session({
@@ -77,7 +75,6 @@ app.use(session({
   saveUninitialized: false,
   cookie: { secure: false }
 }));
-
 // Make user available in all EJS templates
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
