@@ -74,39 +74,29 @@
                <button onclick="showAddModal('addNpcModal')" class="btn-primary">Add New NPC</button>
             </div>
 
-            <div class="npc-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Location</th>
-                            <th>Description</th>
-                            <th>Order</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% npcs.forEach(npc => { %>
-                            <tr>
-                                <td>
-                                    <img src="<%= npc.image_path %>" alt="<%= npc.name %>" 
-                                         class="npc-thumb" style="max-width:160px; height:auto; object-fit:contain;"
-                                         onerror="this.src='/images/npcs/default-npc.png'">
-                                </td>
-                                <td><%= npc.name %></td>
-                                <td><%= npc.location %></td>
-                                <td><%= npc.description ? npc.description.substring(0, 50) + '...' : 'No description' %></td>
-                                <td><%= npc.display_order %></td>
-                                <td class="actions">
-                                    <button onclick="editNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>', '<%= npc.location.replace(/'/g, "\\'") %>', '<%= (npc.description || '').replace(/'/g, "\\'") %>', <%= npc.display_order %>, '<%= npc.image_path.replace(/'/g, "\\'") %>')" class="btn-edit">✏️ Edit</button>
-                                    <button onclick="deleteNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>')" class="btn-delete">🗑️ Delete</button>
-                                </td>
-                            </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
-            </div>
+                <div class="npc-grid">
+  <% npcs.forEach(npc => { %>
+    <div class="npc-card">
+      <div class="npc-left">
+        <img src="<%= npc.image_path %>" alt="<%= npc.name %>" 
+             class="npc-thumb" style="max-width:160px; height:auto; object-fit:contain;"
+             onerror="this.src='/images/npcs/default-npc.png'">
+        <div>
+          <strong><%= npc.name %></strong><br>
+          <small><%= npc.location || '—' %></small>
+        </div>
+      </div>
+      <div class="npc-right">
+        <p><%= npc.description ? npc.description.substring(0, 100) + '...' : 'No description' %></p>
+        <small>Order: <%= npc.display_order %></small>
+        <div class="actions">
+          <button onclick="editNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>', '<%= npc.location ? npc.location.replace(/'/g, "\\'") : '' %>', '<%= (npc.description || '').replace(/'/g, "\\'") %>', <%= npc.display_order %>, '<%= npc.image_path.replace(/'/g, "\\'") %>')" class="btn-edit">✏️ Edit</button>
+          <button onclick="deleteNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>')" class="btn-delete">🗑️ Delete</button>
+        </div>
+      </div>
+    </div>
+  <% }); %>
+</div>                
         </section>
 
         
