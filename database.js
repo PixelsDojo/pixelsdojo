@@ -29,15 +29,18 @@ db.serialize(() => {
 
   // Wiki Pages
   db.run(`CREATE TABLE IF NOT EXISTS pages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    slug TEXT UNIQUE,
-    title TEXT,
-    content TEXT,
-    category TEXT,
-    author_id INTEGER,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(author_id) REFERENCES users(id)
-  )`);
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  slug TEXT UNIQUE,
+  title TEXT,
+  content TEXT,
+  category TEXT,
+  difficulty TEXT CHECK(difficulty IN ('Beginner', 'Intermediate', 'Advanced')) DEFAULT 'Beginner',
+  screenshots TEXT,                -- JSON string: ["path1.jpg", "path2.png"]
+  author_id INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(author_id) REFERENCES users(id)
+)`);
 
   // Likes
   db.run(`CREATE TABLE IF NOT EXISTS likes (
