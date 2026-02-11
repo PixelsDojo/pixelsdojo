@@ -36,6 +36,8 @@ db.serialize(() => {
   content TEXT,
   category TEXT,
   difficulty TEXT CHECK(difficulty IN ('Beginner', 'Intermediate', 'Advanced')) DEFAULT 'Beginner',
+  summary TEXT,
+  pro_tips TEXT,
   screenshots TEXT,                -- JSON string: ["path1.jpg", "path2.png"]
   author_id INTEGER,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
