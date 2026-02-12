@@ -62,7 +62,6 @@ const upload = multer({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride('_method'));
 
 // Serve persistent uploaded images publicly from Railway volume
 app.use('/images/npcs', express.static('/app/data/images/npcs'));
