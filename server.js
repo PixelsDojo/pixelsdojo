@@ -87,18 +87,76 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// Homepage
+// Homepage – enhanced with categories, upvoted, viewed, etc.
 app.get('/', (req, res) => {
+  // Recent posts (top 6)
   db.all(`
     SELECT p.*, u.display_name as author_display_name
-    FROM pages p LEFT JOIN users u ON p.author_id = u.id
-    ORDER BY created_at DESC LIMIT 5
+    FROM pages p 
+    LEFT JOIN users u ON p.author_id = u.id
+    ORDER BY p.created_at DESC 
+    LIMIT 6
   `, [], (err, recentPages) => {
     if (err) {
       console.error('Recent pages error:', err);
       recentPages = [];
     }
-    res.render('index', { user: req.session.user || null, recentPages: recentPages || [] });
+
+    // Most upvoted (assuming you have an 'upvotes' column – add if missing)
+    db.get(`
+      SELECT p.*, u.display_name as author_display_name
+      FROM pages p 
+      LEFT JOIN users u ON p.author_id = u.id
+      ORDER BY p.upvotes DESC 
+      LIMIT 1
+    `, [], (err, mostUpvoted) => {
+      if (err || !mostUpvoted) mostUpvoted = null;
+
+      // Most viewed (assuming 'views' column – add if missing)
+      db.get(`
+        SELECT p.*, u.display_name as author_display_name
+        FROM pages p 
+        LEFT JOIN users u ON p.author_id = u.id
+        ORDER BY p.views DESC 
+        LIMIT 1
+      `, [], (err, mostViewed) => {
+        if (err || !mostViewed) mostViewed = null;
+
+        // Category teasers – 3–4 posts per category for snippets
+        const categories = ['startup', 'earn', 'mastery'];
+        const categoryData = {};
+
+        let completed = 0;
+        categories.forEach(cat => {
+          db.all(`
+            SELECT p.*, u.display_name as author_display_name
+            FROM pages p 
+            LEFT JOIN users u ON p.author_id = u.id
+            WHERE p.category = ?
+            ORDER BY p.created_at DESC 
+            LIMIT 4
+          `, [cat], (err, posts) => {
+            if (err) {
+              console.error(`Category ${cat} error:`, err);
+              categoryData[cat] = [];
+            } else {
+              categoryData[cat] = posts;
+            }
+
+            completed++;
+            if (completed === categories.length) {
+              res.render('index', {
+                user: req.session.user || null,
+                recentPages,
+                mostUpvoted,
+                mostViewed,
+                categoryData,  // { startup: [...], earn: [...], mastery: [...] }
+              });
+            }
+          });
+        });
+      });
+    });
   });
 });
 
