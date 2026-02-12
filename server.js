@@ -59,7 +59,6 @@ const upload = multer({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use(methodOverride('_method'));   // ← uncomment later if you want form-based PUT/DELETE
 
 app.use('/images/npcs',     express.static('/app/data/images/npcs'));
 app.use('/images/profiles', express.static('/app/data/images/profiles'));
@@ -80,7 +79,7 @@ app.use((req, res, next) => {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// ─── ADMIN PROTECTION MIDDLEWARE ───
+// Admin protection middleware
 function requireAdmin(req, res, next) {
   if (!req.session.user || !req.session.user.is_admin) {
     return res.status(403).send('Access denied - admin only');
@@ -111,8 +110,7 @@ app.get('/npcs', (req, res) => {
   });
 });
 
-// ─── Auth routes ─── (login, register, logout, profile) unchanged, keeping as-is
-
+// ─── Auth routes ───
 app.get('/login', (req, res) => {
   if (req.session.user) return res.redirect('/');
   res.render('login', { error: null, user: null });
@@ -138,7 +136,7 @@ app.post('/login', (req, res) => {
   });
 });
 
-// register, logout, profile, profile/edit, profile/update, profile/delete → same as your code, omitted for brevity
+// (register, logout, profile, profile/edit, profile/update, profile/delete routes are missing in your paste — add them back if needed)
 
 // ─── Admin dashboard ───
 app.get('/admin', requireAdmin, (req, res) => {
@@ -157,7 +155,7 @@ app.get('/admin', requireAdmin, (req, res) => {
   });
 });
 
-// Create page (unchanged, but protected)
+// Create new page
 app.post('/admin/pages', requireAdmin, upload.array('screenshots', 15), (req, res) => {
   const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
   if (!title || !slug || !content) return res.status(400).send('Missing required fields');
@@ -178,7 +176,7 @@ app.post('/admin/pages', requireAdmin, upload.array('screenshots', 15), (req, re
   );
 });
 
-// ─── PAGE EDIT ────────────────────────────────────────────────
+// ─── PAGE EDIT & UPDATE ───
 
 // Get page data as JSON (for modal)
 app.get('/admin/pages/:id/edit', requireAdmin, (req, res) => {
@@ -191,8 +189,7 @@ app.get('/admin/pages/:id/edit', requireAdmin, (req, res) => {
   });
 });
 
-// Update page (using POST + multer — easier with files)
-  // Update page (using POST + multer — easier with files)
+// Update page (with slug conflict check)
 app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15), (req, res) => {
   const id = req.params.id;
   const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
@@ -203,9 +200,7 @@ app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15
 
   const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
-  // ────────────────────────────────
-  //   Check for slug conflict
-  // ────────────────────────────────
+  // Check for slug conflict
   db.get(
     'SELECT id FROM pages WHERE slug = ? AND id != ?',
     [cleanSlug, id],
@@ -216,13 +211,12 @@ app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15
       }
 
       if (row) {
-        // Another page already uses this slug
         return res.status(409).json({
           error: 'This slug is already in use by another page. Please choose a different one.'
         });
       }
 
-      // No conflict → proceed with update
+      // No conflict → proceed
       const save = (screenshotsJson) => {
         db.run(
           `UPDATE pages 
@@ -234,59 +228,4 @@ app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15
           function (err) {
             if (err) {
               console.error('Update failed:', err.message);
-              return res.status(500).json({ error: 'Error saving page: ' + err.message });
-            }
-            if (this.changes === 0) {
-              return res.status(404).json({ error: 'Page not found' });
-            }
-            res.json({ success: true });
-            // Alternative: res.redirect('/admin'); if you prefer redirect instead of JSON response
-          }
-        );
-      };
-
-      if (req.files?.length > 0) {
-        // New screenshots uploaded → replace old ones
-        const newPaths = req.files.map(f => '/images/pages/' + f.filename);
-        save(JSON.stringify(newPaths));
-      } else {
-        // Keep existing screenshots
-        db.get('SELECT screenshots FROM pages WHERE id = ?', [id], (err, row) => {
-          if (err || !row) return save('[]');
-          save(row.screenshots);
-        });
-      }
-    }
-  );
-});
-
-  if (req.files?.length > 0) {
-    // New files → replace old screenshots
-    const newPaths = req.files.map(f => '/images/pages/' + f.filename);
-    save(JSON.stringify(newPaths));
-  } else {
-    // No new files → keep existing
-    db.get('SELECT screenshots FROM pages WHERE id = ?', [id], (err, row) => {
-      if (err || !row) return save('[]');
-      save(row.screenshots);
-    });
-  }
-});
-
-// Delete page (unchanged)
-app.delete('/admin/pages/:id', requireAdmin, (req, res) => {
-  db.run('DELETE FROM pages WHERE id = ?', [req.params.id], function(err) {
-    if (err) return res.status(500).json({ error: 'Database error' });
-    if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
-    res.json({ success: true });
-  });
-});
-
-// ─── NPC routes (unchanged, but protected) ───
-// add requireAdmin to each if not already
-
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-});
+              return res.status(500).json({ error: '
