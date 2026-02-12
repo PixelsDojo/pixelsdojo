@@ -110,7 +110,7 @@ app.get('/npcs', (req, res) => {
   });
 });
 
-// ─── Auth routes ───
+// Login
 app.get('/login', (req, res) => {
   if (req.session.user) return res.redirect('/');
   res.render('login', { error: null, user: null });
@@ -135,8 +135,6 @@ app.post('/login', (req, res) => {
     });
   });
 });
-
-// (register, logout, profile, profile/edit, profile/update, profile/delete routes are missing in your paste — add them back if needed)
 
 // ─── Admin dashboard ───
 app.get('/admin', requireAdmin, (req, res) => {
@@ -175,8 +173,6 @@ app.post('/admin/pages', requireAdmin, upload.array('screenshots', 15), (req, re
     }
   );
 });
-
-// ─── PAGE EDIT & UPDATE ───
 
 // Get page data as JSON (for modal)
 app.get('/admin/pages/:id/edit', requireAdmin, (req, res) => {
@@ -228,4 +224,40 @@ app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15
           function (err) {
             if (err) {
               console.error('Update failed:', err.message);
-              return res.status(500).json({ error: '
+              return res.status(500).json({ error: 'Error saving page: ' + err.message });
+            }
+            if (this.changes === 0) {
+              return res.status(404).json({ error: 'Page not found' });
+            }
+            res.json({ success: true });
+          }
+        );
+      };
+
+      if (req.files?.length > 0) {
+        const newPaths = req.files.map(f => '/images/pages/' + f.filename);
+        save(JSON.stringify(newPaths));
+      } else {
+        db.get('SELECT screenshots FROM pages WHERE id = ?', [id], (err, row) => {
+          if (err || !row) return save('[]');
+          save(row.screenshots);
+        });
+      }
+    }
+  );
+});
+
+// Delete page
+app.delete('/admin/pages/:id', requireAdmin, (req, res) => {
+  db.run('DELETE FROM pages WHERE id = ?', [req.params.id], function(err) {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
+    res.json({ success: true });
+  });
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
