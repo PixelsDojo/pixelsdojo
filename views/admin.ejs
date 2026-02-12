@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Pixels Dojo Dashboard</title>
-<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/admin.css">
 </head>
@@ -25,7 +25,7 @@
         </div>
     </header>
 
- <nav>
+    <nav>
         <ul>
             <li><a href="#home">Home</a></li>
             <li><a href="/npcs">NPCs</a></li>
@@ -39,7 +39,7 @@
     <div class="admin-container">
         <h1>🛠️ Admin Dashboard</h1>
 
-<!-- Wiki Pages Management Section -->
+        <!-- Wiki Pages Management Section -->
         <section style="margin-top: 2rem;">
             <h2>Wiki Pages Management</h2>
             <div class="admin-actions">
@@ -83,204 +83,198 @@
         <section>
             <h2>NPC Management</h2>
             <div class="admin-actions">
-               <button onclick="showAddModal('addNpcModal')" class="btn-primary">Add New NPC</button>
+                <button onclick="showAddModal('addNpcModal')" class="btn-primary">Add New NPC</button>
             </div>
 
-                <div class="npc-grid">
-  <% npcs.forEach(npc => { %>
-    <div class="npc-card">
-      <div class="npc-left">
-        <img src="<%= npc.image_path %>" alt="<%= npc.name %>" 
-             class="npc-thumb" style="max-width:160px; height:auto; object-fit:contain;"
-             onerror="this.src='/images/npcs/default-npc.png'">
-        <div>
-          <strong><%= npc.name %></strong><br>
-          <small><%= npc.location || '—' %></small>
-        </div>
-      </div>
-      <div class="npc-right">
-        <p><%= npc.description ? npc.description.substring(0, 100) + '...' : 'No description' %></p>
-        <small>Order: <%= npc.display_order %></small>
-        <div class="actions">
-          <button onclick="editNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>', '<%= npc.location ? npc.location.replace(/'/g, "\\'") : '' %>', '<%= (npc.description || '').replace(/'/g, "\\'") %>', <%= npc.display_order %>, '<%= npc.image_path.replace(/'/g, "\\'") %>')" class="btn-edit">✏️ Edit</button>
-          <button onclick="deleteNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>')" class="btn-delete">🗑️ Delete</button>
-        </div>
-      </div>
-    </div>
-  <% }); %>
-</div>                
+            <div class="npc-grid">
+                <% npcs.forEach(npc => { %>
+                    <div class="npc-card">
+                        <div class="npc-left">
+                            <img src="<%= npc.image_path %>" alt="<%= npc.name %>" 
+                                 class="npc-thumb" style="max-width:160px; height:auto; object-fit:contain;"
+                                 onerror="this.src='/images/npcs/default-npc.png'">
+                            <div>
+                                <strong><%= npc.name %></strong><br>
+                                <small><%= npc.location || '—' %></small>
+                            </div>
+                        </div>
+                        <div class="npc-right">
+                            <p><%= npc.description ? npc.description.substring(0, 100) + '...' : 'No description' %></p>
+                            <small>Order: <%= npc.display_order %></small>
+                            <div class="actions">
+                                <button onclick="editNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>', '<%= npc.location ? npc.location.replace(/'/g, "\\'") : '' %>', '<%= (npc.description || '').replace(/'/g, "\\'") %>', <%= npc.display_order %>, '<%= npc.image_path.replace(/'/g, "\\'") %>')" class="btn-edit">✏️ Edit</button>
+                                <button onclick="deleteNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>')" class="btn-delete">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>                
         </section>
-
-        
     </div>
 
-    
     <!-- Edit NPC Modal -->
-        <div id="editModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('editModal')">×</span>
-    <h2>Edit NPC</h2>
-    <form id="editForm" method="POST" enctype="multipart/form-data">
-      <input type="hidden" id="edit_id" name="id">
-      <input type="hidden" id="edit_current_image_path" name="current_image_path">
-      <div class="form-group">
-        <label>Name *</label>
-        <input type="text" id="edit_name" name="name" required>
-      </div>
-      <div class="form-group">
-        <label>Location *</label>
-        <input type="text" id="edit_location" name="location" required>
-      </div>
-      <div class="form-group">
-        <label>Description</label>
-        <textarea id="edit_description" name="description" rows="3"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Image (leave empty to keep current)</label>
-        <input type="file" name="image" accept="image/*">
-        <small>Any size/shape OK (portrait 160×200 works great).</small>
-      </div>
-      <div class="form-group">
-        <label>Display Order</label>
-        <input type="number" id="edit_display_order" name="display_order">
-      </div>
-      <button type="submit" class="btn-primary">Update NPC</button>
-    </form>
-  </div>
-</div>
-
-<!-- Add Page Modal -->
-<div id="addPageModal" class="modal">
-  <div class="modal-content" style="max-height: 85vh; overflow-y: auto; padding-bottom: 2rem;">
-    <span class="close" onclick="closeModal('addPageModal')">×</span>
-    <h2>Add New Wiki Page</h2>
-    <form id="addPageForm" method="POST" action="/admin/pages" enctype="multipart/form-data">
-      <div class="form-group">
-        <label>Title *</label>
-        <input type="text" name="title" required placeholder="e.g. Farming Guide">
-      </div>
-
-      <div class="form-group">
-        <label>Slug (URL-friendly) *</label>
-        <input type="text" name="slug" required placeholder="e.g. farming-guide">
-      </div>
-
-      <div class="form-group">
-        <label>Category</label>
-        <input type="text" name="category" placeholder="e.g. Farming, Housing, Quests">
-      </div>
-
-      <div class="form-group">
-        <label>Difficulty Level *</label>
-        <select name="difficulty" required style="width:100%; padding:0.8rem;">
-          <option value="Beginner">Beginner</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Advanced">Advanced</option>
-        </select>
-      </div>
-
-        <div class="form-group">
-          <label>Quick Summary (2-3 sentences TL;DR)</label>
-          <textarea name="summary" rows="3" placeholder="Quick overview of the guide..."></textarea>
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editModal')">×</span>
+            <h2>Edit NPC</h2>
+            <form id="editForm" method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="edit_id" name="id">
+                <input type="hidden" id="edit_current_image_path" name="current_image_path">
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" id="edit_name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Location *</label>
+                    <input type="text" id="edit_location" name="location" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="edit_description" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Image (leave empty to keep current)</label>
+                    <input type="file" name="image" accept="image/*">
+                    <small>Any size/shape OK (portrait 160×200 works great).</small>
+                </div>
+                <div class="form-group">
+                    <label>Display Order</label>
+                    <input type="number" id="edit_display_order" name="display_order">
+                </div>
+                <button type="submit" class="btn-primary">Update NPC</button>
+            </form>
         </div>
+    </div>
 
-        <div class="form-group">
-          <label>Pro Tips / Hacks</label>
-          <textarea name="pro_tips" rows="5" placeholder="Advanced tricks, shortcuts, player discoveries..."></textarea>
+    <!-- Add Page Modal -->
+    <div id="addPageModal" class="modal">
+        <div class="modal-content" style="max-height: 85vh; overflow-y: auto; padding-bottom: 2rem;">
+            <span class="close" onclick="closeModal('addPageModal')">×</span>
+            <h2>Add New Wiki Page</h2>
+            <form id="addPageForm" method="POST" action="/admin/pages" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" name="title" required placeholder="e.g. Farming Guide">
+                </div>
+
+                <div class="form-group">
+                    <label>Slug (URL-friendly) *</label>
+                    <input type="text" name="slug" required placeholder="e.g. farming-guide">
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text" name="category" placeholder="e.g. Farming, Housing, Quests">
+                </div>
+
+                <div class="form-group">
+                    <label>Difficulty Level *</label>
+                    <select name="difficulty" required style="width:100%; padding:0.8rem;">
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Quick Summary (2-3 sentences TL;DR)</label>
+                    <textarea name="summary" rows="3" placeholder="Quick overview of the guide..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Pro Tips / Hacks</label>
+                    <textarea name="pro_tips" rows="5" placeholder="Advanced tricks, shortcuts, player discoveries..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Screenshots (up to 15 – any aspect ratio OK)</label>
+                    <input type="file" name="screenshots" accept="image/*" multiple>
+                    <small>Max 350×350 recommended per image, but any size is fine. Will be resized/displayed responsively.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Main Content (paste from Word here)</label>
+                    <div id="quill-editor" style="height: 450px; background: white;"></div>
+                    <textarea name="content" id="content-hidden" style="display: none;"></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width:100%; margin-top:1rem;">Create Page</button>
+            </form>
         </div>
+    </div>
 
-          <div class="form-group">
-            <label>Screenshots (up to 15 – any aspect ratio OK)</label>
-            <input type="file" name="screenshots" accept="image/*" multiple>
-            <small>Max 350×350 recommended per image, but any size is fine. Will be resized/displayed responsively.</small>
-          </div>
+    <!-- Add NPC Modal -->
+    <div id="addNpcModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addNpcModal')">×</span>
+            <h2>Add New NPC</h2>
+            <form id="addNpcForm" method="POST" action="/admin/npcs" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" name="location">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Image</label>
+                    <input type="file" name="image" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>Display Order</label>
+                    <input type="number" name="display_order" value="999">
+                </div>
+                <button type="submit" class="btn-primary">Add NPC</button>
+            </form>
+        </div>
+    </div>
 
-<div class="mb-3">
-            <label for="content" class="form-label">Main Content (paste from Word here)</label>
-            <div id="quill-editor" style="height: 450px; background: white;"></div>  <!-- Quill will fill this -->
-            <textarea name="content" id="content-hidden" style="display: none;"></textarea>  <!-- hidden field for submit -->
-          </div>
-
-      <button type="submit" class="btn-primary" style="width:100%; margin-top:1rem;">Create Page</button>
-    </form>
-  </div>
-</div>
-
-<!-- Add NPC Modal -->
-<div id="addNpcModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('addNpcModal')">×</span>
-    <h2>Add New NPC</h2>
-    <form id="addNpcForm" method="POST" action="/admin/npcs" enctype="multipart/form-data">
-      <div class="form-group">
-        <label>Name *</label>
-        <input type="text" name="name" required>
-      </div>
-      <div class="form-group">
-        <label>Location</label>
-        <input type="text" name="location">
-      </div>
-      <div class="form-group">
-        <label>Description</label>
-        <textarea name="description" rows="3"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Image</label>
-        <input type="file" name="image" accept="image/*">
-      </div>
-      <div class="form-group">
-        <label>Display Order</label>
-        <input type="number" name="display_order" value="999">
-      </div>
-      <button type="submit" class="btn-primary">Add NPC</button>
-    </form>
-  </div>
-</div>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
     <script>
-        function showAddModal(modalId) { 
-    document.getElementById(modalId).style.display = 'block'; 
-}
+        let quill = null;  // Will be initialized on first open
 
-        function showAddPageModal() { 
-            document.getElementById('addPageModal').style.display = 'block'; 
+        function showAddPageModal() {
+            const modal = document.getElementById('addPageModal');
+            modal.style.display = 'block';
+
+            // Initialize Quill only once, right after modal is visible
+            if (!quill) {
+                quill = new Quill('#quill-editor', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['link', 'image'],
+                            ['clean']
+                        ]
+                    },
+                    placeholder: 'Paste your Word content here (steps + images should come along)...'
+                });
+            }
         }
 
-<script>
-  let quill;  // global so we can access it
+        // Copy Quill content to hidden field before submit
+        document.getElementById('addPageForm').addEventListener('submit', function(e) {
+            if (quill) {
+                document.getElementById('content-hidden').value = quill.root.innerHTML;
+            }
+        });
 
-  // Initialize Quill ONLY when modal is shown (prevents sizing issues)
-  const addModal = document.getElementById('addPageModal');
-  addModal.addEventListener('shown.bs.modal', function () {
-    if (!quill) {  // init only once
-      quill = new Quill('#quill-editor', {
-        theme: 'snow',
-        modules: {
-          toolbar: [
-            [{ 'header': [1, 2, 3, false] }],          // headings for steps
-            ['bold', 'italic', 'underline', 'strike'], // formatting
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }], // numbered steps perfect for tutorials
-            ['link', 'image'],                         // image button (for manual insert if needed)
-            ['clean']                                  // remove junk
-          ]
-        },
-        placeholder: 'Paste your Word content here (steps + images should come along)...'
-      });
+        function showAddModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
 
-      // Optional: if editing existing page, load content here (for now, empty for new)
-    }
-  });
-
-  // When form submits, copy Quill HTML to hidden textarea
-  document.getElementById('newPageForm').addEventListener('submit', function(e) {
-    if (quill) {
-      document.getElementById('content-hidden').value = quill.root.innerHTML;
-    }
-  });
-</script>
-
-        function closeModal(id) { 
-            document.getElementById(id).style.display = 'none'; 
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
         }
 
         function editNPC(id, name, location, description, display_order, currentImagePath) {
@@ -295,55 +289,46 @@
             document.getElementById('editModal').style.display = 'block';
         }
 
-function deleteNPC(id, name) {
-  if (confirm(`Are you sure you want to delete "${name}"?`)) {
-    fetch(`/admin/npcs/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      if (response.ok) {
-        alert('NPC deleted!');
-        location.reload();
-      } else {
-        return response.json().then(err => {
-          alert('Unable to delete: ' + (err.error || 'Unknown error'));
-        });
-      }
-    })
-    .catch(err => {
-      alert('Error: ' + err);
-    });
-  }
-}
+        function deleteNPC(id, name) {
+            if (confirm(`Are you sure you want to delete "${name}"?`)) {
+                fetch(`/admin/npcs/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('NPC deleted!');
+                        location.reload();
+                    } else {
+                        return response.json().then(err => {
+                            alert('Unable to delete: ' + (err.error || 'Unknown error'));
+                        });
+                    }
+                })
+                .catch(err => alert('Error: ' + err));
+            }
+        }
 
         function deletePage(id, title) {
-  if (confirm(`Are you sure you want to delete "${title}"?`)) {
-    fetch(`/admin/pages/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      if (response.ok) {
-        alert('Page deleted!');
-        location.reload(); // refresh admin to show updated list
-      } else {
-        response.json().then(err => {
-          alert('Unable to delete: ' + (err.error || 'Server error'));
-        });
-      }
-    })
-    .catch(err => {
-      alert('Error: ' + err);
-    });
-  }
-}
+            if (confirm(`Are you sure you want to delete "${title}"?`)) {
+                fetch(`/admin/pages/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Page deleted!');
+                        location.reload();
+                    } else {
+                        response.json().then(err => {
+                            alert('Unable to delete: ' + (err.error || 'Server error'));
+                        });
+                    }
+                })
+                .catch(err => alert('Error: ' + err));
+            }
+        }
     </script>
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
     <script src="/js/admin.js"></script>
 </body>
 </html>
