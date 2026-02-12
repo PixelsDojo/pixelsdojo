@@ -257,17 +257,20 @@
 
             if (!quill) {
                 quill = new Quill('#quill-editor', {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: [
-                            [{ 'header': [1, 2, 3, false] }],
-                            ['bold', 'italic', 'underline', 'strike'],
-                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                            ['link', 'image'],
-                            ['clean']
-                        ],
-                        clipboard: {
-                            matchVisual: false
+    theme: 'snow',
+    modules: {
+        toolbar: [ /* your toolbar array */ ],
+        clipboard: {
+            matchers: [
+                // Custom matcher for pasted images
+                [Node.ELEMENT_NODE, (node, delta) => {
+                    if (node.tagName === 'IMG') {
+                        return new Delta().insert({ image: node.src });
+                    }
+                    return delta;
+                }]
+            ],
+            matchVisual: false
                         }
                     },
                     placeholder: 'Paste your Word content here (steps + images should come along)...'
