@@ -22,51 +22,125 @@
         </ul>
     </nav>
 
-<div class="hero">
-  <img src="/images/banner_with_pixels_dojo_in_white.png" alt="Dojo Banner" style="width:100%; height:auto;">
-  <div class="hero-buttons">
-    <a href="/pages/starter-quests" class="btn">I'm New</a>
-    <a href="/wiki/earn-pixel" class="btn">Earn Pixel</a>
-    <a href="/wiki/become-master" class="btn">Become a Master</a>
-  </div>
-</div>
+<!-- Hero Section – split layout (buttons left, image right) -->
+<section class="hero-split">
+  <!-- Left: Stacked buttons -->
+  <div class="hero-left">
+    <h1>PIXELS DOJO</h1>
+    <p class="hero-tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
 
-<div class="search-bar">
-  <input type="text" placeholder="Search wiki articles..." id="wiki-search">
-  <button onclick="searchWiki()">Search</button>
-</div>
+    <div class="main-buttons stacked">
+      <a href="/category/startup" class="main-button">
+        <div class="icon">🌱</div>
+        <h3>Start Here</h3>
+        <p>Beginner guides & first steps</p>
+      </a>
 
-<h2>Recent Scrolls</h2>
-<% recentPages.forEach(page => { %>
-  <a href="/pages/<%= page.slug %>"><%= page.title %></a><br>
-<% }) %>
+      <a href="/category/earn" class="main-button">
+        <div class="icon">💰</div>
+        <h3>Earn $PIXEL</h3>
+        <p>Strategies & mechanisms</p>
+      </a>
 
-    <div class="hero-section" id="home">
-        <div class="hero-intro">
-            <h2>Welcome to Pixels Online & TerraVilla</h2>
-            <p>A wonderfully creative, immersive, social farming and crafting game where you can earn real cryptocurrency ($PIXEL) while having fun!</p>
-        </div>
-
-        <div class="main-buttons">
-            <a href="/page/getting-started" class="main-button">
-                <span class="icon">🎮</span>
-                <h3>I'm New - Help Me!</h3>
-                <p>Complete beginner tutorial, NPC quests, map guide, and essential tips to start your journey in TerraVilla</p>
-            </a>
-
-            <a href="/page/earn-pixel" class="main-button">
-                <span class="icon">💰</span>
-                <h3>How to Earn $PIXEL</h3>
-                <p>Task board strategies, earning methods, financial calculations, and optimization tips to maximize your income</p>
-            </a>
-
-            <a href="/page/become-master" class="main-button">
-                <span class="icon">⚡</span>
-                <h3>Become a Pixels Master</h3>
-                <p>VIP membership, NFT lands, pets, advanced tools, guilds, and everything you need to dominate the game</p>
-            </a>
-        </div>
+      <a href="/category/mastery" class="main-button">
+        <div class="icon">👑</div>
+        <h3>Mastery</h3>
+        <p>VIP • NFTs • Advanced</p>
+      </a>
     </div>
+  </div>
+
+  <!-- Right: Hero image -->
+  <div class="hero-right">
+    <img src="/images/hero-full.jpg" alt="Pixels Dojo World" class="hero-image">
+    <div class="hero-overlay">
+      <p>Explore • Learn • Earn</p>
+    </div>
+  </div>
+</section>
+
+<!-- Prominent Search Bar -->
+<div class="search-bar-container">
+  <form action="/search" method="GET" class="search-form">
+    <input type="text" name="q" placeholder="Search the wiki..." required>
+    <button type="submit" class="btn btn-cyan">Search</button>
+  </form>
+</div>
+
+<!-- Category Grid -->
+<section class="category-grid">
+  <!-- Start Here -->
+  <div class="category-block">
+    <h2>Start Here</h2>
+    <p>Beginner guides, map orientation, NPC list, first steps</p>
+    <a href="/category/startup" class="btn btn-outline">View All →</a>
+  </div>
+
+  <!-- Earn $PIXEL -->
+  <div class="category-block">
+    <h2>Earn $PIXEL</h2>
+    <p>Mechanisms, strategies, farming, quests</p>
+    <a href="/category/earn" class="btn btn-outline">View All →</a>
+  </div>
+
+  <!-- Mastery -->
+  <div class="category-block">
+    <h2>Mastery</h2>
+    <p>VIP perks, NFTs, add-ons, advanced paths</p>
+    <a href="/category/mastery" class="btn btn-outline">View All →</a>
+  </div>
+</section>
+
+<!-- Recent Posts -->
+<section class="recent-posts">
+  <h2>Recent Guides</h2>
+  <div class="card-grid">
+    <% recentPages.forEach(page => { %>
+      <div class="card">
+        <h3><a href="/pages/<%= page.slug %>"><%= page.title %></a></h3>
+        <p><%= page.summary || page.content.substring(0, 120) + '...' %></p>
+        <small>By <%= page.author_display_name || 'Community' %> • <%= new Date(page.created_at).toLocaleDateString() %></small>
+      </div>
+    <% }) %>
+  </div>
+  <a href="/all-posts" class="btn btn-outline center">View All Posts</a>
+</section>
+
+<!-- Most Upvoted Post -->
+<section class="featured-post">
+  <h2>Most Upvoted Guide</h2>
+  <div class="featured-card">
+    <!-- Assume you pass mostUpvoted from controller -->
+    <% if (mostUpvoted) { %>
+      <img src="<%= mostUpvoted.screenshots[0] || '/images/placeholder.jpg' %>" alt="Featured">
+      <div>
+        <h3><a href="/pages/<%= mostUpvoted.slug %>"><%= mostUpvoted.title %></a></h3>
+        <p><%= mostUpvoted.summary || mostUpvoted.content.substring(0, 200) + '...' %></p>
+        <small>Upvotes: <%= mostUpvoted.upvotes || 0 %> • By <%= mostUpvoted.author_display_name %></small>
+      </div>
+    <% } else { %>
+      <p>No featured post yet</p>
+    <% } %>
+  </div>
+</section>
+
+<!-- Most Viewed Post -->
+<section class="featured-post">
+  <h2>Most Viewed Guide</h2>
+  <div class="featured-card">
+    <% if (mostViewed) { %>
+      <img src="<%= mostViewed.screenshots[0] || '/images/placeholder.jpg' %>" alt="Featured">
+      <div>
+        <h3><a href="/pages/<%= mostViewed.slug %>"><%= mostViewed.title %></a></h3>
+        <p><%= mostViewed.summary || mostViewed.content.substring(0, 200) + '...' %></p>
+        <small>Views: <%= mostViewed.views || 0 %> • By <%= mostViewed.author_display_name %></small>
+      </div>
+    <% } else { %>
+      <p>No featured post yet</p>
+    <% } %>
+  </div>
+</section>
+
 
     <div class="container">
         <section id="new" class="content-section">
