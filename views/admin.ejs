@@ -77,9 +77,10 @@
                                     <td><%= page.category || '—' %></td>
                                     <td><%= new Date(page.created_at).toLocaleDateString() %></td>
                                     <td class="actions">
-                                        <a href="/pages/<%= page.slug %>" target="_blank" class="btn-view">View</a>
-                                        <button onclick="deletePage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'") %>')" class="btn-delete">🗑️ Delete</button>
-                                    </td>
+                                    <button onclick="window.open('/pages/<%= page.slug %>', '_blank')" class="btn-action btn-view">👁️ View</button>
+                                    <button onclick="editPage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'") %>')" class="btn-action btn-edit">✏️ Edit</button>
+                                    <button onclick="deletePage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'") %>')" class="btn-action btn-delete">🗑️ Delete</button>
+                                </td>
                                 </tr>
                             <% }); %>
                         <% } else { %>
