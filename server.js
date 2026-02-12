@@ -185,62 +185,44 @@ app.get('/admin/pages/:id/edit', requireAdmin, (req, res) => {
   });
 });
 
-// Update page (with slug conflict check)
+// Update page – ignore submitted slug, always keep original
 app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15), (req, res) => {
   const id = req.params.id;
-  const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
+  const { title, content, category, difficulty, summary, pro_tips } = req.body;
+  // Note: slug is intentionally NOT destructured – we ignore it
 
-  if (!title || !slug || !content) {
-    return res.status(400).json({ error: 'Missing required fields' });
+  if (!title || !content) {
+    return res.status(400).json({ error: 'Missing required fields: title and content' });
   }
 
-  const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-
-  // First get the current slug of this page
+  // Fetch the current (original) slug – we will NOT change it
   db.get('SELECT slug FROM pages WHERE id = ?', [id], (err, current) => {
-    if (err || !current) {
+    if (err) {
+      console.error('Fetch original slug error:', err.message);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (!current) {
       return res.status(404).json({ error: 'Page not found' });
     }
 
-    // If slug is unchanged → skip conflict check and just save
-    if (cleanSlug === current.slug) {
-      return proceedWithUpdate();
-    }
+    const cleanSlug = current.slug; // ← always use original slug
 
-    // Slug changed → check if new slug is already taken by someone else
-    db.get(
-      'SELECT id FROM pages WHERE slug = ? AND id != ?',
-      [cleanSlug, id],
-      (err, conflict) => {
-        if (err) {
-          console.error('Slug check error:', err.message);
-          return res.status(500).json({ error: 'Database error' });
-        }
-        if (conflict) {
-          return res.status(409).json({
-            error: 'This slug is already used by another page. Choose a different one.'
-          });
-        }
-        proceedWithUpdate();
-      }
-    );
-  });
-
-  function proceedWithUpdate() {
     const save = (screenshotsJson) => {
       db.run(
         `UPDATE pages 
-         SET title=?, slug=?, content=?, category=?, difficulty=?, 
-             screenshots=?, summary=?, pro_tips=?, updated_at=CURRENT_TIMESTAMP 
-         WHERE id=?`,
+         SET title = ?, slug = ?, content = ?, category = ?, difficulty = ?, 
+             screenshots = ?, summary = ?, pro_tips = ?, updated_at = CURRENT_TIMESTAMP 
+         WHERE id = ?`,
         [title, cleanSlug, content, category || null, difficulty || 'Beginner',
          screenshotsJson, summary || null, pro_tips || null, id],
-        function(err) {
+        function (err) {
           if (err) {
             console.error('Update failed:', err.message);
             return res.status(500).json({ error: 'Error saving page: ' + err.message });
           }
-          if (this.changes === 0) return res.status(404).json({ error: 'Page not found' });
+          if (this.changes === 0) {
+            return res.status(404).json({ error: 'Page not found' });
+          }
           res.json({ success: true });
         }
       );
@@ -252,10 +234,10 @@ app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15
     } else {
       db.get('SELECT screenshots FROM pages WHERE id = ?', [id], (err, row) => {
         if (err || !row) return save('[]');
-        save(row.screenshots);
+        save(row.screenshots || '[]');
       });
     }
-  }
+  });
 });
 
 // Delete page
