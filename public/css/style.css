@@ -492,3 +492,44 @@ footer a:hover {
     border: 2px solid #f44336;
     color: #f44336;
 }
+
+/* Basic mobile-first responsiveness */
+@media (max-width: 768px) {
+  header .header-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .user-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .hero {
+    position: relative;
+  }
+
+  .hero-buttons {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: column;
+    width: 80%;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  .npc-grid, .page-grid {
+    grid-template-columns: 1fr;  /* one column on mobile */
+  }
+
+  footer .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}
