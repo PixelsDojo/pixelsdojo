@@ -7,139 +7,139 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-   <%- include('partials/header') %>
-
-
+    <%- include('partials/header') %>
 
     <nav>
         <ul>
-            <li><a href="#home">Home</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/category/startup">Start Here</a></li>
+            <li><a href="/category/earn">Earn $PIXEL</a></li>
+            <li><a href="/category/mastery">Mastery</a></li>
             <li><a href="/npcs">NPCs</a></li>
-            <li><a href="#new">I'm New</a></li>
-            <li><a href="#earn">Earn $PIXEL</a></li>
-            <li><a href="#master">Become Master</a></li>
             <li><a href="#community">Community</a></li>
         </ul>
     </nav>
 
-<!-- Hero Section – split layout (buttons left, image right) -->
-<section class="hero-split">
-  <!-- Left: Stacked buttons -->
-  <div class="hero-left">
-    <h1>PIXELS DOJO</h1>
-    <p class="hero-tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
+    <!-- Hero – split layout: buttons left stacked, image right -->
+    <section class="hero-split">
+        <!-- Left: Stacked buttons + intro -->
+        <div class="hero-left">
+            <h1>PIXELS DOJO</h1>
+            <p class="hero-tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
 
-    <div class="main-buttons stacked">
-      <a href="/category/startup" class="main-button">
-        <div class="icon">🌱</div>
-        <h3>Start Here</h3>
-        <p>Beginner guides & first steps</p>
-      </a>
+            <div class="main-buttons stacked">
+                <a href="/category/startup" class="main-button">
+                    <div class="icon">🌱</div>
+                    <h3>Start Here</h3>
+                    <p>Beginner guides & first steps</p>
+                </a>
 
-      <a href="/category/earn" class="main-button">
-        <div class="icon">💰</div>
-        <h3>Earn $PIXEL</h3>
-        <p>Strategies & mechanisms</p>
-      </a>
+                <a href="/category/earn" class="main-button">
+                    <div class="icon">💰</div>
+                    <h3>Earn $PIXEL</h3>
+                    <p>Strategies & mechanisms</p>
+                </a>
 
-      <a href="/category/mastery" class="main-button">
-        <div class="icon">👑</div>
-        <h3>Mastery</h3>
-        <p>VIP • NFTs • Advanced</p>
-      </a>
+                <a href="/category/mastery" class="main-button">
+                    <div class="icon">👑</div>
+                    <h3>Mastery</h3>
+                    <p>VIP • NFTs • Advanced</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- Right: Hero image with padding/overlay -->
+        <div class="hero-right">
+            <img src="/images/hero-full.jpg" alt="Pixels Dojo World" class="hero-image">
+            <div class="hero-overlay">
+                <p>Explore • Learn • Earn</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prominent Search Bar -->
+    <div class="search-bar-container">
+        <form action="/search" method="GET" class="search-form">
+            <input type="text" name="q" placeholder="Search the wiki..." required>
+            <button type="submit" class="btn btn-cyan">Search</button>
+        </form>
     </div>
-  </div>
 
-  <!-- Right: Hero image -->
-  <div class="hero-right">
-    <img src="/images/hero-full.jpg" alt="Pixels Dojo World" class="hero-image">
-    <div class="hero-overlay">
-      <p>Explore • Learn • Earn</p>
-    </div>
-  </div>
-</section>
+    <!-- Category Grid – 4 blocks -->
+    <section class="category-grid">
+        <!-- Start Here -->
+        <div class="category-block">
+            <h2>Start Here</h2>
+            <p>Beginner guides, map orientation, NPC list, first steps</p>
+            <a href="/category/startup" class="btn btn-outline">View All →</a>
+        </div>
 
-<!-- Prominent Search Bar -->
-<div class="search-bar-container">
-  <form action="/search" method="GET" class="search-form">
-    <input type="text" name="q" placeholder="Search the wiki..." required>
-    <button type="submit" class="btn btn-cyan">Search</button>
-  </form>
-</div>
+        <!-- Earn $PIXEL -->
+        <div class="category-block">
+            <h2>Earn $PIXEL</h2>
+            <p>Mechanisms, strategies, farming, quests</p>
+            <a href="/category/earn" class="btn btn-outline">View All →</a>
+        </div>
 
-<!-- Category Grid -->
-<section class="category-grid">
-  <!-- Start Here -->
-  <div class="category-block">
-    <h2>Start Here</h2>
-    <p>Beginner guides, map orientation, NPC list, first steps</p>
-    <a href="/category/startup" class="btn btn-outline">View All →</a>
-  </div>
+        <!-- Mastery -->
+        <div class="category-block">
+            <h2>Mastery</h2>
+            <p>VIP perks, NFTs, add-ons, advanced paths</p>
+            <a href="/category/mastery" class="btn btn-outline">View All →</a>
+        </div>
 
-  <!-- Earn $PIXEL -->
-  <div class="category-block">
-    <h2>Earn $PIXEL</h2>
-    <p>Mechanisms, strategies, farming, quests</p>
-    <a href="/category/earn" class="btn btn-outline">View All →</a>
-  </div>
+        <!-- Recent Guides -->
+        <div class="category-block recent">
+            <h2>Recent Guides</h2>
+            <div class="card-grid mini">
+                <% recentPages.slice(0, 3).forEach(page => { %>
+                    <div class="card mini">
+                        <h4><a href="/pages/<%= page.slug %>"><%= page.title %></a></h4>
+                        <small>By <%= page.author_display_name || 'Community' %></small>
+                    </div>
+                <% }) %>
+            </div>
+            <a href="/all-posts" class="btn btn-outline">All Recent Posts →</a>
+        </div>
+    </section>
 
-  <!-- Mastery -->
-  <div class="category-block">
-    <h2>Mastery</h2>
-    <p>VIP perks, NFTs, add-ons, advanced paths</p>
-    <a href="/category/mastery" class="btn btn-outline">View All →</a>
-  </div>
-</section>
+    <!-- Most Upvoted Post – full-width -->
+    <section class="featured-post">
+        <h2>Most Upvoted Guide</h2>
+        <div class="featured-card">
+            <% if (mostUpvoted) { %>
+                <img src="<%= mostUpvoted.screenshots && mostUpvoted.screenshots[0] ? mostUpvoted.screenshots[0] : '/images/placeholder.jpg' %>" alt="Featured">
+                <div>
+                    <h3><a href="/pages/<%= mostUpvoted.slug %>"><%= mostUpvoted.title %></a></h3>
+                    <p><%= mostUpvoted.summary || mostUpvoted.content.substring(0, 200) + '...' %></p>
+                    <small>Upvotes: <%= mostUpvoted.upvotes || 0 %> • By <%= mostUpvoted.author_display_name || 'Community' %></small>
+                </div>
+            <% } else { %>
+                <p>No featured post yet — check back soon!</p>
+            <% } %>
+        </div>
+    </section>
 
-<!-- Recent Posts -->
-<section class="recent-posts">
-  <h2>Recent Guides</h2>
-  <div class="card-grid">
-    <% recentPages.forEach(page => { %>
-      <div class="card">
-        <h3><a href="/pages/<%= page.slug %>"><%= page.title %></a></h3>
-        <p><%= page.summary || page.content.substring(0, 120) + '...' %></p>
-        <small>By <%= page.author_display_name || 'Community' %> • <%= new Date(page.created_at).toLocaleDateString() %></small>
-      </div>
-    <% }) %>
-  </div>
-  <a href="/all-posts" class="btn btn-outline center">View All Posts</a>
-</section>
+    <!-- Most Viewed Post – full-width -->
+    <section class="featured-post">
+        <h2>Most Viewed Guide</h2>
+        <div class="featured-card">
+            <% if (mostViewed) { %>
+                <img src="<%= mostViewed.screenshots && mostViewed.screenshots[0] ? mostViewed.screenshots[0] : '/images/placeholder.jpg' %>" alt="Featured">
+                <div>
+                    <h3><a href="/pages/<%= mostViewed.slug %>"><%= mostViewed.title %></a></h3>
+                    <p><%= mostViewed.summary || mostViewed.content.substring(0, 200) + '...' %></p>
+                    <small>Views: <%= mostViewed.views || 0 %> • By <%= mostViewed.author_display_name || 'Community' %></small>
+                </div>
+            <% } else { %>
+                <p>No featured post yet — check back soon!</p>
+            <% } %>
+        </div>
+    </section>
 
-<!-- Most Upvoted Post -->
-<section class="featured-post">
-  <h2>Most Upvoted Guide</h2>
-  <div class="featured-card">
-    <!-- Assume you pass mostUpvoted from controller -->
-    <% if (mostUpvoted) { %>
-      <img src="<%= mostUpvoted.screenshots[0] || '/images/placeholder.jpg' %>" alt="Featured">
-      <div>
-        <h3><a href="/pages/<%= mostUpvoted.slug %>"><%= mostUpvoted.title %></a></h3>
-        <p><%= mostUpvoted.summary || mostUpvoted.content.substring(0, 200) + '...' %></p>
-        <small>Upvotes: <%= mostUpvoted.upvotes || 0 %> • By <%= mostUpvoted.author_display_name %></small>
-      </div>
-    <% } else { %>
-      <p>No featured post yet</p>
-    <% } %>
-  </div>
-</section>
-
-<!-- Most Viewed Post -->
-<section class="featured-post">
-  <h2>Most Viewed Guide</h2>
-  <div class="featured-card">
-    <% if (mostViewed) { %>
-      <img src="<%= mostViewed.screenshots[0] || '/images/placeholder.jpg' %>" alt="Featured">
-      <div>
-        <h3><a href="/pages/<%= mostViewed.slug %>"><%= mostViewed.title %></a></h3>
-        <p><%= mostViewed.summary || mostViewed.content.substring(0, 200) + '...' %></p>
-        <small>Views: <%= mostViewed.views || 0 %> • By <%= mostViewed.author_display_name %></small>
-      </div>
-    <% } else { %>
-      <p>No featured post yet</p>
-    <% } %>
-  </div>
-</section>
+    <%- include('partials/footer') %>
+</body>
+</html>
 
 
     <div class="container">
