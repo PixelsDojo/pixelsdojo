@@ -493,41 +493,55 @@ footer a:hover {
     color: #f44336;
 }
 
-/* Wiki Page Layout */
+/* === Wiki Page Layout & Content Improvements (updated to match OG style) === */
+
 .wiki-layout {
     display: flex;
-    gap: 2rem;
+    gap: 2.5rem;
     max-width: 1400px;
     margin: 3rem auto;
     padding: 0 1.5rem;
 }
 
 .wiki-main {
-    flex: 3;                 /* 75% width */
-    background: rgba(20, 20, 30, 0.7);
+    flex: 3;
+    background: var(--card-bg);
     padding: 2.5rem;
     border-radius: 12px;
-    border: 2px solid var(--neon-purple);
-    box-shadow: 0 8px 30px rgba(133, 0, 255, 0.25);
+    border: 3px solid var(--cyan);
+    box-shadow: 0 8px 30px rgba(0, 212, 255, 0.15);
+    transition: box-shadow 0.3s;
+}
+
+.wiki-main:hover {
+    box-shadow: 0 12px 40px rgba(133, 0, 255, 0.3);
 }
 
 .wiki-sidebar {
-    flex: 1;                 /* 25% width */
-    min-width: 280px;
+    flex: 1;
+    min-width: 300px;
 }
 
 .sidebar-block {
-    background: rgba(20, 20, 30, 0.6);
-    border: 1px solid var(--purple);
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin-bottom: 1.8rem;
+    background: var(--card-bg);
+    border: 2px solid var(--neon-purple);
+    border-radius: 12px;
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(101, 0, 255, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.sidebar-block:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(133, 0, 255, 0.35);
 }
 
 .sidebar-block h3 {
     color: var(--yellow);
-    margin-bottom: 1rem;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+    text-shadow: 0 0 8px rgba(237, 255, 132, 0.3);
 }
 
 .sidebar-block ul {
@@ -538,72 +552,109 @@ footer a:hover {
 .sidebar-block a {
     color: var(--cyan);
     display: block;
-    padding: 0.6rem 0;
-    transition: color 0.2s;
+    padding: 0.7rem 0;
+    transition: color 0.3s, padding-left 0.3s;
 }
 
 .sidebar-block a:hover {
     color: var(--yellow);
+    padding-left: 0.8rem;
 }
 
-/* Responsive – stack on mobile */
+/* Responsive */
 @media (max-width: 992px) {
     .wiki-layout {
         flex-direction: column;
     }
     .wiki-sidebar {
-        order: -1; /* sidebar on top for mobile */
+        order: -1;
     }
     .wiki-main {
-        padding: 1.5rem;
+        padding: 1.8rem;
     }
 }
 
-/* Content improvements – make headings & paragraphs consistent + separated */
+/* Unified content styling – matches OG look */
 .content-body {
-    font-size: 1.1rem;
-    line-height: 1.8;
+    font-size: 1.15rem;
+    line-height: 1.85;
     color: #e4e4e4;
 }
 
 .content-body h1 {
     color: var(--yellow);
     font-size: 2.8rem;
-    margin-bottom: 1.5rem;
-    text-shadow: 0 0 10px rgba(237, 255, 132, 0.4);
+    margin: 0 0 1.8rem;
+    text-shadow: 0 0 12px rgba(237, 255, 132, 0.5);
+    text-align: center;
 }
 
 .content-body h2 {
     color: var(--cyan);
     font-size: 2.2rem;
-    margin: 3rem 0 1.2rem;
-    padding-bottom: 0.6rem;
-    border-bottom: 2px solid var(--purple);
+    margin: 3.5rem 0 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 3px solid var(--purple);
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
 }
 
 .content-body h3 {
     color: var(--cyan-light);
     font-size: 1.8rem;
-    margin: 2.5rem 0 1rem;
+    margin: 2.8rem 0 1.2rem;
+    background: rgba(101, 0, 255, 0.08);
+    padding: 1rem 1.4rem;
+    border-radius: 10px;
+    border-left: 6px solid var(--cyan);
+    box-shadow: 0 4px 12px rgba(0, 212, 255, 0.1);
 }
 
 .content-body p {
-    margin-bottom: 1.6rem; /* bigger breaks between paragraphs */
+    margin-bottom: 2rem; /* bigger breathing room */
 }
 
 .content-body ul, .content-body ol {
-    margin: 1.5rem 0;
-    padding-left: 2rem;
+    margin: 1.8rem 0 2.2rem;
+    padding-left: 2.2rem;
 }
 
 .content-body li {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 }
 
-/* Optional: Box every section for more outline feel */
-.content-body h2, .content-body h3 {
-    background: rgba(101, 0, 255, 0.08);
-    padding: 0.8rem 1.2rem;
-    border-radius: 8px;
-    border-left: 5px solid var(--cyan);
+/* Section separation – subtle outline feel */
+.content-body > h2, .content-body > h3 {
+    position: relative;
+}
+
+.content-body > h2::after, .content-body > h3::after {
+    content: '';
+    position: absolute;
+    bottom: -0.8rem;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cyan), transparent);
+    border-radius: 2px;
+}
+
+/* Make screenshots match OG card style */
+.screenshot-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+}
+
+.screenshot-gallery img {
+    width: 100%;
+    border-radius: 12px;
+    border: 2px solid var(--neon-purple);
+    box-shadow: 0 6px 20px rgba(101, 0, 255, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.screenshot-gallery img:hover {
+    transform: scale(1.04);
+    box-shadow: 0 12px 35px rgba(133, 0, 255, 0.4);
 }
