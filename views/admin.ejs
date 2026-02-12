@@ -260,11 +260,15 @@
         }
 
         // Copy Quill content to hidden field before submit
-        document.getElementById('addPageForm').addEventListener('submit', function(e) {
-            if (quill) {
-                document.getElementById('content-hidden').value = quill.root.innerHTML;
-            }
-        });
+       document.getElementById('addPageForm').addEventListener('submit', function(e) {
+    if (quill) {
+        const contentValue = quill.root.innerHTML;
+        console.log('Saving Quill content:', contentValue);  // ← this line shows in browser console
+        document.getElementById('content-hidden').value = contentValue;
+    } else {
+        console.warn('Quill not initialized!');
+    }
+});
 
         function showAddModal(modalId) {
             document.getElementById(modalId).style.display = 'block';
