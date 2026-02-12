@@ -192,26 +192,73 @@ app.get('/admin/pages/:id/edit', requireAdmin, (req, res) => {
 });
 
 // Update page (using POST + multer — easier with files)
+  // Update page (using POST + multer — easier with files)
 app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15), (req, res) => {
   const id = req.params.id;
   const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
 
-  if (!title || !slug || !content) return res.status(400).json({ error: 'Missing fields' });
+  if (!title || !slug || !content) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
 
   const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
-  const save = (screenshotsJson) => {
-    db.run(
-      `UPDATE pages SET title=?, slug=?, content=?, category=?, difficulty=?, screenshots=?, summary=?, pro_tips=?, updated_at=CURRENT_TIMESTAMP WHERE id=?`,
-      [title, cleanSlug, content, category || null, difficulty || 'Beginner', screenshotsJson, summary || null, pro_tips || null, id],
-      function(err) {
-        if (err) return res.status(500).json({ error: 'Update failed: ' + err.message });
-        if (this.changes === 0) return res.status(404).json({ error: 'Page not found' });
-        res.json({ success: true });
-        // or res.redirect('/admin') if not using AJAX
+  // ────────────────────────────────
+  //   Check for slug conflict
+  // ────────────────────────────────
+  db.get(
+    'SELECT id FROM pages WHERE slug = ? AND id != ?',
+    [cleanSlug, id],
+    (err, row) => {
+      if (err) {
+        console.error('Slug check error:', err.message);
+        return res.status(500).json({ error: 'Database error during slug check' });
       }
-    );
-  };
+
+      if (row) {
+        // Another page already uses this slug
+        return res.status(409).json({
+          error: 'This slug is already in use by another page. Please choose a different one.'
+        });
+      }
+
+      // No conflict → proceed with update
+      const save = (screenshotsJson) => {
+        db.run(
+          `UPDATE pages 
+           SET title=?, slug=?, content=?, category=?, difficulty=?, 
+               screenshots=?, summary=?, pro_tips=?, updated_at=CURRENT_TIMESTAMP 
+           WHERE id=?`,
+          [title, cleanSlug, content, category || null, difficulty || 'Beginner',
+           screenshotsJson, summary || null, pro_tips || null, id],
+          function (err) {
+            if (err) {
+              console.error('Update failed:', err.message);
+              return res.status(500).json({ error: 'Error saving page: ' + err.message });
+            }
+            if (this.changes === 0) {
+              return res.status(404).json({ error: 'Page not found' });
+            }
+            res.json({ success: true });
+            // Alternative: res.redirect('/admin'); if you prefer redirect instead of JSON response
+          }
+        );
+      };
+
+      if (req.files?.length > 0) {
+        // New screenshots uploaded → replace old ones
+        const newPaths = req.files.map(f => '/images/pages/' + f.filename);
+        save(JSON.stringify(newPaths));
+      } else {
+        // Keep existing screenshots
+        db.get('SELECT screenshots FROM pages WHERE id = ?', [id], (err, row) => {
+          if (err || !row) return save('[]');
+          save(row.screenshots);
+        });
+      }
+    }
+  );
+});
 
   if (req.files?.length > 0) {
     // New files → replace old screenshots
