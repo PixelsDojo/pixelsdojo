@@ -18,10 +18,12 @@ const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
-const fs = require('fs');           // only once
+const fs = require('fs');
 const db = require('./database.js');
 
-// Auto-create persistent folders on startup (only once)
+const app = express();
+
+// Auto-create persistent folders on startup
 const uploadDirs = [
   '/app/data/images/npcs',
   '/app/data/images/profiles',
@@ -33,8 +35,6 @@ uploadDirs.forEach(dir => {
     console.log(`Created persistent upload folder: ${dir}`);
   }
 });
-
-const app = express();
 
 // Multer setup - persistent storage on Railway volume
 const storage = multer.diskStorage({
@@ -58,24 +58,28 @@ const upload = multer({
   limits: { fileSize: 2 * 1024 * 1024 } // 2MB max
 });
 
-// Basic middleware
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve persistent uploaded images publicly from Railway volume
-app.use('/images/npcs', express.static('/app/data/images/npcs'));
+// Serve uploaded images publicly
+app.use('/images/npcs',     express.static('/app/data/images/npcs'));
 app.use('/images/profiles', express.static('/app/data/images/profiles'));
-app.use('/images/pages', express.static('/app/data/images/pages'));
+app.use('/images/pages',    express.static('/app/data/images/pages'));
 
-// Session for login state
+// Session
 app.use(session({
-  secret: 'pixels-dojo-secret-key-change-this-in-production',
+  secret: process.env.SESSION_SECRET || 'pixels-dojo-secret-key-change-this-in-production',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
+  }
 }));
-// Make user available in all EJS templates
+
+// Make user available in all templates
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   next();
@@ -84,6 +88,16 @@ app.use((req, res, next) => {
 // Set EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+// ────────────────────────────────────────────────
+//  ADMIN MIDDLEWARE (this was missing!)
+function isAdmin(req, res, next) {
+  if (req.session?.user?.is_admin) {
+    return next();
+  }
+  return res.status(403).send('Access denied - admin only');
+}
+// ────────────────────────────────────────────────
 
 // Homepage
 app.get('/', (req, res) => {
@@ -97,7 +111,6 @@ app.get('/', (req, res) => {
       console.error('Recent pages error:', err);
       recentPages = [];
     }
-
     res.render('index', {
       user: req.session.user || null,
       recentPages: recentPages || []
@@ -112,7 +125,6 @@ app.get('/npcs', (req, res) => {
       console.error('NPC query error:', err.message);
       return res.status(500).send('Database error loading NPCs');
     }
-    console.log(`Rendered NPCs page with ${rows.length} entries`);
     res.render('npcs', { 
       npcs: rows,
       user: req.session.user || null 
@@ -120,7 +132,8 @@ app.get('/npcs', (req, res) => {
   });
 });
 
-// Login routes
+// ─── Login / Register / Logout ───────────────────────────────────────
+
 app.get('/login', (req, res) => {
   if (req.session.user) return res.redirect('/');
   res.render('login', { error: null, user: null });
@@ -155,30 +168,25 @@ app.post('/login', (req, res) => {
   });
 });
 
-// Register
 app.get('/register', (req, res) => {
   if (req.session.user) return res.redirect('/');
   res.render('register', { error: null, user: null });
 });
 
 app.post('/register', (req, res) => {
-  console.log('Register attempt received:', req.body);
-
   const { username, email, password, display_name } = req.body;
 
   if (!username || !email || !password) {
-    console.log('Missing fields');
     return res.render('register', { error: 'All fields required', user: null });
   }
 
   db.get('SELECT * FROM users WHERE username = ? OR email = ?', [username, email], (err, existing) => {
     if (err) {
-      console.error('Register check error:', err.message);
+      console.error('Register check error:', err?.message);
       return res.render('register', { error: 'Server error - try again', user: null });
     }
 
     if (existing) {
-      console.log('User/email already taken');
       return res.render('register', { error: 'Username or email already taken', user: null });
     }
 
@@ -191,30 +199,24 @@ app.post('/register', (req, res) => {
           console.error('Register insert error:', err.message);
           return res.render('register', { error: 'Registration failed - try again', user: null });
         }
-
-        console.log(`New user registered: ${username}`);
         res.redirect('/login');
       }
     );
   });
 });
 
-// Logout
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
-    if (err) {
-      console.error('Logout error:', err);
-    }
+    if (err) console.error('Logout error:', err);
     res.clearCookie('connect.sid');
     res.redirect('/');
   });
 });
 
-// Profile page
+// ─── Profile ──────────────────────────────────────────────────────────
+
 app.get('/profile', (req, res) => {
-  if (!req.session.user) {
-    return res.redirect('/login');
-  }
+  if (!req.session.user) return res.redirect('/login');
 
   db.get('SELECT * FROM users WHERE id = ?', [req.session.user.id], (err, freshUser) => {
     if (err || !freshUser) {
@@ -235,13 +237,11 @@ app.get('/profile', (req, res) => {
   });
 });
 
-// Profile Edit - show form
 app.get('/profile/edit', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   res.render('profile-edit', { user: req.session.user });
 });
 
-// Save profile changes
 app.post('/profile/update', upload.single('profile_image'), (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
@@ -250,7 +250,6 @@ app.post('/profile/update', upload.single('profile_image'), (req, res) => {
 
   if (req.file) {
     profileImage = '/images/profiles/' + req.file.filename;
-    console.log('Profile pic saved:', req.file.path);
   }
 
   db.run(
@@ -268,7 +267,6 @@ app.post('/profile/update', upload.single('profile_image'), (req, res) => {
   );
 });
 
-// Delete account
 app.post('/profile/delete', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
@@ -281,19 +279,14 @@ app.post('/profile/delete', (req, res) => {
   });
 });
 
-// Admin dashboard
-app.get('/admin', (req, res) => {
-  if (!req.session.user || !req.session.user.is_admin) {
-    return res.status(403).send('Access denied - admin only');
-  }
+// ─── Admin ────────────────────────────────────────────────────────────
 
+app.get('/admin', isAdmin, (req, res) => {
   db.all('SELECT * FROM npcs ORDER BY display_order ASC', [], (err, npcRows) => {
     if (err) return res.status(500).send('Error loading NPCs');
 
     db.all('SELECT * FROM pages ORDER BY created_at DESC', [], (err, pageRows) => {
       if (err) return res.status(500).send('Error loading pages');
-
-      console.log(`Admin dashboard: ${npcRows.length} NPCs, ${pageRows.length} pages`);
 
       res.render('admin', {
         user: req.session.user,
@@ -305,11 +298,7 @@ app.get('/admin', (req, res) => {
 });
 
 // Create new page
-app.post('/admin/pages', upload.array('screenshots', 15), (req, res) => {
-  if (!req.session.user || !req.session.user.is_admin) {
-    return res.status(403).send('Admin only');
-  }
-
+app.post('/admin/pages', isAdmin, upload.array('screenshots', 15), (req, res) => {
   const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
 
   if (!title || !slug || !content) {
@@ -318,9 +307,8 @@ app.post('/admin/pages', upload.array('screenshots', 15), (req, res) => {
 
   const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
-  // Handle screenshots
   let screenshots = [];
-  if (req.files && req.files.length > 0) {
+  if (req.files?.length > 0) {
     screenshots = req.files.map(file => '/images/pages/' + file.filename);
   }
   const screenshotsJson = JSON.stringify(screenshots);
@@ -344,13 +332,12 @@ app.post('/admin/pages', upload.array('screenshots', 15), (req, res) => {
         console.error('Page creation error:', err.message);
         return res.status(500).send('Error saving page: ' + err.message);
       }
-      console.log(`New page created: ${title} (${cleanSlug})`);
       res.redirect('/admin');
     }
   );
 });
 
-// View a single wiki page (with author info)
+// View single page
 app.get('/pages/:slug', (req, res) => {
   db.get(`
     SELECT p.*, 
@@ -362,7 +349,7 @@ app.get('/pages/:slug', (req, res) => {
     WHERE p.slug = ?
   `, [req.params.slug], (err, page) => {
     if (err) {
-      console.error('Page view error:', err.message);
+      console.error('Page view error:', err?.message);
       return res.status(500).send('Database error');
     }
     if (!page) return res.status(404).send('Page not found');
@@ -376,118 +363,30 @@ app.get('/pages/:slug', (req, res) => {
       if (req.session.user) {
         db.get('SELECT type FROM likes WHERE page_id = ? AND user_id = ?', [page.id, req.session.user.id], (err, reaction) => {
           if (!err && reaction) userReaction = reaction.type;
-          renderPage();
+          render();
         });
       } else {
-        renderPage();
+        render();
       }
     });
 
-    function renderPage() {
+    function render() {
       res.render('page', {
-        page: page,
+        page,
         user: req.session.user || null,
-        likes: likes,
+        likes,
         userReaction: userReaction || null
       });
     }
   });
 });
 
-// GET /admin/pages/:id/edit - return JSON for edit modal
-app.get('/admin/pages/:id/edit', isAdmin, async (req, res) => {
-  const page = await Page.findById(req.params.id);
-  if (!page) return res.status(404).json({ error: 'Page not found' });
-  res.json(page);
-});
+// ─── NPC Admin Routes ─────────────────────────────────────────────────
 
-// PUT /admin/pages/:id - update page
-app.put('/admin/pages/:id', isAdmin, async (req, res) => {
-  const { id } = req.params;
-  const updates = {
-    title: req.body.title,
-    slug: req.body.slug,
-    category: req.body.category,
-    difficulty: req.body.difficulty,
-    summary: req.body.summary,
-    pro_tips: req.body.pro_tips,
-    content: req.body.content,
-    // screenshots: handle file upload if new ones added
-  };
-
-  // If new screenshots uploaded
-  if (req.files && req.files.screenshots) {
-    // your upload logic here
-  }
-
-  const updated = await Page.findByIdAndUpdate(id, updates, { new: true });
-  res.redirect('/admin');
-});
-
-// Delete wiki page
-app.delete('/admin/pages/:id', (req, res) => {
-  if (!req.session.user || !req.session.user.is_admin) {
-    return res.status(403).json({ error: 'Admin only' });
-  }
-
-  const id = req.params.id;
-
-  db.run('DELETE FROM pages WHERE id = ?', [id], function(err) {
-    if (err) {
-      console.error('Delete page error:', err.message);
-      return res.status(500).json({ error: 'Database error - could not delete' });
-    }
-
-    if (this.changes === 0) {
-      return res.status(404).json({ error: 'Page not found' });
-    }
-
-    console.log(`Page ${id} deleted successfully`);
-    res.json({ success: true });
-  });
-});
-
-// Update NPC
-app.post('/admin/npcs/:id', upload.single('image'), (req, res) => {
-  if (!req.session.user || !req.session.user.is_admin) {
-    return res.status(403).send('Admin only');
-  }
-
-  const id = req.params.id;
-  const { name, location, description, display_order, current_image_path } = req.body;
-
-  let imagePath = current_image_path || '/images/npcs/default-npc.png';
-
-  if (req.file) {
-    imagePath = '/images/npcs/' + req.file.filename;
-    console.log(`New image uploaded for NPC ${id}: ${req.file.filename}`);
-  }
-
-  db.run(
-    `UPDATE npcs SET name = ?, location = ?, description = ?, image_path = ?, display_order = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
-    [name, location, description || null, imagePath, parseInt(display_order) || 999, id],
-    (err) => {
-      if (err) {
-        console.error('NPC update error:', err.message);
-        return res.status(500).send('Error saving NPC: ' + err.message);
-      }
-      console.log(`NPC ${id} updated successfully`);
-      res.redirect('/admin');
-    }
-  );
-});
-
-// Add new NPC
-app.post('/admin/npcs', upload.single('image'), (req, res) => {
-  if (!req.session.user || !req.session.user.is_admin) {
-    return res.status(403).send('Admin only');
-  }
-
+app.post('/admin/npcs', isAdmin, upload.single('image'), (req, res) => {
   const { name, location, description, display_order } = req.body;
 
-  if (!name) {
-    return res.status(400).send('Name is required');
-  }
+  if (!name) return res.status(400).send('Name is required');
 
   let imagePath = '/images/npcs/default-npc.png';
   if (req.file) {
@@ -503,36 +402,53 @@ app.post('/admin/npcs', upload.single('image'), (req, res) => {
         console.error('NPC add error:', err.message);
         return res.status(500).send('Error adding NPC');
       }
-      console.log(`New NPC added: ${name} (ID ${this.lastID})`);
       res.redirect('/admin');
     }
   );
 });
 
-// Delete NPC
-app.delete('/admin/npcs/:id', (req, res) => {
-  if (!req.session.user || !req.session.user.is_admin) {
-    return res.status(403).json({ error: 'Admin only' });
+app.post('/admin/npcs/:id', isAdmin, upload.single('image'), (req, res) => {
+  const id = req.params.id;
+  const { name, location, description, display_order, current_image_path } = req.body;
+
+  let imagePath = current_image_path || '/images/npcs/default-npc.png';
+  if (req.file) {
+    imagePath = '/images/npcs/' + req.file.filename;
   }
 
+  db.run(
+    `UPDATE npcs SET name = ?, location = ?, description = ?, image_path = ?, display_order = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+    [name, location, description || null, imagePath, parseInt(display_order) || 999, id],
+    (err) => {
+      if (err) {
+        console.error('NPC update error:', err.message);
+        return res.status(500).send('Error saving NPC: ' + err.message);
+      }
+      res.redirect('/admin');
+    }
+  );
+});
+
+app.delete('/admin/npcs/:id', isAdmin, (req, res) => {
   const id = req.params.id;
-
   db.run('DELETE FROM npcs WHERE id = ?', [id], function(err) {
-    if (err) {
-      console.error('Delete NPC error:', err.message);
-      return res.status(500).json({ error: 'Database error - could not delete' });
-    }
-
-    if (this.changes === 0) {
-      return res.status(404).json({ error: 'NPC not found' });
-    }
-
-    console.log(`NPC ${id} deleted successfully`);
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (this.changes === 0) return res.status(404).json({ error: 'NPC not found' });
     res.json({ success: true });
   });
 });
 
-// Catch-all error handler
+app.delete('/admin/pages/:id', isAdmin, (req, res) => {
+  const id = req.params.id;
+  db.run('DELETE FROM pages WHERE id = ?', [id], function(err) {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (this.changes === 0) return res.status(404).json({ error: 'Page not found' });
+    res.json({ success: true });
+  });
+});
+
+// ─── Error handler ────────────────────────────────────────────────────
+
 app.use((err, req, res, next) => {
   console.error('SERVER ERROR:', err.stack);
   res.status(500).send(`Internal Server Error: ${err.message}`);
