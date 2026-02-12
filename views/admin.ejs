@@ -222,10 +222,16 @@
                     <input type="text" name="slug" required placeholder="e.g. farming-guide">
                 </div>
 
-                <div class="form-group">
-                    <label>Category</label>
-                    <input type="text" name="category" placeholder="e.g. Farming, Housing, Quests">
-                </div>
+               <div class="form-group">
+  <label>Category *</label>
+  <select name="category" required style="width:100%; padding:0.8rem;">
+    <option value="">Select category</option>
+    <option value="startup">Start Here</option>
+    <option value="earn">Earn $PIXEL</option>
+    <option value="mastery">Mastery</option>
+    <option value="general">General / Other</option>
+  </select>
+</div>
 
                 <div class="form-group">
                     <label>Difficulty Level *</label>
