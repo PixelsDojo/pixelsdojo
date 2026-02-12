@@ -75,7 +75,9 @@
     <p><%- page.summary || '[No summary yet]' %></p>
 
     <!-- Main Content -->
-    <div dangerouslySetInnerHTML={{ __html: page.content }}></div>
+    <div class="content-body">
+  <%- page.content || '<p style="color: var(--yellow);">No content saved yet — check backend logs.</p>' %>
+</div>
 
     <!-- Screenshots -->
     <% if (page.screenshots && page.screenshots.length > 0) { %>
