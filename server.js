@@ -62,6 +62,7 @@ const upload = multer({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
 
 // Serve persistent uploaded images publicly from Railway volume
 app.use('/images/npcs', express.static('/app/data/images/npcs'));
@@ -392,6 +393,36 @@ app.get('/pages/:slug', (req, res) => {
       });
     }
   });
+});
+
+// GET /admin/pages/:id/edit - return JSON for edit modal
+app.get('/admin/pages/:id/edit', isAdmin, async (req, res) => {
+  const page = await Page.findById(req.params.id);
+  if (!page) return res.status(404).json({ error: 'Page not found' });
+  res.json(page);
+});
+
+// PUT /admin/pages/:id - update page
+app.put('/admin/pages/:id', isAdmin, async (req, res) => {
+  const { id } = req.params;
+  const updates = {
+    title: req.body.title,
+    slug: req.body.slug,
+    category: req.body.category,
+    difficulty: req.body.difficulty,
+    summary: req.body.summary,
+    pro_tips: req.body.pro_tips,
+    content: req.body.content,
+    // screenshots: handle file upload if new ones added
+  };
+
+  // If new screenshots uploaded
+  if (req.files && req.files.screenshots) {
+    // your upload logic here
+  }
+
+  const updated = await Page.findByIdAndUpdate(id, updates, { new: true });
+  res.redirect('/admin');
 });
 
 // Delete wiki page
