@@ -1,6 +1,6 @@
 <header>
   <div class="header-container">
-    <!-- LEFT: Logo + tagline -->
+    <!-- Left: Logo + text -->
     <div class="logo-section">
       <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo" class="logo">
       <div class="logo-text">
@@ -9,24 +9,23 @@
       </div>
     </div>
 
-    <!-- RIGHT: User status + blue nav + widget -->
-    <div class="right-section">
-      <!-- User status & profile buttons -->
+    <!-- Right: User + Price widget + links -->
+    <div class="user-section">
       <div class="user-status">
         <% if (user) { %>
-          <span>Welcome, <%= user.display_name || user.username %>!</span>
-          <a href="/profile">My Account</a>
+          <span class="welcome">Welcome, <%= user.display_name || user.username %>!</span>
+          <a href="/profile">Profile</a>
           <% if (user.is_admin) { %>
-            <a href="/admin">Admin Dashboard</a>
+            <a href="/admin">Admin</a>
           <% } %>
           <a href="/logout">Logout</a>
         <% } else { %>
-          <a href="/login">Login</a> |
+          <a href="/login">Login</a>
           <a href="/register">Register</a>
         <% } %>
       </div>
 
-      <!-- CoinGecko widget -->
+      <!-- Price widget -->
       <div class="price-widget">
         <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
         <coingecko-coin-price-marquee-widget 
