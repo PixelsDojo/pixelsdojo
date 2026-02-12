@@ -354,6 +354,18 @@ app.get('/pages/:slug', (req, res) => {
   );
 });
 
+app.get('/category/:cat', (req, res) => {
+  const cat = req.params.cat;
+  db.all(
+    `SELECT * FROM pages WHERE category = ? ORDER BY created_at DESC`,
+    [cat],
+    (err, pages) => {
+      if (err) pages = [];
+      res.render('category', { category: cat, pages, user: req.session.user });
+    }
+  );
+});
+
 // Delete page
 app.delete('/admin/pages/:id', requireAdmin, (req, res) => {
   db.run('DELETE FROM pages WHERE id = ?', [req.params.id], function(err) {
