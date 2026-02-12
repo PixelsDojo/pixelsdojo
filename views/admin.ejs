@@ -108,7 +108,7 @@
                         </div>
                     </div>
                 <% }); %>
-            </div>                
+            </div>
         </section>
     </div>
 
@@ -238,37 +238,41 @@
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
     <script>
-        let quill = null;  // Will be initialized on first open
+        let quill = null;
 
         function showAddPageModal() {
             const modal = document.getElementById('addPageModal');
             modal.style.display = 'block';
 
-            // Initialize Quill only once, right after modal is visible
             if (!quill) {
                 quill = new Quill('#quill-editor', {
-            theme: 'snow',
-            modules: {
-            toolbar: [ /* your existing toolbar array */ ],
-            clipboard: {
-            matchVisual: false  // Helps with Word paste fidelity
-            }
-            },
-                 placeholder: 'Paste your Word content here (steps + images should come along)...'
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['link', 'image'],
+                            ['clean']
+                        ],
+                        clipboard: {
+                            matchVisual: false
+                        }
+                    },
+                    placeholder: 'Paste your Word content here (steps + images should come along)...'
                 });
             }
         }
 
-        // Copy Quill content to hidden field before submit
-       document.getElementById('addPageForm').addEventListener('submit', function(e) {
-    if (quill) {
-        const contentValue = quill.root.innerHTML;
-        console.log('Saving Quill content:', contentValue);  // ← this line shows in browser console
-        document.getElementById('content-hidden').value = contentValue;
-    } else {
-        console.warn('Quill not initialized!');
-    }
-});
+        document.getElementById('addPageForm').addEventListener('submit', function(e) {
+            if (quill) {
+                const contentValue = quill.root.innerHTML;
+                console.log('Saving Quill content:', contentValue);
+                document.getElementById('content-hidden').value = contentValue;
+            } else {
+                console.warn('Quill not initialized!');
+            }
+        });
 
         function showAddModal(modalId) {
             document.getElementById(modalId).style.display = 'block';
@@ -312,24 +316,4 @@
 
         function deletePage(id, title) {
             if (confirm(`Are you sure you want to delete "${title}"?`)) {
-                fetch(`/admin/pages/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Page deleted!');
-                        location.reload();
-                    } else {
-                        response.json().then(err => {
-                            alert('Unable to delete: ' + (err.error || 'Server error'));
-                        });
-                    }
-                })
-                .catch(err => alert('Error: ' + err));
-            }
-        }
-    </script>
-    <script src="/js/admin.js"></script>
-</body>
-</html>
+                fetch(`/admin/pages/${id}
