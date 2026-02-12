@@ -247,17 +247,14 @@
             // Initialize Quill only once, right after modal is visible
             if (!quill) {
                 quill = new Quill('#quill-editor', {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: [
-                            [{ 'header': [1, 2, 3, false] }],
-                            ['bold', 'italic', 'underline', 'strike'],
-                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                            ['link', 'image'],
-                            ['clean']
-                        ]
-                    },
-                    placeholder: 'Paste your Word content here (steps + images should come along)...'
+            theme: 'snow',
+            modules: {
+            toolbar: [ /* your existing toolbar array */ ],
+            clipboard: {
+            matchVisual: false  // Helps with Word paste fidelity
+            }
+            },
+                 placeholder: 'Paste your Word content here (steps + images should come along)...'
                 });
             }
         }
