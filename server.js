@@ -196,55 +196,66 @@ app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15
 
   const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
-  // Check for slug conflict
-  db.get(
-    'SELECT id FROM pages WHERE slug = ? AND id != ?',
-    [cleanSlug, id],
-    (err, row) => {
-      if (err) {
-        console.error('Slug check error:', err.message);
-        return res.status(500).json({ error: 'Database error during slug check' });
-      }
-
-      if (row) {
-        return res.status(409).json({
-          error: 'This slug is already in use by another page. Please choose a different one.'
-        });
-      }
-
-      // No conflict → proceed
-      const save = (screenshotsJson) => {
-        db.run(
-          `UPDATE pages 
-           SET title=?, slug=?, content=?, category=?, difficulty=?, 
-               screenshots=?, summary=?, pro_tips=?, updated_at=CURRENT_TIMESTAMP 
-           WHERE id=?`,
-          [title, cleanSlug, content, category || null, difficulty || 'Beginner',
-           screenshotsJson, summary || null, pro_tips || null, id],
-          function (err) {
-            if (err) {
-              console.error('Update failed:', err.message);
-              return res.status(500).json({ error: 'Error saving page: ' + err.message });
-            }
-            if (this.changes === 0) {
-              return res.status(404).json({ error: 'Page not found' });
-            }
-            res.json({ success: true });
-          }
-        );
-      };
-
-      if (req.files?.length > 0) {
-        const newPaths = req.files.map(f => '/images/pages/' + f.filename);
-        save(JSON.stringify(newPaths));
-      } else {
-        db.get('SELECT screenshots FROM pages WHERE id = ?', [id], (err, row) => {
-          if (err || !row) return save('[]');
-          save(row.screenshots);
-        });
-      }
+  // First get the current slug of this page
+  db.get('SELECT slug FROM pages WHERE id = ?', [id], (err, current) => {
+    if (err || !current) {
+      return res.status(404).json({ error: 'Page not found' });
     }
-  );
+
+    // If slug is unchanged → skip conflict check and just save
+    if (cleanSlug === current.slug) {
+      return proceedWithUpdate();
+    }
+
+    // Slug changed → check if new slug is already taken by someone else
+    db.get(
+      'SELECT id FROM pages WHERE slug = ? AND id != ?',
+      [cleanSlug, id],
+      (err, conflict) => {
+        if (err) {
+          console.error('Slug check error:', err.message);
+          return res.status(500).json({ error: 'Database error' });
+        }
+        if (conflict) {
+          return res.status(409).json({
+            error: 'This slug is already used by another page. Choose a different one.'
+          });
+        }
+        proceedWithUpdate();
+      }
+    );
+  });
+
+  function proceedWithUpdate() {
+    const save = (screenshotsJson) => {
+      db.run(
+        `UPDATE pages 
+         SET title=?, slug=?, content=?, category=?, difficulty=?, 
+             screenshots=?, summary=?, pro_tips=?, updated_at=CURRENT_TIMESTAMP 
+         WHERE id=?`,
+        [title, cleanSlug, content, category || null, difficulty || 'Beginner',
+         screenshotsJson, summary || null, pro_tips || null, id],
+        function(err) {
+          if (err) {
+            console.error('Update failed:', err.message);
+            return res.status(500).json({ error: 'Error saving page: ' + err.message });
+          }
+          if (this.changes === 0) return res.status(404).json({ error: 'Page not found' });
+          res.json({ success: true });
+        }
+      );
+    };
+
+    if (req.files?.length > 0) {
+      const newPaths = req.files.map(f => '/images/pages/' + f.filename);
+      save(JSON.stringify(newPaths));
+    } else {
+      db.get('SELECT screenshots FROM pages WHERE id = ?', [id], (err, row) => {
+        if (err || !row) return save('[]');
+        save(row.screenshots);
+      });
+    }
+  }
 });
 
 // Delete page
