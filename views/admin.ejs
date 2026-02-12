@@ -195,10 +195,11 @@
             <small>Max 350×350 recommended per image, but any size is fine. Will be resized/displayed responsively.</small>
           </div>
 
-      <div class="form-group">
-        <label>Content (main article text)</label>
-        <textarea name="content" rows="15" required placeholder="Paste or type your full guide here..."></textarea>
-      </div>
+<div class="mb-3">
+            <label for="content" class="form-label">Main Content (paste from Word here)</label>
+            <div id="quill-editor" style="height: 450px; background: white;"></div>  <!-- Quill will fill this -->
+            <textarea name="content" id="content-hidden" style="display: none;"></textarea>  <!-- hidden field for submit -->
+          </div>
 
       <button type="submit" class="btn-primary" style="width:100%; margin-top:1rem;">Create Page</button>
     </form>
@@ -244,6 +245,39 @@
         function showAddPageModal() { 
             document.getElementById('addPageModal').style.display = 'block'; 
         }
+
+<script>
+  let quill;  // global so we can access it
+
+  // Initialize Quill ONLY when modal is shown (prevents sizing issues)
+  const addModal = document.getElementById('addPageModal');
+  addModal.addEventListener('shown.bs.modal', function () {
+    if (!quill) {  // init only once
+      quill = new Quill('#quill-editor', {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            [{ 'header': [1, 2, 3, false] }],          // headings for steps
+            ['bold', 'italic', 'underline', 'strike'], // formatting
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }], // numbered steps perfect for tutorials
+            ['link', 'image'],                         // image button (for manual insert if needed)
+            ['clean']                                  // remove junk
+          ]
+        },
+        placeholder: 'Paste your Word content here (steps + images should come along)...'
+      });
+
+      // Optional: if editing existing page, load content here (for now, empty for new)
+    }
+  });
+
+  // When form submits, copy Quill HTML to hidden textarea
+  document.getElementById('newPageForm').addEventListener('submit', function(e) {
+    if (quill) {
+      document.getElementById('content-hidden').value = quill.root.innerHTML;
+    }
+  });
+</script>
 
         function closeModal(id) { 
             document.getElementById(id).style.display = 'none'; 
