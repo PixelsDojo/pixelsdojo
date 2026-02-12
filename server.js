@@ -241,6 +241,37 @@ app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15
   });
 });
 
+// Public view single page (GET /pages/:slug)
+app.get('/pages/:slug', (req, res) => {
+  db.get(
+    `SELECT * FROM pages WHERE slug = ?`,
+    [req.params.slug],
+    (err, page) => {
+      if (err) {
+        console.error('Database error viewing page:', err.message);
+        return res.status(500).send('Server error');
+      }
+      if (!page) {
+        return res.status(404).send('Page not found');
+      }
+
+      // Optional: parse screenshots if stored as JSON
+      try {
+        page.screenshots = JSON.parse(page.screenshots || '[]');
+      } catch (e) {
+        page.screenshots = [];
+      }
+
+      res.render('page', { 
+        page,
+        user: req.session.user || null,
+        likes: 0,          // replace with real like count later
+        dislikes: 0        // same
+      });
+    }
+  );
+});
+
 // Delete page
 app.delete('/admin/pages/:id', requireAdmin, (req, res) => {
   db.run('DELETE FROM pages WHERE id = ?', [req.params.id], function(err) {
