@@ -5,19 +5,15 @@
 }
 
 :root {
-    --neon-purple: #6500ff;
     --purple: #8500ff;
-    --cyan: #00d4ff;
-    --cyan-light: #4dd0e1;
     --yellow: #edff84;
-    --lime: #b7eb05;
     --green: #b7eb05;
-    --bg-color: #0a0a15;
     --dark-bg: #1a1a2e;
     --card-bg: #0f3460;
+    --cyan: #00d4ff;
+    --cyan-light: #4dd0e1;
 }
 
-/* Base styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, var(--dark-bg) 0%, #16213e 100%);
@@ -72,13 +68,13 @@ header {
     width: 100%;
 }
 
-.user-nav, .user-status {
+.user-nav {
     display: flex;
-    align-items: center;
     gap: 1rem;
+    align-items: center;
 }
 
-.user-nav a, .user-status a, .user-status span {
+.user-nav a {
     color: white;
     text-decoration: none;
     padding: 0.5rem 1rem;
@@ -87,32 +83,9 @@ header {
     transition: all 0.3s;
 }
 
-.user-nav a:hover, .user-status a:hover {
+.user-nav a:hover {
     background: var(--yellow);
     color: var(--purple);
-}
-
-/* Main Navigation (blue menu) */
-.main-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin: 0.5rem 0;
-    justify-content: flex-end;
-}
-
-.main-nav a {
-    color: #00bfff;
-    text-decoration: none;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: background 0.2s, color 0.2s;
-}
-
-.main-nav a:hover {
-    background: rgba(0, 191, 255, 0.15);
-    color: white;
 }
 
 /* Live Price Widget */
@@ -120,8 +93,43 @@ header {
     background: rgba(0, 0, 0, 0.3);
     padding: 1rem;
     border-radius: 8px;
+    margin: 1rem auto;
     max-width: 400px;
     text-align: center;
+}
+
+/* Main Navigation */
+nav {
+    background: var(--card-bg);
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+nav a {
+    color: var(--cyan);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+nav a:hover {
+    color: #fff;
+    background: rgba(0, 212, 255, 0.2);
 }
 
 /* Hero Section with 3 Big Buttons */
@@ -210,15 +218,17 @@ header {
     font-size: 1.1rem;
 }
 
-/* Container & Content Sections */
-.container, .content-section {
+/* Container */
+.container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
 }
 
+/* Content Sections */
 .content-section {
     background: var(--card-bg);
+    padding: 2rem;
     margin-bottom: 2rem;
     border-radius: 8px;
     border-left: 4px solid var(--cyan);
@@ -233,18 +243,24 @@ header {
 
 .content-section h3 {
     color: var(--cyan-light);
-    margin: 1.5rem 0 0.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
     font-size: 1.5rem;
 }
 
 .content-section ul, .content-section ol {
-    margin: 0.5rem 0 0.5rem 2rem;
+    margin-left: 2rem;
+    margin-top: 0.5rem;
+}
+
+.content-section li {
+    margin-bottom: 0.5rem;
 }
 
 /* Cards Grid */
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.5rem;
     margin-top: 2rem;
 }
@@ -267,35 +283,7 @@ header {
     margin-bottom: 0.75rem;
 }
 
-/* Buttons */
-.btn, .btn-primary {
-    display: inline-block;
-    background: var(--cyan);
-    color: var(--dark-bg);
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background 0.3s;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.btn:hover, .btn-primary:hover {
-    background: var(--cyan-light);
-}
-
-.btn-purple {
-    background: var(--purple);
-    color: white;
-}
-
-.btn-purple:hover {
-    background: #6a00cc;
-}
-
-/* Interaction Bar / Like Buttons */
+/* Like/Dislike Buttons */
 .interaction-bar {
     display: flex;
     gap: 1rem;
@@ -320,11 +308,120 @@ header {
     gap: 0.5rem;
 }
 
-.like-btn:hover { background: var(--cyan); color: var(--dark-bg); }
-.dislike-btn:hover { background: #ff4444; border-color: #ff4444; color: white; }
+.like-btn:hover {
+    background: var(--cyan);
+    color: var(--dark-bg);
+}
 
-.like-btn.liked { background: var(--cyan); color: var(--dark-bg); }
-.dislike-btn.disliked { background: #ff4444; border-color: #ff4444; color: white; }
+.dislike-btn:hover {
+    background: #ff4444;
+    border-color: #ff4444;
+    color: white;
+}
+
+.like-btn.liked {
+    background: var(--cyan);
+    color: var(--dark-bg);
+}
+
+.dislike-btn.disliked {
+    background: #ff4444;
+    border-color: #ff4444;
+    color: white;
+}
+
+/* Question Form */
+.question-form {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    border: 2px solid var(--purple);
+}
+
+.question-form h3 {
+    color: var(--yellow);
+    margin-bottom: 1rem;
+}
+
+.question-form textarea {
+    width: 100%;
+    padding: 1rem;
+    background: var(--dark-bg);
+    border: 2px solid var(--cyan);
+    border-radius: 5px;
+    color: white;
+    font-family: inherit;
+    min-height: 120px;
+    margin-bottom: 1rem;
+}
+
+.question-form input {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--dark-bg);
+    border: 2px solid var(--cyan);
+    border-radius: 5px;
+    color: white;
+    font-family: inherit;
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    background: var(--cyan);
+    color: var(--dark-bg);
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn:hover {
+    background: var(--cyan-light);
+}
+
+.btn-purple {
+    background: var(--purple);
+    color: white;
+}
+
+.btn-purple:hover {
+    background: #6a00cc;
+}
+
+/* Author Card */
+.author-card {
+    background: rgba(133, 0, 255, 0.1);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 2px solid var(--purple);
+    margin: 2rem 0;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.author-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--yellow);
+}
+
+.author-info h3 {
+    color: var(--yellow);
+    margin-bottom: 0.5rem;
+}
+
+.author-info p {
+    color: #b8b8b8;
+}
 
 /* Footer */
 footer {
@@ -335,49 +432,59 @@ footer {
     border-top: 3px solid var(--cyan);
 }
 
-footer p, footer a {
+footer p {
     color: #b8b8b8;
 }
 
-footer a:hover {
+footer a {
     color: var(--yellow);
+    text-decoration: none;
+}
+
+footer a:hover {
     text-decoration: underline;
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
-    header .header-container {
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .main-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-container {
         flex-direction: column;
         text-align: center;
-        gap: 1rem;
     }
-
-    .user-nav, .main-nav {
-        flex-direction: column;
-        gap: 0.5rem;
-        justify-content: center;
-    }
-
-    .main-nav {
-        gap: 1rem;
-    }
-
+    
     .logo-section img {
         height: 60px;
     }
-
-    .hero-buttons {
+    
+    .author-card {
         flex-direction: column;
-        width: 80%;
-        bottom: 1.5rem;
+        text-align: center;
     }
+}
 
-    .hero-buttons .btn {
-        width: 100%;
-        margin: 0.5rem 0;
-    }
+/* Alerts */
+.alert {
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+}
 
-    .card-grid, .main-buttons {
-        grid-template-columns: 1fr;
-    }
+.alert-success {
+    background: rgba(76, 175, 80, 0.2);
+    border: 2px solid #4CAF50;
+    color: #4CAF50;
+}
+
+.alert-error {
+    background: rgba(244, 67, 54, 0.2);
+    border: 2px solid #f44336;
+    color: #f44336;
 }
