@@ -159,62 +159,50 @@
     </div>
 
 <!-- Edit Page Modal -->
-<div id="editPageModal" class="modal">
-  <div class="modal-content" style="max-height: 85vh; overflow-y: auto; padding-bottom: 2rem;">
-    <span class="close" onclick="closeModal('editPageModal')">×</span>
-    <h2>Edit Wiki Page</h2>
-    <form id="editPageForm" method="POST" action="/admin/pages" enctype="multipart/form-data">
-      <input type="hidden" name="_method" value="PUT"> <!-- for method override if needed -->
-      <input type="hidden" id="edit_page_id" name="id">
-
-      <div class="form-group">
-        <label>Title *</label>
-        <input type="text" id="edit_title" name="title" required>
+<!-- Example modal structure – adjust to match yours -->
+<div class="modal fade" id="editPageModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Page</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
+      <form id="editPageForm" enctype="multipart/form-data">
+        <div class="modal-body">
+          <input type="hidden" name="id" id="editPageId">
 
-      <div class="form-group">
-        <label>Slug *</label>
-        <input type="text" id="edit_slug" name="slug" required>
-      </div>
+          <div class="mb-3">
+            <label for="editTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="editTitle" name="title" required>
+          </div>
 
-      <div class="form-group">
-        <label>Category</label>
-        <input type="text" id="edit_category" name="category">
-      </div>
+          <!-- This is the slug field – make it readonly -->
+          <div class="mb-3">
+            <label for="editSlug" class="form-label">Slug (cannot be changed)</label>
+            <input 
+              type="text" 
+              class="form-control bg-light" 
+              id="editSlug" 
+              name="slug" 
+              readonly                    <!-- ← prevents editing -->
+              style="cursor: not-allowed;" <!-- visual hint -->
+            >
+          </div>
 
-      <div class="form-group">
-        <label>Difficulty *</label>
-        <select id="edit_difficulty" name="difficulty" required>
-          <option value="Beginner">Beginner</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Advanced">Advanced</option>
-        </select>
-      </div>
+          <div class="mb-3">
+            <label for="editContent" class="form-label">Content (Quill editor)</label>
+            <div id="editQuillEditor"></div> <!-- Quill container -->
+            <input type="hidden" name="content" id="editContent">
+          </div>
 
-      <div class="form-group">
-        <label>Quick Summary</label>
-        <textarea id="edit_summary" name="summary" rows="3"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Pro Tips / Hacks</label>
-        <textarea id="edit_pro_tips" name="pro_tips" rows="5"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Screenshots (add new ones – existing will stay)</label>
-        <input type="file" name="screenshots" accept="image/*" multiple>
-        <small>Current screenshots will remain unless you replace them later.</small>
-      </div>
-
-      <div class="form-group">
-        <label>Main Content</label>
-        <div id="edit-quill-editor" style="height: 450px; background: white;"></div>
-        <textarea name="content" id="edit-content-hidden" style="display: none;"></textarea>
-      </div>
-
-      <button type="submit" class="btn-primary" style="width:100%; margin-top:1rem;">Save Changes</button>
-    </form>
+          <!-- other fields: category, difficulty, summary, pro_tips, screenshots... -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
