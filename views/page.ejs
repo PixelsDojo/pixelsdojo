@@ -3,112 +3,289 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= page.title %> - Pixels Dojo</title>
+  <title><%= page.title %> - Pixels Dojo Wiki</title>
   <link rel="stylesheet" href="/css/style.css">
-  <style>
-    .page-container { max-width: 900px; margin: 2rem auto; padding: 1rem; }
-    .metadata { color: #aaa; margin-bottom: 1rem; font-size: 0.95rem; }
-    .screenshot-gallery img { max-width: 350px; height: auto; margin: 0.5rem; border-radius: 8px; }
-    .pro-tips { background: #1e2a3a; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; }
-  </style>
 </head>
 <body>
- <header>
-  <div class="header-container">
-    <div class="logo-section">
-      <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo" class="logo">
-      <div class="logo-text">
-        <h1>PIXELS DOJO</h1>
-        <p class="tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <div class="logo-section">
+        <a href="/">
+          <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo" class="logo">
+        </a>
+        <div class="logo-text">
+          <h1><a href="/" style="color:white; text-decoration:none;">PIXELS DOJO</a></h1>
+          <p class="tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
+        </div>
       </div>
-    </div>
-
-    <div class="right-section">
-      <div class="user-nav">
-        <% if (user) { %>
-          <span>Welcome, <%= user.display_name || user.username %>!</span>
-          <% if (user.is_admin) { %>
-            <a href="/admin">Admin</a>
+      <div class="right-section">
+        <div class="user-nav">
+          <% if (user) { %>
+            <span>Welcome, <%= user.display_name || user.username %>!</span>
+            <% if (user.is_admin) { %>
+              <a href="/admin">Admin</a>
+            <% } %>
+            <a href="/logout">Logout</a>
+          <% } else { %>
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
           <% } %>
-          <a href="/logout">Logout</a>
-        <% } else { %>
-          <a href="/login">Login</a> |
-          <a href="/register">Register</a>
-        <% } %>
-      </div>
-
-      <div class="price-widget">
-        <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
-        <coingecko-coin-price-marquee-widget 
-          coin-ids="pixels" 
-          currency="usd" 
-          background-color="transparent" 
-          font-color="#edff84">
-        </coingecko-coin-price-marquee-widget>
+        </div>
+        <div class="price-widget">
+          <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
+          <coingecko-coin-price-marquee-widget 
+            coin-ids="pixels" 
+            currency="usd" 
+            background-color="transparent" 
+            font-color="#edff84">
+          </coingecko-coin-price-marquee-widget>
+        </div>
       </div>
     </div>
-  </div>
-</header>
+  </header>
 
- <nav>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="/npcs">NPCs</a></li>
-            <li><a href="#new">I'm New</a></li>
-            <li><a href="#earn">Earn $PIXEL</a></li>
-            <li><a href="#master">Become Master</a></li>
-            <li><a href="#community">Community</a></li>
-        </ul>
-    </nav>
+  <!-- NAVIGATION -->
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/npcs">NPCs</a></li>
+      <li><a href="/#new">I'm New</a></li>
+      <li><a href="/#earn">Earn $PIXEL</a></li>
+      <li><a href="/#master">Become Master</a></li>
+      <li><a href="/#community">Community</a></li>
+    </ul>
+  </nav>
 
+  <!-- MAIN CONTENT -->
   <div class="page-container">
+    <!-- Page Title -->
     <h1><%= page.title %></h1>
 
+    <!-- Metadata -->
     <div class="metadata">
-      <strong>Last Updated:</strong> <%= new Date(page.updated_at || page.created_at).toLocaleDateString() %><br>
+      <strong>Last Updated:</strong> <%= new Date(page.updated_at || page.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %><br>
       <strong>Difficulty:</strong> <%= page.difficulty || 'Beginner' %><br>
-      <strong>Author:</strong> <a href="/u/<%= page.author_username || 'unknown' %>"><%= page.author_display_name || 'Unknown' %></a>
+      <strong>Category:</strong> <%= page.category || 'General' %><br>
+      <% if (page.author_display_name || page.author_username) { %>
+        <strong>Author:</strong> 
+        <a href="/u/<%= page.author_username || 'unknown' %>">
+          <%= page.author_display_name || page.author_username || 'Unknown' %>
+        </a>
+      <% } %>
     </div>
 
-    <!-- Quick Summary -->
-    <h2>Quick Summary</h2>
-    <p><%- page.summary || '[No summary yet]' %></p>
-
-    <!-- Main Content -->
-    <div dangerouslySetInnerHTML={{ __html: page.content }}></div>
-
-    <!-- Screenshots -->
-    <% if (page.screenshots && page.screenshots.length > 0) { %>
-      <h2>Screenshots</h2>
-      <div class="screenshot-gallery">
-        <% JSON.parse(page.screenshots).forEach(path => { %>
-          <img src="<%= path %>" alt="Screenshot">
-        <% }) %>
+    <!-- Interaction Bar (Likes/Comments) -->
+    <% if (user) { %>
+      <div class="interaction-bar">
+        <button class="like-btn <%= userReaction === 'like' ? 'liked' : '' %>" onclick="react('<%= page.id %>', 'like')">
+          👍 Like (<span id="like-count"><%= likes || 0 %></span>)
+        </button>
+        <button class="dislike-btn <%= userReaction === 'dislike' ? 'disliked' : '' %>" onclick="react('<%= page.id %>', 'dislike')">
+          👎 Dislike (<span id="dislike-count"><%= dislikes || 0 %></span>)
+        </button>
+        <button onclick="scrollToComments()">💬 Comments</button>
+      </div>
+    <% } else { %>
+      <div class="interaction-bar">
+        <span>👍 <%= likes || 0 %> likes • 👎 <%= dislikes || 0 %> dislikes</span>
+        <span style="color:#888">(Login to react)</span>
       </div>
     <% } %>
 
-    <!-- Pro Tips / Hints -->
-    <div class="pro-tips">
-    <h3>Pro Tips / Hacks</h3>
-    <p><%- page.pro_tips || '[No tips yet]' %></p>
-  </div>
+    <!-- Quick Summary (if exists) -->
+    <% if (page.summary) { %>
+      <h2>Quick Summary</h2>
+      <p><%- page.summary %></p>
+    <% } %>
 
-<p>
-  <strong>Author:</strong> 
-  <a href="/u/<%= page.author_username || 'unknown' %>">
-    <img src="<%= page.author_profile_image || '/images/default-avatar.png' %>" alt="Avatar" style="width:32px; height:32px; border-radius:50%; vertical-align:middle; margin-right:8px;">
-    <%= page.author_display_name || page.author_username || 'Unknown' %>
-  </a>
-</p>
-
-    <!-- Likes / Comments / Upvotes -->
-    <div style="margin:2rem 0;">
-      <button>👍 Upvote (<%= likes || 0 %>)</button>
-      <button>💬 Comment</button>
+    <!-- Main Content -->
+    <div class="content-body">
+      <%- page.content %>
     </div>
 
-    <!-- Related Pages / Community -->
-    <p>See also: [related links]</p>
+    <!-- Screenshots Gallery (if exists) -->
+    <% if (page.screenshots && page.screenshots.length > 0) { %>
+      <h2>Screenshots & Images</h2>
+      <div class="screenshot-gallery">
+        <% 
+        let screenshotArray;
+        try {
+          screenshotArray = typeof page.screenshots === 'string' ? JSON.parse(page.screenshots) : page.screenshots;
+        } catch(e) {
+          screenshotArray = [];
+        }
+        screenshotArray.forEach(path => { %>
+          <img src="<%= path %>" alt="Screenshot" loading="lazy">
+        <% }); %>
+      </div>
+    <% } %>
+
+    <!-- Pro Tips Section (if exists) -->
+    <% if (page.pro_tips) { %>
+      <div class="pro-tips">
+        <h3>💡 Pro Tips & Hacks</h3>
+        <%- page.pro_tips %>
+      </div>
+    <% } %>
+
+    <!-- Related Pages (if exists) -->
+    <% if (page.related_pages) { %>
+      <h2>Related Guides</h2>
+      <ul>
+        <% 
+        let relatedArray;
+        try {
+          relatedArray = typeof page.related_pages === 'string' ? JSON.parse(page.related_pages) : page.related_pages;
+        } catch(e) {
+          relatedArray = [];
+        }
+        relatedArray.forEach(link => { %>
+          <li><a href="<%= link.url %>"><%= link.title %></a></li>
+        <% }); %>
+      </ul>
+    <% } %>
+
+    <!-- Author Profile Section -->
+    <% if (page.author_display_name || page.author_username) { %>
+      <p class="author-section">
+        <img src="<%= page.author_profile_image || '/images/default-avatar.png' %>" alt="Author Avatar">
+        <span>
+          <strong>Written by:</strong> 
+          <a href="/u/<%= page.author_username || 'unknown' %>">
+            <%= page.author_display_name || page.author_username || 'Unknown' %>
+          </a>
+          <% if (page.author_bio) { %>
+            <br><em style="font-size:0.9rem; color:#b8b8b8;"><%= page.author_bio %></em>
+          <% } %>
+        </span>
+      </p>
+    <% } %>
+
+    <!-- Question/Feedback Form -->
+    <div class="question-form" id="comments">
+      <h3>❓ Have a Question or Feedback?</h3>
+      <p style="color:#b8b8b8; margin-bottom:1rem;">Ask a question about this guide and we'll get back to you via email!</p>
+      <form onsubmit="submitQuestion(event)">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email" required>
+        <textarea name="question" placeholder="Ask your question or provide feedback..." required></textarea>
+        <button type="submit" class="btn btn-purple">Submit Question</button>
+      </form>
+      <div id="question-result"></div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <div style="text-align:center; margin-top:2rem;">
+      <a href="#" class="btn" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;">
+        ⬆️ Back to Top
+      </a>
+    </div>
   </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 Pixels Dojo Wiki - Community Resource for Pixels Online</p>
+    <p>Not affiliated with Pixels or Animoca Brands | Built with ❤️ by the community</p>
+    <p><a href="/">Home</a> • <a href="/about">About</a> • <a href="/contribute">Contribute</a> • <a href="/contact">Contact</a></p>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    // React to page (like/dislike)
+    async function react(pageId, type) {
+      try {
+        const res = await fetch('/react/' + pageId, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({type})
+        });
+        
+        if (res.ok) {
+          location.reload(); // Refresh to show updated counts
+        } else {
+          alert('Error submitting reaction. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error submitting reaction. Please try again.');
+      }
+    }
+
+    // Submit question form
+    async function submitQuestion(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        question: form.question.value,
+        page_slug: '<%= page.slug || "unknown" %>'
+      };
+      
+      try {
+        const res = await fetch('/submit-question', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data)
+        });
+        
+        if (res.ok) {
+          document.getElementById('question-result').innerHTML = 
+            '<div class="alert alert-success">✅ Question submitted! We\'ll respond via email within 24-48 hours.</div>';
+          form.reset();
+          
+          // Scroll to success message
+          document.getElementById('question-result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          document.getElementById('question-result').innerHTML = 
+            '<div class="alert alert-error">❌ Error submitting question. Please try again.</div>';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('question-result').innerHTML = 
+          '<div class="alert alert-error">❌ Network error. Please check your connection and try again.</div>';
+      }
+    }
+
+    // Scroll to comments section
+    function scrollToComments() {
+      document.getElementById('comments').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Image zoom on click (for screenshot gallery)
+    document.querySelectorAll('.screenshot-gallery img').forEach(img => {
+      img.addEventListener('click', function() {
+        // Simple fullscreen view
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; display:flex; align-items:center; justify-content:center; cursor:pointer;';
+        
+        const fullImg = document.createElement('img');
+        fullImg.src = this.src;
+        fullImg.style.cssText = 'max-width:90%; max-height:90%; border-radius:8px;';
+        
+        overlay.appendChild(fullImg);
+        document.body.appendChild(overlay);
+        
+        overlay.addEventListener('click', function() {
+          document.body.removeChild(overlay);
+        });
+      });
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href !== '#') {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
+  </script>
 </body>
 </html>
