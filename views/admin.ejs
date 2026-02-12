@@ -369,6 +369,54 @@
             document.getElementById('editModal').style.display = 'block';
         }
 
+let editQuill = null;
+
+function editPage(id, title) {
+    // Fetch page data via AJAX (or pre-load if you want)
+    fetch(`/admin/pages/${id}/edit`)  // You'll need this route to return JSON
+        .then(res => res.json())
+        .then(page => {
+            document.getElementById('edit_page_id').value = page.id;
+            document.getElementById('edit_title').value = page.title;
+            document.getElementById('edit_slug').value = page.slug;
+            document.getElementById('edit_category').value = page.category || '';
+            document.getElementById('edit_difficulty').value = page.difficulty || 'Beginner';
+            document.getElementById('edit_summary').value = page.summary || '';
+            document.getElementById('edit_pro_tips').value = page.pro_tips || '';
+
+            // Show modal
+            document.getElementById('editPageModal').style.display = 'block';
+
+            // Initialize Quill for edit (only once)
+            if (!editQuill) {
+                editQuill = new Quill('#edit-quill-editor', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['link', 'image'],
+                            ['clean']
+                        ],
+                        clipboard: { matchVisual: false }
+                    },
+                    placeholder: 'Edit content here...'
+                });
+            }
+
+            // Load existing content into Quill
+            editQuill.root.innerHTML = page.content || '';
+
+            // Submit handler for edit form
+            const editForm = document.getElementById('editPageForm');
+            editForm.onsubmit = function(e) {
+                document.getElementById('edit-content-hidden').value = editQuill.root.innerHTML;
+            };
+        })
+        .catch(err => alert('Error loading page: ' + err));
+}
+
         function deleteNPC(id, name) {
             if (confirm(`Are you sure you want to delete "${name}"?`)) {
                 fetch(`/admin/npcs/${id}`, {
