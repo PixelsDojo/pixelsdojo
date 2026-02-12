@@ -658,3 +658,133 @@ footer a:hover {
     transform: scale(1.04);
     box-shadow: 0 12px 35px rgba(133, 0, 255, 0.4);
 }
+
+/* === Front Page Enhancements – match wiki aesthetic === */
+
+/* Hero – add padding, glow, consistent feel */
+.hero-section {
+    padding: 4rem 2rem; /* more breathing room around hero */
+    background: linear-gradient(to bottom, rgba(20, 20, 30, 0.7), var(--dark-bg));
+    border-radius: 16px;
+    border: 2px solid var(--neon-purple);
+    box-shadow: 0 8px 30px rgba(133, 0, 255, 0.25);
+    margin: 2rem auto;
+    max-width: 1300px;
+}
+
+.hero-intro {
+    background: rgba(101, 0, 255, 0.08);
+    border: 1px solid var(--cyan);
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.hero-intro h2 {
+    color: var(--yellow);
+    font-size: 3rem;
+    text-shadow: 0 0 12px rgba(237, 255, 132, 0.5);
+    margin-bottom: 1rem;
+}
+
+.hero-intro p {
+    font-size: 1.4rem;
+    color: var(--cyan-light);
+}
+
+/* Main Buttons – match wiki card/hover style */
+.main-buttons {
+    gap: 2rem;
+}
+
+.main-button {
+    border: 3px solid var(--cyan);
+    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.2);
+    transition: all 0.4s ease;
+    background: linear-gradient(135deg, var(--card-bg), #0f3460);
+}
+
+.main-button:hover {
+    transform: translateY(-10px);
+    border-color: var(--purple);
+    box-shadow: 0 15px 40px rgba(133, 0, 255, 0.4);
+    background: linear-gradient(135deg, #16213e, var(--dark-bg));
+}
+
+.main-button h3 {
+    color: var(--yellow);
+    text-shadow: 0 0 8px rgba(237, 255, 132, 0.4);
+}
+
+/* Search Bar – make it prominent and matching */
+.search-bar-container {
+    max-width: 800px;
+    margin: 0 auto 4rem;
+    text-align: center;
+}
+
+.search-form {
+    display: flex;
+    background: var(--card-bg);
+    border: 2px solid var(--cyan);
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.15);
+}
+
+.search-form input {
+    flex: 1;
+    padding: 1.2rem 2rem;
+    font-size: 1.2rem;
+    background: transparent;
+    border: none;
+    color: white;
+}
+
+.search-form input::placeholder {
+    color: var(--cyan-light);
+}
+
+.search-form button {
+    background: var(--cyan);
+    color: var(--dark-bg);
+    border: none;
+    padding: 0 2.5rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.search-form button:hover {
+    background: var(--cyan-light);
+}
+
+/* Recent Posts / Cards – unify with wiki */
+.card-grid {
+    gap: 2rem;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 2px solid var(--neon-purple);
+    border-radius: 12px;
+    padding: 1.8rem;
+    box-shadow: 0 6px 20px rgba(101, 0, 255, 0.2);
+    transition: all 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    border-color: var(--cyan);
+    box-shadow: 0 12px 35px rgba(133, 0, 255, 0.35);
+}
+
+.card h3 {
+    color: var(--cyan);
+    margin-bottom: 1rem;
+}
+
+/* Make sure all headings have glow */
+h1, h2, h3 {
+    text-shadow: 0 0 8px rgba(237, 255, 132, 0.3);
+}
