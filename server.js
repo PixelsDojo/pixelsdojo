@@ -189,6 +189,7 @@ app.get('/admin/pages/:id/edit', requireAdmin, (req, res) => {
 app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15), (req, res) => {
   const id = req.params.id;
   const { title, content, category, difficulty, summary, pro_tips } = req.body;
+  console.log('Submitted slug (should be ignored):', req.body.slug);
   // Note: slug is intentionally NOT destructured – we ignore it
 
   if (!title || !content) {
