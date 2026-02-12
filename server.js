@@ -136,6 +136,30 @@ app.post('/login', (req, res) => {
   });
 });
 
+// User Profile (GET /profile)
+app.get('/profile', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login?redirect=/profile');
+  }
+
+  // Optional: fetch user's contributed pages or other data
+  db.all(
+    `SELECT * FROM pages WHERE author_id = ? ORDER BY created_at DESC`,
+    [req.session.user.id],
+    (err, userPages) => {
+      if (err) {
+        console.error('Error loading user pages:', err);
+        userPages = [];
+      }
+
+      res.render('profile', {
+        user: req.session.user,
+        pages: userPages || []
+      });
+    }
+  );
+});
+
 // ─── Admin dashboard ───
 app.get('/admin', requireAdmin, (req, res) => {
   db.all('SELECT * FROM npcs ORDER BY display_order ASC', [], (err, npcRows) => {
