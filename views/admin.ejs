@@ -8,9 +8,17 @@
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
-     <header>
+    <header>
   <div class="header-container">
-    <div class="left-section">
+    <div class="logo-section">
+      <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo" class="logo">
+      <div class="logo-text">
+        <h1>PIXELS DOJO</h1>
+        <p class="tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
+      </div>
+    </div>
+
+    <div class="right-section">
       <div class="user-nav">
         <% if (user) { %>
           <span>Welcome, <%= user.display_name || user.username %>!</span>
@@ -32,14 +40,6 @@
           background-color="transparent" 
           font-color="#edff84">
         </coingecko-coin-price-marquee-widget>
-      </div>
-    </div>
-
-    <div class="logo-section">
-      <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo" class="logo">
-      <div class="logo-text">
-        <h1>PIXELS DOJO</h1>
-        <p class="tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
       </div>
     </div>
   </div>
