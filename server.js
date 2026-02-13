@@ -168,6 +168,59 @@ app.get('/npcs', (req, res) => {
   });
 });
 
+// GET /register - Show registration form
+app.get('/register', (req, res) => {
+  if (req.session.user) {
+    return res.redirect('/');  // Already logged in? Send home
+  }
+  res.render('register', { error: null });
+});
+
+// POST /register - Handle new user creation
+app.post('/register', (req, res) => {
+  const { username, email, password, display_name, bio } = req.body;
+
+  // Basic validation
+  if (!username || !email || !password || !display_name) {
+    return res.render('register', { error: 'All required fields must be filled (username, email, password, display name)' });
+  }
+
+  // Hash password
+  bcrypt.hash(password, 10, (err, hash) => {
+    if (err) {
+      console.error('Bcrypt error:', err);
+      return res.render('register', { error: 'Server error during registration' });
+    }
+
+    // Insert new user (roles default to 0)
+    db.run(
+      `INSERT INTO users (username, email, password, display_name, bio, profile_image, is_admin, is_contributor)
+       VALUES (?, ?, ?, ?, ?, '/images/default-avatar.png', 0, 0)`,
+      [username.trim(), email.trim(), hash, display_name.trim(), bio ? bio.trim() : ''],
+      function(err) {
+        if (err) {
+          if (err.message.includes('UNIQUE constraint failed')) {
+            return res.render('register', { error: 'Username or email already taken' });
+          }
+          console.error('DB insert error:', err.message);
+          return res.render('register', { error: 'Registration failed - try again' });
+        }
+
+        // Auto-login after success
+        req.session.user = {
+          id: this.lastID,
+          username,
+          display_name,
+          is_admin: 0,
+          is_contributor: 0
+        };
+
+        res.redirect('/?registered=success');
+      }
+    );
+  });
+});
+
 // Login
 app.get('/login', (req, res) => {
   if (req.session.user) return res.redirect('/');
