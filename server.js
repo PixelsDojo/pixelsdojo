@@ -228,11 +228,16 @@ app.get('/profile/edit', (req, res) => {
 app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
-  const { display_name, email } = req.body;
+  const { display_name, bio } = req.body;  // ← pull bio from form
   const userId = req.session.user.id;
 
-  let updateQuery = `UPDATE users SET display_name = ?, email = ?`;
-  let params = [display_name || null, email || null];
+  // Build query dynamically
+  let updateQuery = `UPDATE users SET display_name = ?`;
+  let params = [display_name || req.session.user.display_name || req.session.user.username];  // fallback to username if empty
+
+  // Always add bio (even if empty string)
+  updateQuery += `, bio = ?`;
+  params.push(bio || '');  // empty string clears it nicely
 
   if (req.file) {
     const imagePath = `/images/profiles/${req.file.filename}`;
@@ -243,21 +248,26 @@ app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
   updateQuery += ` WHERE id = ?`;
   params.push(userId);
 
+  console.log('Profile update attempt:', { display_name, bio, hasFile: !!req.file, userId });  // ← debug log
+
   db.run(updateQuery, params, function(err) {
     if (err) {
-      console.error('Profile update error:', err);
+      console.error('Profile update DB error:', err.message);
       return res.render('profile-edit', {
         user: req.session.user,
-        error: 'Failed to update profile. Try again.'
+        error: 'Failed to save changes. Please try again.'
       });
     }
 
-    // Update session with new data
+    // Update session so changes show immediately without re-login
     req.session.user.display_name = display_name || req.session.user.display_name;
-    req.session.user.email = email || req.session.user.email;
-    if (req.file) req.session.user.profile_image = `/images/profiles/${req.file.filename}`;
+    req.session.user.bio = bio || req.session.user.bio || '';
 
-    res.redirect('/profile');
+    if (req.file) {
+      req.session.user.profile_image = `/images/profiles/${req.file.filename}`;
+    }
+
+    res.redirect('/profile?success=1');
   });
 });
 
