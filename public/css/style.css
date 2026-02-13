@@ -187,28 +187,42 @@ nav a:hover {
 .hero-split {
     display: flex;
     gap: 2.5rem;
-    background: linear-gradient(to bottom right, rgba(15,52,96,0.7), rgba(10,10,21,0.85));
+    background: linear-gradient(to bottom right, rgba(15,52,96,0.75), rgba(10,10,21,0.9));
     border-radius: 16px;
-    padding: 2.5rem;
-    margin: 2rem 0;
+    padding: 2.5rem 2rem;
+    margin: 2.5rem 0 3rem;
     border: 2px solid var(--neon-purple);
-    box-shadow: 0 10px 40px rgba(101,0,255,0.3);
-    overflow: hidden;
+    box-shadow: 0 12px 48px rgba(101,0,255,0.28);
+    overflow: hidden; /* keep but we'll control child overflow */
+    align-items: center; /* better vertical align */
 }
 
 .hero-left {
-    flex: 1;
+    flex: 1 1 50%;
 }
 
 .hero-right {
-    flex: 1;
+    flex: 1 1 50%;
     position: relative;
+    overflow: hidden;
+    border-radius: 12px;
 }
 
 .hero-right img {
     width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    height: auto;                  /* ← changed: respect aspect ratio */
+    min-height: 280px;             /* prevent tiny on narrow screens */
+    object-fit: contain;           /* ← key fix: show full image, no forced crop */
+    display: block;
+    border: 2px solid rgba(0,212,255,0.4);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    background: var(--dark-bg);    /* fallback bg if image fails */
+}
+
+.hero-right img[alt*="Banner"] {   /* target your specific banner */
+    object-fit: contain;           /* ensure full visibility */
+    max-height: 420px;             /* cap height so it doesn't explode layout */
+    margin: 0 auto;
 }
 
 .main-buttons {
@@ -361,36 +375,124 @@ nav a:hover {
 
 footer {
     background: var(--card-bg);
-    border-top: 3px solid var(--cyan);
-    padding: 2.5rem 1.5rem;
-    color: #b8b8b8;
-    margin-top: 4rem;
+    border-top: 4px solid var(--cyan);
+    padding: 3rem 1.5rem 2rem;
+    color: #d0d0d0;
+    margin-top: 5rem;
 }
 
 .footer-row {
     display: flex;
     justify-content: space-between;
+    align-items: stretch;         /* ← makes all blocks same height */
     gap: 1.5rem;
-    flex-wrap: wrap;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .footer-block {
     flex: 1;
-    min-width: 240px;
+    min-width: 220px;
     border: 1px solid var(--neon-purple);
     border-radius: 12px;
-    padding: 1.4rem;
-    background: rgba(101,0,255,0.06);
+    padding: 1.6rem;
+    background: rgba(101,0,255,0.08);
+    box-shadow: 0 6px 20px rgba(101,0,255,0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* content spreads nicely */
+    transition: all 0.3s;
 }
 
-.profile-block { flex: 2; }
+.footer-block:hover {
+    box-shadow: 0 10px 30px rgba(133,0,255,0.3);
+    transform: translateY(-4px);
+}
+
+.profile-block {
+    flex: 1.8; /* slightly wider for profile */
+}
+
+.profile-card {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--cyan);
+    object-fit: cover;
+}
+
+.profile-name {
+    color: var(--yellow);
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.social-block {
+    text-align: center;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1.6rem;
+    margin-top: 1rem;
+}
+
+.social-icon {
+    width: 38px;
+    height: 38px;
+    transition: transform 0.3s;
+}
+
+.social-icon:hover {
+    transform: scale(1.2);
+}
+
+.logo-block {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-logo {
+    max-width: 160px;
+    height: auto;
+}
 
 .footer-copyright {
     text-align: center;
-    margin-top: 2rem;
+    margin-top: 2.5rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(237,255,132,0.15);
-    font-size: 0.9rem;
+    border-top: 1px solid rgba(237,255,132,0.2);
+    font-size: 0.95rem;
+    color: #aaa;
+}
+
+/* Mobile footer */
+@media (max-width: 992px) {
+    .footer-row {
+        flex-direction: column;
+        gap: 1.8rem;
+    }
+    
+    .profile-block,
+    .social-block,
+    .logo-block {
+        flex: none;
+        text-align: center;
+    }
+    
+    .profile-card {
+        flex-direction: column;
+        gap: 1rem;
+    }
 }
 
 /* ─── Mobile ───────────────────────────────────────────────── */
