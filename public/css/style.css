@@ -992,8 +992,13 @@ li a:hover {
     text-decoration: underline;
 }
 
-/* On mobile: stack sidebar on top */
+/* ============================================= */
+/* Mobile Responsive (992px and below)           */
+/* ============================================= */
+
 @media (max-width: 992px) {
+
+    /* Existing: Sidebar stacking (keep this) */
     .main-wrapper {
         flex-direction: column;
         gap: 1.5rem;
@@ -1010,32 +1015,115 @@ li a:hover {
     .main-content-area {
         padding: 0 1rem;
     }
+
+    /* New: Header stacking + mobile-friendly adjustments */
+    .header-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1.2rem;
+    }
+
+    .logo-section {
+        width: 100%;
+        margin-bottom: 0.8rem;
+    }
+
+    .logo-section h1 {
+        font-size: 2.2rem;          /* readable but not huge */
+    }
+
+    .user-nav,
+    .price-widget,
+    .right-section {
+        flex-direction: column;
+        width: 100%;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+
+    .user-nav a,
+    .price-widget {
+        width: auto;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.95rem;
+    }
+
+    header {
+        padding: 1.2rem 1rem;       /* tighter padding for mobile */
+    }
+
+    /* Prevent tiny text overall */
+    body {
+        font-size: 1.05rem;
+    }
+
+    /* Nav items stack vertically */
+    nav ul {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    nav li {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Hero: make it breathe better on small screens */
+    .hero-split {
+        flex-direction: column;     /* stack left/right vertically */
+        padding: 1.5rem 1rem;
+        gap: 2rem;
+    }
+
+    .hero-left,
+    .hero-right {
+        width: 100%;
+    }
+
+    /* Grids/cards: already good, but reinforce min-width */
+    .card-grid,
+    .category-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.2rem;
+    }
+
+    /* Breathing room for sections */
+    .content-section {
+        margin: 2.5rem auto;
+        padding: 1.8rem 1.2rem;
+    }
+
+    /* Footer stacking (if not already handled) */
+    footer .footer-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
 }
 
-/* Tighter hero on wide screens */
+/* Loose rules that apply always (keep these outside media query) */
 .hero-split {
-    max-width: 100% !important;  /* let it breathe but not stretch forever */
+    max-width: 100%;
     padding: 2rem 1rem;
 }
 
-/* Prevent cards/grids from becoming comically wide */
-.card-grid, .category-grid {
+.card-grid,
+.category-grid {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     max-width: 100%;
 }
 
-a:not(.btn):hover, a:not(.main-button):hover {
+a:not(.btn):hover,
+a:not(.main-button):hover {
     color: #FF69F5 !important;
     text-decoration: underline;
 }
 
-/* Subtle breathing room for OG sections */
 .content-section {
     margin: 3rem auto;
     padding: 2.5rem;
 }
 
-/* If footer feels too wide too */
 footer .footer-container {
     max-width: 1400px;
 }
