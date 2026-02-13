@@ -20,17 +20,18 @@
       <div class="card-grid">
         <% pages.forEach(page => { %>
           <div class="card">
-            <% if (page.screenshots && page.screenshots.length > 0) { %>
-              <img 
-                src="<%= page.screenshots[0] %>" 
-                alt="<%= page.title %>" 
-                style="width: 100%; height: 180px; object-fit: cover; border-bottom: 3px solid var(--cyan);"
-              >
-            <% } else { %>
-              <div style="height: 180px; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--cyan);">
-                No Image
-              </div>
-            <% } %>
+            <% if (page.screenshots && page.screenshots.length > 0 && page.screenshots[0]) { %>
+  <img 
+    src="<%= page.screenshots[0] %>" 
+    alt="<%= page.title %>" 
+    style="width: 100%; height: 180px; object-fit: cover; border-bottom: 3px solid var(--cyan);"
+    onerror="this.src='/images/placeholder-category.jpg'" <!-- fallback if image fails -->
+  >
+<% } else { %>
+  <div style="height: 180px; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--cyan); border-bottom: 3px solid var(--cyan);">
+    No Image Yet
+  </div>
+<% } %>
 
             <div style="padding: 1.5rem;">
               <h3 style="color: var(--cyan); margin-bottom: 0.8rem;">
