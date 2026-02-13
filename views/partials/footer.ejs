@@ -2,23 +2,22 @@
   <div class="footer-container">
     <div class="footer-row">
 
-      <!-- 1. Wide Profile Card (left, takes more space) -->
+      <!-- 1. Your fixed profile card (always Lizzy) -->
       <div class="footer-block profile-block">
         <div class="profile-card">
-          <img 
-            src="<%= typeof user !== 'undefined' && user.profile_image ? user.profile_image : '/images/lizzy_profile_2.png' %>" 
-            alt="Lizzy Sims" 
-            class="profile-pic"
-            onerror="this.src='/images/lizzy_profile_2.png'" <!-- fallback if user pic missing -->
-          >
+          <img src="/images/lizzy_profile_2.png" alt="Lizzy Sims" class="profile-pic">
           <div class="profile-info">
             <p class="profile-name">Lizzy Sims</p>
             <p class="profile-blurb">Founder & curator • Helping new Pixels players master TerraVilla since 2026</p>
+            <!-- Sponsor credit – small & appreciative -->
+            <p class="sponsor-credit">
+              Page made possible by <a href="https://x.com/THEIR_TAG" target="_blank">@THEIR_TAG</a>'s land NFT support ❤️
+            </p>
           </div>
         </div>
       </div>
 
-      <!-- 2. Socials (small icons, centered-ish) -->
+      <!-- 2. Socials -->
       <div class="footer-block social-block">
         <h4>Get Social</h4>
         <div class="social-icons">
@@ -28,7 +27,7 @@
           <a href="https://discord.gg/aqeBVdeu" target="_blank" title="Discord">
             <img src="/images/social/discord-icon.png" alt="Discord" class="social-icon">
           </a>
-          <!-- Placeholders for future Insta & FB -->
+          <!-- Insta & FB placeholders -->
           <a href="#" target="_blank" title="Instagram (coming soon)">
             <img src="/images/social/insta-icon.png" alt="Instagram" class="social-icon">
           </a>
@@ -38,13 +37,13 @@
         </div>
       </div>
 
-      <!-- 3. Pixel Dojo Logo (right) -->
+      <!-- 3. Pixel Dojo Logo -->
       <div class="footer-block logo-block">
         <img src="/images/pixeldojo_logo_round_.png" alt="Pixel Dojo Logo" class="footer-logo">
       </div>
     </div>
 
-    <!-- Copyright / disclaimer – always bottom -->
+    <!-- Copyright at very bottom -->
     <div class="footer-copyright">
       <p>All rights reserved © 2026 Pixels Dojo • Built with ❤️ by the community</p>
     </div>
