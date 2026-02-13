@@ -365,6 +365,44 @@ nav a:hover {
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
+.wiki-page {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--cyan);
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-meta {
+  display: flex;
+  gap: 1.2rem;
+  color: #aaa;
+  font-size: 0.95rem;
+  flex-wrap: wrap;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.gallery-img {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--neon-purple);
+}
+
+.no-media {
+  color: #888;
+  font-style: italic;
+  text-align: center;
+  margin: 2rem 0;
+}
 /* ─── Buttons ──────────────────────────────────────────────── */
 
 .btn {
