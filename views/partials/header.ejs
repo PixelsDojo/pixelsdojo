@@ -8,20 +8,31 @@
       </div>
     </div>
 
-<!-- Right side – price + user nav inline -->
+  <!-- Right side – price + user nav inline -->
 <div class="right-section" style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.8rem;">
-
-  <div class="price-widget" style="font-size: 0.85rem; padding: 0.5rem 1rem; text-align: right; min-width: 180px; max-width: 220px;">
-    <script src="https://widgets.coingecko.com/gecko-coin-price-marquee-widget.js"></script>
-
-    <gecko-coin-price-marquee-widget 
-      coin-id="pixels"
-      locale="en"
-      dark-mode="true"
-      outlined="true"
-      initial-currency="usd">
-    </gecko-coin-price-marquee-widget>
+  <!-- Price widget on top -->
+  <div class="price-widget" style="font-size: 0.85rem; padding: 0.5rem 1rem; text-align: right; min-width: 180px;">
+    <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
+    <coingecko-coin-price-marquee-widget coin-ids="pixels" currency="usd" background-color="transparent" font-color="#edff84"></coingecko-coin-price-marquee-widget>
   </div>
+
+  <!-- User buttons below -->
+  <div class="user-nav" style="display: flex; gap: 0.8rem; flex-wrap: nowrap;">
+        <% if (user) { %>
+          <span>Welcome, <%= user.display_name || user.username %>!</span>
+          <a href="/profile" class="btn btn-small">Profile</a>
+          <% if (user.is_admin || user.is_editor) { %>
+            <a href="/admin" class="btn btn-small btn-admin">Dashboard</a>
+          <% } %>
+          <a href="/logout" class="btn btn-small btn-logout">Logout</a>
+        <% } else { %>
+          <a href="/login" class="btn btn-small">Login</a>
+          <a href="/register" class="btn btn-small">Register</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</header>
   
   <!-- Your user nav / profile links go below or beside as before -->
 </div>
