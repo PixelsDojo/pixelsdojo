@@ -474,6 +474,7 @@
                 document.getElementById('editPageId').value = page.id;
                 document.getElementById('editTitle').value = page.title || '';
                 document.getElementById('editSlug').value = page.slug || '';
+document.getElementById('editPageForm').action = `/admin/pages/${page.id}/update`;
 
                 // Show modal (custom style)
                 const modal = document.getElementById('editPageModal');
