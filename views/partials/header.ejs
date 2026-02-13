@@ -8,21 +8,10 @@
       </div>
     </div>
 
-    <div class="user-nav">
-  <% if (user) { %>
-    <span>Welcome, <%= user.display_name || user.username %>!</span>
-    <a href="/profile" class="btn btn-small">Profile</a>
-    <% if (user.is_admin || user.is_editor) { %>
-      <a href="/admin" class="btn btn-small btn-admin">Dashboard</a>
-    <% } %>
-    <a href="/logout" class="btn btn-small btn-logout">Logout</a>
-  <% } else { %>
-    <a href="/login" class="btn btn-small">Login</a>
-    <a href="/register" class="btn btn-small">Register</a>
-  <% } %>
-</div>
-
-      <div class="price-widget">
+    <!-- Right side – price + user nav inline -->
+    <div class="right-section" style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: nowrap;">
+      <!-- Price widget – smaller & inline -->
+      <div class="price-widget" style="font-size: 0.9rem; padding: 0.6rem 1rem; min-width: auto;">
         <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
         <coingecko-coin-price-marquee-widget 
           coin-ids="pixels" 
@@ -30,6 +19,21 @@
           background-color="transparent" 
           font-color="#edff84">
         </coingecko-coin-price-marquee-widget>
+      </div>
+
+      <!-- User nav – now inline with price -->
+      <div class="user-nav">
+        <% if (user) { %>
+          <span>Welcome, <%= user.display_name || user.username %>!</span>
+          <a href="/profile" class="btn btn-small">Profile</a>
+          <% if (user.is_admin || user.is_editor) { %>
+            <a href="/admin" class="btn btn-small btn-admin">Dashboard</a>
+          <% } %>
+          <a href="/logout" class="btn btn-small btn-logout">Logout</a>
+        <% } else { %>
+          <a href="/login" class="btn btn-small">Login</a>
+          <a href="/register" class="btn btn-small">Register</a>
+        <% } %>
       </div>
     </div>
   </div>
