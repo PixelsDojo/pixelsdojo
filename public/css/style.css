@@ -517,6 +517,53 @@ footer {
     }
 }
 
+/* Better like/dislike buttons */
+.interaction-bar {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: rgba(26, 26, 46, 0.7);
+    border-radius: 12px;
+    border: 1px solid var(--cyan);
+}
+
+.like-btn, .dislike-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1.6rem;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    cursor: pointer;
+    border: 2px solid var(--cyan);
+    background: transparent;
+    color: var(--cyan);
+}
+
+.like-btn:hover, .like-btn.liked {
+    background: var(--cyan);
+    color: var(--dark-bg);
+    border-color: var(--cyan);
+    transform: scale(1.05);
+}
+
+.dislike-btn:hover, .dislike-btn.disliked {
+    background: #ff4444;
+    color: white;
+    border-color: #ff4444;
+    transform: scale(1.05);
+}
+
+/* Icons (use Font Awesome or emoji if you have them) */
+.like-btn::before { content: '👍 '; }
+.dislike-btn::before { content: '👎 '; }
+
+
+
 /* ─── Mobile Responsive (992px and below) ──────────────────────────────────────── */
 
 @media (max-width: 992px) {
