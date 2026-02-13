@@ -247,50 +247,103 @@ app.post('/login', (req, res) => {
   });
 });
 
-// User Profile (GET /profile)
+// User Profile (GET /profile) – fetch full user data every time
 app.get('/profile', (req, res) => {
   if (!req.session.user) {
     return res.redirect('/login?redirect=/profile');
   }
 
-  // Fetch user's pages (optional)
-  db.all(
-    `SELECT * FROM pages WHERE author_id = ? ORDER BY created_at DESC`,
+  // Fetch the complete user record from the database
+  db.get(
+    `SELECT id, username, email, display_name, bio, profile_image, is_admin, is_contributor 
+     FROM users WHERE id = ?`,
     [req.session.user.id],
-    (err, userPages) => {
-      if (err) userPages = [];
-      res.render('profile', {
-        user: req.session.user,
-        pages: userPages || []
+    (err, fullUser) => {
+      if (err) {
+        console.error('Profile fetch error:', err.message);
+        return res.status(500).send('Error loading profile data');
+      }
+      if (!fullUser) {
+        // User no longer exists? Destroy session and force re-login
+        req.session.destroy();
+        return res.redirect('/login?error=user_not_found');
+      }
+
+      // Update session with full/current data (so header, navbar, etc. show correct info)
+      req.session.user = {
+        ...req.session.user,
+        display_name: fullUser.display_name || fullUser.username,
+        bio: fullUser.bio || '',
+        profile_image: fullUser.profile_image || '/images/default-avatar.png',
+        email: fullUser.email || '',
+        is_contributor: !!fullUser.is_contributor
+      };
+
+      // Fetch pages authored by this user (optional)
+      db.all(
+        `SELECT * FROM pages WHERE author_id = ? ORDER BY created_at DESC`,
+        [req.session.user.id],
+        (err, userPages) => {
+          if (err) {
+            console.error('User pages fetch error:', err);
+            userPages = [];
+          }
+
+          res.render('profile', {
+            user: req.session.user,   // now complete
+            pages: userPages || []
+          });
+        }
+      );
+    }
+  );
+});
+
+// Edit profile form (GET /profile/edit) – also fetch full user
+app.get('/profile/edit', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login?redirect=/profile/edit');
+  }
+
+  db.get(
+    `SELECT id, username, email, display_name, bio, profile_image 
+     FROM users WHERE id = ?`,
+    [req.session.user.id],
+    (err, fullUser) => {
+      if (err || !fullUser) {
+        console.error('Edit profile fetch error:', err);
+        return res.redirect('/profile?error=load_failed');
+      }
+
+      // Update session (optional but keeps everything in sync)
+      req.session.user = {
+        ...req.session.user,
+        display_name: fullUser.display_name,
+        bio: fullUser.bio,
+        profile_image: fullUser.profile_image
+      };
+
+      res.render('profile-edit', {
+        user: fullUser,   // pass fresh full user
+        error: null
       });
     }
   );
 });
 
-// Edit profile form (GET /profile/edit)
-app.get('/profile/edit', (req, res) => {
-  if (!req.session.user) return res.redirect('/login?redirect=/profile/edit');
-
-  res.render('profile-edit', {
-    user: req.session.user,
-    error: null
-  });
-});
-
-// Update profile (POST /profile/edit)
+// Update profile (POST /profile/edit) – already mostly good, minor safety improvements
 app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
-  const { display_name, bio } = req.body;  // ← pull bio from form
+  const { display_name, bio } = req.body;
   const userId = req.session.user.id;
 
-  // Build query dynamically
+  // Build dynamic update
   let updateQuery = `UPDATE users SET display_name = ?`;
-  let params = [display_name || req.session.user.display_name || req.session.user.username];  // fallback to username if empty
+  let params = [display_name || req.session.user.display_name || req.session.user.username];
 
-  // Always add bio (even if empty string)
   updateQuery += `, bio = ?`;
-  params.push(bio || '');  // empty string clears it nicely
+  params.push(bio || '');
 
   if (req.file) {
     const imagePath = `/images/profiles/${req.file.filename}`;
@@ -301,9 +354,9 @@ app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
   updateQuery += ` WHERE id = ?`;
   params.push(userId);
 
-  console.log('Profile update attempt:', { display_name, bio, hasFile: !!req.file, userId });  // ← debug log
+  console.log('Profile update attempt:', { display_name, bio, hasFile: !!req.file, userId });
 
-  db.run(updateQuery, params, function(err) {
+  db.run(updateQuery, params, function (err) {
     if (err) {
       console.error('Profile update DB error:', err.message);
       return res.render('profile-edit', {
@@ -312,7 +365,7 @@ app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
       });
     }
 
-    // Update session so changes show immediately without re-login
+    // Update session immediately so changes show without re-login
     req.session.user.display_name = display_name || req.session.user.display_name;
     req.session.user.bio = bio || req.session.user.bio || '';
 
