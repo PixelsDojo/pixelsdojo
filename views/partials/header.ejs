@@ -9,17 +9,18 @@
     </div>
 
     <div class="user-nav">
-      <% if (user) { %>
-        <span class="welcome">Welcome, <%= user.display_name || user.username %>!</span>
-        <a href="/profile">Profile</a>
-        <% if (user.is_admin) { %>
-          <a href="/admin">Admin</a>
-        <% } %>
-        <a href="/logout">Logout</a>
-      <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-      <% } %>
+  <% if (user) { %>
+    <span>Welcome, <%= user.display_name || user.username %>!</span>
+    <a href="/profile" class="btn btn-small">Profile</a>
+    <% if (user.is_admin || user.is_editor) { %>
+      <a href="/admin" class="btn btn-small btn-admin">Dashboard</a>
+    <% } %>
+    <a href="/logout" class="btn btn-small btn-logout">Logout</a>
+  <% } else { %>
+    <a href="/login" class="btn btn-small">Login</a>
+    <a href="/register" class="btn btn-small">Register</a>
+  <% } %>
+</div>
 
       <div class="price-widget">
         <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
