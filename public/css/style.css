@@ -531,6 +531,19 @@ nav a:hover {
   color: var(--yellow);
   text-decoration: underline;
 }
+
+.npc-page-content {
+  padding: 2rem;                /* all sides – adjust as needed */
+  padding-top: 1rem;            /* less top if you want tighter feel */
+  padding-bottom: 3rem;         /* more breathing room at bottom */
+  max-width: 1400px;            /* optional: cap width like homepage */
+  margin: 0 auto;               /* center it */
+}
+
+.npc-section {
+  margin: 0 1rem;               /* small side margin on mobile */
+}
+
 /* ─── Buttons ──────────────────────────────────────────────── */
 
 .btn {
@@ -868,4 +881,16 @@ footer {
     .card-grid {
         padding: 1.5rem 1rem;
     }
+}
+
+/* Mobile adjustment – reduce padding if needed */
+@media (max-width: 992px) {
+  .npc-page-content {
+    padding: 1.2rem;
+  }
+  
+  .npc-grid, .npc-list {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.2rem;
+  }
 }
