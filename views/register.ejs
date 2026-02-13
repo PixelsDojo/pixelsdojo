@@ -53,7 +53,7 @@
       <div class="form-group">
         <label>Choose Profile Picture *</label>
         <div class="pfp-options">
-          <% for (let i = 1; i <= 10; i++) { %>
+          <% for (let i = 1; i <= 5; i++) { %>
             <label>
               <input type="radio" name="profile_image" value="/images/defaults/default<%= i %>.png" required <%= i === 1 ? 'checked' : '' %>>
               <img src="/images/defaults/default<%= i %>.png" alt="Default avatar <%= i %>">
