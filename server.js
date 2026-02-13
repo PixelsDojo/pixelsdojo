@@ -162,11 +162,36 @@ app.get('/', (req, res) => {
 
 // NPCs list
 app.get('/npcs', (req, res) => {
-  db.all('SELECT * FROM npcs ORDER BY display_order ASC', [], (err, rows) => {
-    if (err) return res.status(500).send('Database error loading NPCs');
-    res.render('npcs', { npcs: rows, user: req.session.user || null });
+  const sort = req.query.sort || 'display_order';  // default
+  let orderBy = 'display_order ASC';
+
+  // Valid sort options – prevent SQL injection
+  if (sort === 'name') {
+    orderBy = 'name ASC';
+  } else if (sort === 'location') {
+    orderBy = 'location ASC';
+  } else if (sort === 'name-desc') {
+    orderBy = 'name DESC';
+  } else if (sort === 'location-desc') {
+    orderBy = 'location DESC';
+  }
+  // you can add more later (e.g. 'difficulty', 'type')
+
+  const query = `SELECT * FROM npcs ORDER BY ${orderBy}`;
+
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      console.error('NPC query error:', err);
+      return res.status(500).send('Database error');
+    }
+    res.render('npcs', {
+      npcs: rows,
+      user: req.session.user || null,
+      currentSort: sort   // pass to view so we can highlight active sort
+    });
   });
 });
+
 
 // GET /register - Show registration form
 app.get('/register', (req, res) => {
