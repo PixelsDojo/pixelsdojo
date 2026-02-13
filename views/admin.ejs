@@ -370,13 +370,12 @@
         </div>
     </div>
 
-        <!-- Scripts -->
-    <!-- Scripts -->
+       <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
 <script>
-    let quill = null;       // for add modal
-    let editQuill = null;   // for edit modal
+    let quill = null;       // Add page
+    let editQuill = null;   // Edit page
 
     // ─── Add Page Modal ──────────────────────────────────────
     function showAddPageModal() {
@@ -426,6 +425,19 @@
                 }
             });
         }
+
+        // Also listen for edit form submit
+        const editForm = document.getElementById('editPageForm');
+        if (editForm) {
+            editForm.addEventListener('submit', function(e) {
+                if (editQuill) {
+                    document.getElementById('editContent').value = editQuill.root.innerHTML;
+                    console.log('Saving Quill content (edit):', editQuill.root.innerHTML);
+                } else {
+                    console.warn('Edit Quill not initialized');
+                }
+            });
+        }
     });
 
     // ─── Generic modal helpers ──────────────────────────────────────
@@ -460,20 +472,15 @@
                 return res.json();
             })
             .then(page => {
-                // Fill form fields (using correct IDs from your HTML)
-                const idEl    = document.getElementById('editPageId');
-                const titleEl = document.getElementById('editTitle');
-                const slugEl  = document.getElementById('editSlug');
+                document.getElementById('editPageId').value = page.id;
+                document.getElementById('editTitle').value = page.title || '';
+                document.getElementById('editSlug').value = page.slug || '';
 
-                if (idEl)    idEl.value    = page.id;
-                if (titleEl) titleEl.value = page.title || '';
-                if (slugEl)  slugEl.value  = page.slug || '';
-
-                // Show modal
+                // Show modal (custom style)
                 const modal = document.getElementById('editPageModal');
                 if (modal) modal.style.display = 'block';
 
-                // Initialize Quill for edit (once)
+                // Initialize Quill if not already
                 if (!editQuill) {
                     editQuill = new Quill('#editQuillEditor', {
                         theme: 'snow',
@@ -498,38 +505,6 @@
                 } catch (e) {
                     console.warn('Content not valid Delta – using HTML fallback');
                     editQuill.root.innerHTML = page.content || '';
-                }
-
-                // Handle form submit via AJAX
-                const editForm = document.getElementById('editPageForm');
-                if (editForm) {
-                    editForm.onsubmit = function(e) {
-                        e.preventDefault();
-
-                        // Save Quill content to hidden field
-                        document.getElementById('editContent').value = editQuill.root.innerHTML;
-
-                        const formData = new FormData(editForm);
-
-                        fetch(`/admin/pages/${page.id}/update`, {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(r => r.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Page updated successfully!');
-                                modal.style.display = 'none';
-                                location.reload(); // refresh admin list
-                            } else {
-                                alert('Save failed: ' + (data.error || 'Unknown error'));
-                            }
-                        })
-                        .catch(err => {
-                            console.error('Save error:', err);
-                            alert('Error saving page: ' + err.message);
-                        });
-                    };
                 }
             })
             .catch(err => {
