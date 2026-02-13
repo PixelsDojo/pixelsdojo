@@ -38,14 +38,23 @@
       <article class="wiki-page">
         <header class="page-header">
           <h1><%= page.title %></h1>
-          <div class="page-meta">
+          <% 
+  let createdDate = 'Unknown';
+  try {
+    createdDate = new Date(page.created_at).toLocaleDateString();
+  } catch (e) {}
+
+  let updatedDate = '';
+  if (page.updated_at) {
+    try {
+      updatedDate = '· Updated ' + new Date(page.updated_at).toLocaleDateString();
+    } catch (e) {}
+  }
+%>
+<div class="page-meta">
   <span>By <%= page.author_display_name || 'Community' %></span>
-  <span>· <%= new Date(page.created_at).toLocaleDateString() %></span>
-  
-  <% if (page.updated_at) { %>
-    <span>· Updated <%= new Date(page.updated_at).toLocaleDateString() %></span>
-  <% } %>
-  
+  <span>· <%= createdDate %></span>
+  <%- updatedDate %>
   <span>· <%= page.views || 0 %> views</span>
 </div>
         </header>
