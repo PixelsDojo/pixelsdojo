@@ -233,9 +233,15 @@
           </div>
 
          <div class="mb-3">
-            <label for="editCategory" class="form-label">Category</label>
-            <input type="text" class="form-control" id="editCategory" name="category">
-          </div>
+          <label>Category *</label>
+  <select name="category" required style="width:100%; padding:0.8rem;">
+    <option value="">Select category</option>
+    <option value="startup">Start Here</option>
+    <option value="earn">Earn $PIXEL</option>
+    <option value="mastery">Mastery</option>
+    <option value="general">General / Other</option>
+  </select>
+</div>
 
           <div class="mb-3">
             <label for="editDifficulty" class="form-label">Difficulty</label>
