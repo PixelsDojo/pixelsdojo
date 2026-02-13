@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Users | Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+  <main>
+    <h1>Manage Users</h1>
+    <p>Use this to invite contributors/editors. Toggle the Contributor status.</p>
+    <table border="1" style="width:100%; border-collapse: collapse; margin-top: 1rem;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Display Name</th>
+          <th>Admin?</th>
+          <th>Contributor?</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(u => { %>
+          <tr>
+            <td><%= u.id %></td>
+            <td><%= u.username %></td>
+            <td><%= u.email || 'N/A' %></td>
+            <td><%= u.display_name || u.username %></td>
+            <td><%= u.is_admin ? 'Yes' : 'No' %></td>
+            <td><%= u.is_contributor ? 'Yes' : 'No' %></td>
+            <td>
+              <form action="/admin/users/<%= u.id %>/toggle-contributor" method="POST">
+                <button type="submit">
+                  <%= u.is_contributor ? 'Revoke Contributor' : 'Make Contributor' %>
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+  <%- include('partials/footer') %>
+</body>
+</html>
