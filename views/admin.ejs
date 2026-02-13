@@ -120,16 +120,16 @@
                         <% if (pages && pages.length > 0) { %>
                             <% pages.forEach(page => { %>
                                 <tr>
-                                    <td><%= page.title %></td>
-                                    <td><%= page.slug %></td>
-                                    <td><%= page.category || '—' %></td>
-                                    <td><%= new Date(page.created_at).toLocaleDateString() %></td>
-                                    <td class="actions">
-                                    <button onclick="window.open('/pages/<%= page.slug %>', '_blank')" class="btn-action btn-view">👁️ View</button>
-                                    <button onclick="editPage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'") %>')" class="btn-action btn-edit">✏️ Edit</button>
-                                    <button onclick="deletePage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'") %>')" class="btn-action btn-delete">🗑️ Delete</button>
-                                </td>
-                                </tr>
+    <td><%= page.title %></td>
+    <td><%= page.slug %></td>
+    <td><%= page.category || '—' %></td>
+    <td><%= new Date(page.created_at).toLocaleDateString() %></td>
+    <td class="actions">
+        <button onclick="window.open('/pages/<%= page.slug %>', '_blank')" class="btn-action btn-view">👁️ View</button>
+        <button onclick="editPage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'").replace(/"/g, '\\"') %>')" class="btn-action btn-edit">✏️ Edit</button>
+        <button onclick="deletePage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'").replace(/"/g, '\\"') %>')" class="btn-action btn-delete">🗑️ Delete</button>
+    </td>
+</tr>
                             <% }); %>
                         <% } else { %>
                             <tr><td colspan="5">No pages yet — add one above!</td></tr>
