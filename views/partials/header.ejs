@@ -34,23 +34,7 @@
   </div>
 </header>
   
-  <!-- Your user nav / profile links go below or beside as before -->
-</div>
-
-  <!-- User buttons below -->
-  <div class="user-nav" style="display: flex; gap: 0.8rem; flex-wrap: nowrap;">
-        <% if (user) { %>
-          <span>Welcome, <%= user.display_name || user.username %>!</span>
-          <a href="/profile" class="btn btn-small">Profile</a>
-          <% if (user.is_admin || user.is_editor) { %>
-            <a href="/admin" class="btn btn-small btn-admin">Dashboard</a>
-          <% } %>
-          <a href="/logout" class="btn btn-small btn-logout">Logout</a>
-        <% } else { %>
-          <a href="/login" class="btn btn-small">Login</a>
-          <a href="/register" class="btn btn-small">Register</a>
-        <% } %>
-      </div>
+        </div>
     </div>
   </div>
 </header>
