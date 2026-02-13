@@ -190,6 +190,7 @@
         <button>👍 Upvote (<%= likes || 0 %>)</button>
         <button>💬 Comment</button>
       </div>
+<%- include('partials/author-card', { author: page.author_display_name || 'Community' }) %>
 
       <!-- Related -->
       <p>See also: [related links]</p>
