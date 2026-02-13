@@ -194,81 +194,95 @@ nav a:hover {
 
 /* ─── Hero Section ─────────────────────────────────────────── */
 
+/* ─── Hero Section – Background image version ──────────────────────────────── */
+
 .hero-split {
-    display: flex;
-    gap: 2.5rem;
-    background: linear-gradient(to bottom right, rgba(15,52,96,0.75), rgba(10,10,21,0.9));
-    border-radius: 16px;
-    padding: 2.5rem 2rem;
-    margin: 2.5rem 0 3rem;
-    border: 2px solid var(--neon-purple);
-    box-shadow: 0 12px 48px rgba(101,0,255,0.28);
-    overflow: hidden; /* keep but we'll control child overflow */
-    align-items: center; /* better vertical align */
-}
-
-.hero-left {
-    flex: 1 1 50%;
-}
-
-.hero-right {
-    flex: 1 1 50%;
     position: relative;
+    min-height: 500px;                    /* adjust if too tall/short on your screen */
+    background-image: url('/images/banner_with_pixels_dojo_in_white.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 16px;
     overflow: hidden;
-    border-radius: 12px;
+    margin: 2.5rem 0;
+    border: 2px solid var(--neon-purple);
+    box-shadow: 0 12px 48px rgba(101,0,255,0.3);
 }
 
-.hero-right img {
-    width: 100%;
-    height: auto;                  /* ← changed: respect aspect ratio */
-    min-height: 280px;             /* prevent tiny on narrow screens */
-    object-fit: contain;           /* ← key fix: show full image, no forced crop */
-    display: block;
-    border: 2px solid rgba(0,212,255,0.4);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-    background: var(--dark-bg);    /* fallback bg if image fails */
+/* Dark overlay for readability */
+.hero-split::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(10,10,21,0.65), rgba(15,52,96,0.75));
+    z-index: 1;
 }
 
-.hero-right img[alt*="Banner"] {   /* target your specific banner */
-    object-fit: contain;           /* ensure full visibility */
-    max-height: 420px;             /* cap height so it doesn't explode layout */
-    margin: 0 auto;
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.hero-title {
+    color: var(--yellow);
+    font-size: 3.2rem;
+    text-shadow: 0 0 16px rgba(237,255,132,0.7);
+    margin-bottom: 0.8rem;
+    text-align: center;
+}
+
+.hero-tagline {
+    color: var(--cyan-light);
+    font-size: 1.4rem;
+    text-align: center;
+    margin-bottom: 3rem;
 }
 
 .main-buttons {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.8rem;
-    margin: 2.5rem 0;
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
 .main-button {
-    background: linear-gradient(135deg, var(--card-bg), #16213e);
-    padding: 2.5rem 1.8rem;
-    border-radius: 12px;
+    background: rgba(15,52,96,0.75);
+    backdrop-filter: blur(6px);           /* glass effect – remove if you don't like it */
+    padding: 2rem 1.5rem;                 /* smaller than before */
+    border-radius: 14px;
     border: 3px solid var(--cyan);
     text-align: center;
     color: white;
-    transition: all 0.35s ease;
-    position: relative;
-    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 
 .main-button:hover {
-    transform: translateY(-8px);
+    transform: translateY(-10px) scale(1.04);
     border-color: var(--purple);
-    box-shadow: 0 16px 40px rgba(133,0,255,0.45);
+    box-shadow: 0 16px 48px rgba(133,0,255,0.5);
 }
 
 .main-button .icon {
-    font-size: 3.8rem;
+    font-size: 3.5rem;
     margin-bottom: 1rem;
 }
 
 .main-button h3 {
     color: var(--yellow);
-    font-size: 1.7rem;
-    margin-bottom: 0.8rem;
+    font-size: 1.6rem;
+    margin-bottom: 0.6rem;
+}
+
+.main-button p {
+    font-size: 1.05rem;
+    color: #d0d0ff;
 }
 
 /* ─── Search ───────────────────────────────────────────────── */
