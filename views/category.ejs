@@ -1,9 +1,58 @@
-<h1><%= category.charAt(0).toUpperCase() + category.slice(1) %> Guides</h1>
-<div class="card-grid">
-  <% pages.forEach(page => { %>
-    <div class="card">
-      <h3><a href="/pages/<%= page.slug %>"><%= page.title %></a></h3>
-      <p><%= page.summary || page.content.substring(0, 150) + '...' %></p>
-    </div>
-  <% }) %>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= category.charAt(0).toUpperCase() + category.slice(1) %> Guides - Pixels Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <div class="container" style="max-width: 1300px; margin: 3rem auto;">
+    <h1 style="color: var(--yellow); text-shadow: 0 0 12px rgba(237, 255, 132, 0.5); text-align: center; margin-bottom: 3rem;">
+      <%= category.charAt(0).toUpperCase() + category.slice(1) %> Guides
+    </h1>
+
+    <% if (pages && pages.length > 0) { %>
+      <div class="card-grid" style="margin-bottom: 4rem;">
+        <% pages.forEach(page => { %>
+          <div class="card" style="transition: all 0.3s; border: 2px solid var(--neon-purple); background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(101, 0, 255, 0.2);">
+            <% if (page.screenshots && page.screenshots.length > 0) { %>
+              <img src="<%= page.screenshots[0] %>" alt="<%= page.title %>" style="width: 100%; height: 180px; object-fit: cover; border-bottom: 3px solid var(--cyan);">
+            <% } else { %>
+              <div style="height: 180px; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--cyan);">
+                No Image
+              </div>
+            <% } %>
+            <div style="padding: 1.5rem;">
+              <h3 style="color: var(--cyan); margin-bottom: 0.8rem;">
+                <a href="/pages/<%= page.slug %>" style="color: inherit; text-decoration: none;">
+                  <%= page.title %>
+                </a>
+              </h3>
+              <p style="color: #b8b8b8; font-size: 1rem; margin-bottom: 1rem;">
+                <%= page.summary || page.content.substring(0, 150) + '...' %>
+              </p>
+              <small style="color: var(--cyan-light);">
+                By <%= page.author_display_name || 'Community' %> • 
+                <%= new Date(page.created_at).toLocaleDateString() %>
+              </small>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div style="text-align: center; padding: 4rem; background: rgba(20, 20, 30, 0.7); border-radius: 12px; border: 2px solid var(--purple);">
+        <h3 style="color: var(--yellow);">No guides in this category yet</h3>
+        <p style="color: #b8b8b8; margin: 1rem 0;">Be the first to add one!</p>
+        <% if (user && user.is_admin) { %>
+          <a href="/admin" class="btn btn-cyan">Add a Guide Now</a>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
