@@ -540,10 +540,6 @@ nav a:hover {
   margin: 0 auto;               /* center it */
 }
 
-.npc-section {
-  margin: 0 1rem;               /* small side margin on mobile */
-}
-
 /* ─── Buttons ──────────────────────────────────────────────── */
 
 .btn {
