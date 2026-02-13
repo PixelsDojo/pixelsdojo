@@ -533,10 +533,10 @@ nav a:hover {
 }
 
 .npc-page-content {
-  padding: 2rem;                /* all sides – adjust as needed */
-  padding-top: 1rem;            /* less top if you want tighter feel */
+  padding: 4rem;                /* all sides – adjust as needed */
+  padding-top: 2rem;            /* less top if you want tighter feel */
   padding-bottom: 3rem;         /* more breathing room at bottom */
-  max-width: 1400px;            /* optional: cap width like homepage */
+  max-width: 1200px;            /* optional: cap width like homepage */
   margin: 0 auto;               /* center it */
 }
 
