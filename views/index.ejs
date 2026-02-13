@@ -9,281 +9,175 @@
 <body>
     <%- include('partials/header') %>
 
-  <nav>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/category/startup">Start Here</a></li>
-    <li><a href="/category/earn">Earn $PIXEL</a></li>
-    <li><a href="/category/mastery">Mastery</a></li>
-    <li><a href="/npcs">NPCs</a></li>
-    <li><a href="/category/community">Community</a></li>
-  </ul>
-</nav>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/category/startup">Start Here</a></li>
+        <li><a href="/category/earn">Earn $PIXEL</a></li>
+        <li><a href="/category/mastery">Mastery</a></li>
+        <li><a href="/npcs">NPCs</a></li>
+        <li><a href="/category/community">Community</a></li>
+      </ul>
+    </nav>
 
-    <!-- Hero – split layout: buttons left stacked, image right -->
-    <section class="hero-split">
-        <!-- Left: Stacked buttons + intro -->
-        <div class="hero-left">
-            <h1>PIXELS DOJO</h1>
-            <p class="hero-tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
+    <div class="main-wrapper">  <!-- Push content right of sidebar -->
 
-            <div class="main-buttons stacked">
-                <a href="/category/startup" class="main-button">
-                    <div class="icon">🌱</div>
-                    <h3>Start Here</h3>
-                    <p>Beginner guides & first steps</p>
-                </a>
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h4>Library</h4>
+        <a href="/">🏠 All Articles</a>
+        <a href="/npcs">🧑‍🤝‍🧑 NPC Gallery</a>
+        <hr>
+        <h5>Categories</h5>
+        <a href="/category/startup">Start Here</a>
+        <a href="/category/earn">Earn $PIXEL</a>
+        <a href="/category/mastery">Mastery</a>
+        <a href="/category/community">Community</a>
+        <!-- Add more links as articles grow -->
+      </aside>
 
-                <a href="/category/earn" class="main-button">
-                    <div class="icon">💰</div>
-                    <h3>Earn $PIXEL</h3>
-                    <p>Strategies & mechanisms</p>
-                </a>
+      <!-- Hero – your existing split layout -->
+      <section class="hero-split">
+          <!-- Left: Stacked buttons + intro -->
+          <div class="hero-left">
+              <h1>PIXELS DOJO</h1>
+              <p class="hero-tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
 
-                <a href="/category/mastery" class="main-button">
-                    <div class="icon">👑</div>
-                    <h3>Mastery</h3>
-                    <p>VIP • NFTs • Advanced</p>
-                </a>
-            </div>
-        </div>
+              <div class="main-buttons stacked">
+                  <a href="/category/startup" class="main-button">
+                      <div class="icon">🌱</div>
+                      <h3>Start Here</h3>
+                      <p>Beginner guides & first steps</p>
+                  </a>
 
-        <!-- Right: Hero image with padding/overlay -->
-        <div class="hero-right">
-            <img src="/images/hero-full.jpg" alt="Pixels Dojo World" class="hero-image">
-            <div class="hero-overlay">
-                <p>Explore • Learn • Earn</p>
-            </div>
-        </div>
-    </section>
+                  <a href="/category/earn" class="main-button">
+                      <div class="icon">💰</div>
+                      <h3>Earn $PIXEL</h3>
+                      <p>Strategies & mechanisms</p>
+                  </a>
 
-    <!-- Prominent Search Bar -->
-    <div class="search-bar-container">
-        <form action="/search" method="GET" class="search-form">
-            <input type="text" name="q" placeholder="Search the wiki..." required>
-            <button type="submit" class="btn btn-cyan">Search</button>
-        </form>
-    </div>
+                  <a href="/category/mastery" class="main-button">
+                      <div class="icon">👑</div>
+                      <h3>Mastery</h3>
+                      <p>VIP • NFTs • Advanced</p>
+                  </a>
+              </div>
+          </div>
 
-    <!-- Category Grid – 4 blocks -->
-    <section class="category-grid">
-        <!-- Start Here -->
-        <div class="category-block">
-            <h2>Start Here</h2>
-            <p>Beginner guides, map orientation, NPC list, first steps</p>
-            <a href="/category/startup" class="btn btn-outline">View All →</a>
-        </div>
+          <!-- Right: Hero image -->
+          <div class="hero-right">
+              <img src="/images/hero-full.jpg" alt="Pixels Dojo World" class="hero-image" 
+                   onerror="this.src='https://via.placeholder.com/600x400/1a1a2e/FF10F0?text=Hero+Image+Coming+Soon';">
+              <div class="hero-overlay">
+                  <p>Explore • Learn • Earn</p>
+              </div>
+          </div>
+      </section>
 
-        <!-- Earn $PIXEL -->
-        <div class="category-block">
-            <h2>Earn $PIXEL</h2>
-            <p>Mechanisms, strategies, farming, quests</p>
-            <a href="/category/earn" class="btn btn-outline">View All →</a>
-        </div>
+      <!-- Search Bar – keep yours -->
+      <div class="search-bar-container">
+          <form action="/search" method="GET" class="search-form">
+              <input type="text" name="q" placeholder="Search the wiki..." required>
+              <button type="submit" class="btn btn-cyan">Search</button>
+          </form>
+      </div>
 
-        <!-- Mastery -->
-        <div class="category-block">
-            <h2>Mastery</h2>
-            <p>VIP perks, NFTs, add-ons, advanced paths</p>
-            <a href="/category/mastery" class="btn btn-outline">View All →</a>
-        </div>
+      <!-- Your existing 4-block grid -->
+      <section class="category-grid">
+          <!-- Start Here -->
+          <div class="category-block">
+              <h2>Start Here</h2>
+              <p>Beginner guides, map orientation, NPC list, first steps</p>
+              <a href="/category/startup" class="btn btn-outline">View All →</a>
+          </div>
 
-        <!-- Recent Guides -->
-        <div class="category-block recent">
-            <h2>Recent Guides</h2>
-            <div class="card-grid mini">
-                <% recentPages.slice(0, 3).forEach(page => { %>
-                    <div class="card mini">
-                        <h4><a href="/pages/<%= page.slug %>"><%= page.title %></a></h4>
-                        <small>By <%= page.author_display_name || 'Community' %></small>
-                    </div>
-                <% }) %>
-            </div>
-            <a href="/all-posts" class="btn btn-outline">All Recent Posts →</a>
-        </div>
-    </section>
+          <!-- Earn $PIXEL -->
+          <div class="category-block">
+              <h2>Earn $PIXEL</h2>
+              <p>Mechanisms, strategies, farming, quests</p>
+              <a href="/category/earn" class="btn btn-outline">View All →</a>
+          </div>
 
-    <!-- Most Upvoted Post – full-width -->
-    <section class="featured-post">
-        <h2>Most Upvoted Guide</h2>
-        <div class="featured-card">
-            <% if (mostUpvoted) { %>
-                <img src="<%= mostUpvoted.screenshots && mostUpvoted.screenshots[0] ? mostUpvoted.screenshots[0] : '/images/placeholder.jpg' %>" alt="Featured">
-                <div>
-                    <h3><a href="/pages/<%= mostUpvoted.slug %>"><%= mostUpvoted.title %></a></h3>
-                    <p><%= mostUpvoted.summary || mostUpvoted.content.substring(0, 200) + '...' %></p>
-                    <small>Upvotes: <%= mostUpvoted.upvotes || 0 %> • By <%= mostUpvoted.author_display_name || 'Community' %></small>
-                </div>
-            <% } else { %>
-                <p>No featured post yet — check back soon!</p>
-            <% } %>
-        </div>
-    </section>
+          <!-- Mastery -->
+          <div class="category-block">
+              <h2>Mastery</h2>
+              <p>VIP perks, NFTs, add-ons, advanced paths</p>
+              <a href="/category/mastery" class="btn btn-outline">View All →</a>
+          </div>
 
-    <!-- Most Viewed Post – full-width -->
-    <section class="featured-post">
-        <h2>Most Viewed Guide</h2>
-        <div class="featured-card">
-            <% if (mostViewed) { %>
-                <img src="<%= mostViewed.screenshots && mostViewed.screenshots[0] ? mostViewed.screenshots[0] : '/images/placeholder.jpg' %>" alt="Featured">
-                <div>
-                    <h3><a href="/pages/<%= mostViewed.slug %>"><%= mostViewed.title %></a></h3>
-                    <p><%= mostViewed.summary || mostViewed.content.substring(0, 200) + '...' %></p>
-                    <small>Views: <%= mostViewed.views || 0 %> • By <%= mostViewed.author_display_name || 'Community' %></small>
-                </div>
-            <% } else { %>
-                <p>No featured post yet — check back soon!</p>
-            <% } %>
-        </div>
-    </section>
+          <!-- Recent Guides -->
+          <div class="category-block recent">
+              <h2>Recent Guides</h2>
+              <div class="card-grid mini">
+                  <% recentPages.slice(0, 3).forEach(page => { %>
+                      <div class="card mini">
+                          <h4><a href="/pages/<%= page.slug %>"><%= page.title %></a></h4>
+                          <small>By <%= page.author_display_name || 'Community' %></small>
+                      </div>
+                  <% }) %>
+              </div>
+              <a href="/all-posts" class="btn btn-outline">All Recent Posts →</a>
+          </div>
+      </section>
 
-    <%- include('partials/footer') %>
-</body>
-</html>
+      <!-- Featured Posts – keep yours -->
+      <section class="featured-post">
+          <h2>Most Upvoted Guide</h2>
+          <div class="featured-card">
+              <% if (mostUpvoted) { %>
+                  <img src="<%= mostUpvoted.screenshots && mostUpvoted.screenshots[0] ? mostUpvoted.screenshots[0] : '/images/placeholder.jpg' %>" alt="Featured">
+                  <div>
+                      <h3><a href="/pages/<%= mostUpvoted.slug %>"><%= mostUpvoted.title %></a></h3>
+                      <p><%= mostUpvoted.summary || mostUpvoted.content.substring(0, 200) + '...' %></p>
+                      <small>Upvotes: <%= mostUpvoted.upvotes || 0 %> • By <%= mostUpvoted.author_display_name || 'Community' %></small>
+                  </div>
+              <% } else { %>
+                  <div class="placeholder-card">No featured post yet — coming soon!</div>
+              <% } %>
+          </div>
+      </section>
 
+      <section class="featured-post">
+          <h2>Most Viewed Guide</h2>
+          <div class="featured-card">
+              <% if (mostViewed) { %>
+                  <img src="<%= mostViewed.screenshots && mostViewed.screenshots[0] ? mostViewed.screenshots[0] : '/images/placeholder.jpg' %>" alt="Featured">
+                  <div>
+                      <h3><a href="/pages/<%= mostViewed.slug %>"><%= mostViewed.title %></a></h3>
+                      <p><%= mostViewed.summary || mostViewed.content.substring(0, 200) + '...' %></p>
+                      <small>Views: <%= mostViewed.views || 0 %> • By <%= mostViewed.author_display_name || 'Community' %></small>
+                  </div>
+              <% } else { %>
+                  <div class="placeholder-card">No featured post yet — coming soon!</div>
+              <% } %>
+          </div>
+      </section>
 
-    <div class="container">
-        <section id="new" class="content-section">
-            <h2>🎯 Getting Started - Your First Steps</h2>
-            <p><strong>Before You Start:</strong> Join the Pixels Discord and follow on X/Twitter! Time-limited events, giveaways, energy parties, and exclusive collectibles are announced there. The social side is HUGE in Pixels!</p>
-            
-            <div class="card-grid">
-                <div class="card">
-                    <h3>📱 Connect</h3>
-                    <p><strong>Discord:</strong> Most active, daily events<br>
-                    <strong>X/Twitter:</strong> @pixels_online<br>
-                    <strong>Substack:</strong> The Pixels Post</p>
-                </div>
-                <div class="card">
-                    <h3>🎮 Tutorial Quests</h3>
-                    <p>Start with Barney, Margaret, and Jack. Learn farming, crafting, mining, and the task board. Don't skip the tutorial!</p>
-                </div>
-                <div class="card">
-                    <h3>🗺️ Explore TerraVilla</h3>
-                    <p>Main fountain is your hub. Buck's Galore for tasks, Sauna for energy, Neon Zone for games, and NFT lands via Infiniportal.</p>
-                </div>
-            </div>
+      <!-- OG static content blocks – keep exactly as you have -->
+      <div class="container">
+          <section id="new" class="content-section">
+              <h2>🎯 Getting Started - Your First Steps</h2>
+              <!-- ... your full content here, unchanged ... -->
+          </section>
 
-            <h3>The Aim of the Game</h3>
-            <ul>
-                <li>🏆 Earn $PIXEL tokens (real cryptocurrency)</li>
-                <li>📈 Level up your skills and reputation</li>
-                <li>🎯 Develop keen strategies</li>
-                <li>🖼️ Invest in limited items and NFTs</li>
-                <li>👑 Climb leaderboards and immortalize yourself in TerraVilla</li>
-            </ul>
-        </section>
+          <section id="earn" class="content-section">
+              <h2>💰 How to Earn $PIXEL - Complete Guide</h2>
+              <!-- ... unchanged ... -->
+          </section>
 
-        <section id="earn" class="content-section">
-            <h2>💰 How to Earn $PIXEL - Complete Guide</h2>
-            
-            <h3>Primary Method: The Task Board ⭐</h3>
-            <p>Complete orders from the Infinifunnel task board in your house to earn $PIXEL. Your earnings increase based on skill level, VIP status, land ownership, and reputation.</p>
+          <section id="master" class="content-section">
+              <h2>⚡ Become a Pixels Master</h2>
+              <!-- ... unchanged ... -->
+          </section>
 
-            <div class="card-grid">
-                <div class="card">
-                    <h3>📋 Task Board</h3>
-                    <p>8-10 orders available. Simple orders = Coins. Complex orders = $PIXEL. VIP members get MORE orders!</p>
-                </div>
-                <div class="card">
-                    <h3>🔥 Hearth System</h3>
-                    <p>Join Wildgroves, Seedwrights, or Reapers. Power up your faction's Hearth or sabotage enemies for $PIXEL rewards.</p>
-                </div>
-                <div class="card">
-                    <h3>🎮 Neon Zone</h3>
-                    <p>Play ranked arcade games for $PIXEL. No energy needed! Perfect for waiting periods.</p>
-                </div>
-                <div class="card">
-                    <h3>📊 Staking</h3>
-                    <p>Stake your $PIXEL for passive income. Currently 25-79% APR - much better than banks!</p>
-                </div>
-            </div>
+          <section id="community" class="content-section">
+              <h2>👥 Community & Resources</h2>
+              <!-- ... unchanged ... -->
+          </section>
+      </div>
 
-            <h3>Best Strategies to Maximize Earnings</h3>
-            <ul>
-                <li>✅ Focus on Task Board (most reliable income)</li>
-                <li>✅ Level ALL skills evenly (more task variety)</li>
-                <li>✅ Get VIP membership (more tasks, better rewards)</li>
-                <li>✅ Manage energy strategically (your limiting factor)</li>
-                <li>✅ Build reputation for market access</li>
-                <li>✅ Stake your $PIXEL for passive income</li>
-            </ul>
-        </section>
-
-        <section id="master" class="content-section">
-            <h2>⚡ Become a Pixels Master</h2>
-            
-            <h3>VIP Membership</h3>
-            <p>VIP costs $PIXEL but provides huge benefits: more task orders, market access, Sauna energy boosts (1000 energy 2-3x daily), and reputation points.</p>
-
-            <h3>NFT Land & Ownership</h3>
-            <p><strong>You DON'T need land to play!</strong> But it provides advantages: earn from sharecroppers, access higher-tier resources, Tier 2 & 3 crafting stations, and customize your space.</p>
-
-            <div class="card-grid">
-                <div class="card">
-                    <h3>🏡 NFT Lands</h3>
-                    <p>Own land, earn from visitors, access premium resources, and build your community. Available on Mavis Market.</p>
-                </div>
-                <div class="card">
-                    <h3>🐾 Pets</h3>
-                    <p>Pets extend your reach and add carry capacity. Essential for efficiency, especially in Neon Zone!</p>
-                </div>
-                <div class="card">
-                    <h3>🎨 UGCs</h3>
-                    <p>Create and sell custom decorative items for $PIXEL. Design skills + marketplace savvy = profit!</p>
-                </div>
-                <div class="card">
-                    <h3>🛠️ Tools & Add-Ons</h3>
-                    <p>PGA (Pixels Game Assistant) and Voxels add-ons provide inventory tracking, timers, and land finders.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="community" class="content-section">
-            <h2>👥 Community & Resources</h2>
-            
-            <div class="card-grid">
-                <div class="card">
-                    <h3>Discord</h3>
-                    <p>250k+ members. Daily events, energy parties, giveaways, and announcements. Most active community hub.</p>
-                </div>
-                <div class="card">
-                    <h3>Twitter/X</h3>
-                    <p>@pixels_online - 280k+ followers. Quick updates, announcements, and community highlights.</p>
-                </div>
-                <div class="card">
-                    <h3>The Pixels Post</h3>
-                    <p>Weekly AMAs on Substack. Developer insights, roadmap updates, and detailed patch notes.</p>
-                </div>
-                <div class="card">
-                    <h3>Helper Tools</h3>
-                    <p>pixels.tips for profitability tracking. PGA browser extension. Ronin blockchain explorer.</p>
-                </div>
-            </div>
-        </section>
-
-    <footer>
-  <div class="footer-content">
-    <div class="site-map">
-      <h4>Site Map</h4>
-      <a href="/">Home</a><br>
-      <a href="/wiki">All Wiki</a><br>
-      <a href="/profile">My Account</a>
-    </div>
-    <div class="social">
-      <h4>Get Social</h4>
-      <a href="https://x.com/pixelsdojo">X</a> |
-      <a href="https://discord.gg/aqeBVdeu">Discord</a> |
-      <!-- add others -->
-    </div>
-    <div class="founder">
-      <img src="/images/lizzy_profile_2.png" alt="Lizzy Sims" style="width:80px; border-radius:50%;">
-      <p>Founder: <a href="/u/lizzysims">Lizzy Sims</a></p>
-      <p>All rights reserved © 2026 Pixels Dojo - Community Resource for Pixels Online</p>
-    <p> Built with ❤️ by the community</p>
-    </div>
-      </div>        
-    </footer>
+      <%- include('partials/footer') %>
+    </div> <!-- end main-wrapper -->
 
     <script src="/js/main.js"></script>
 </body>
