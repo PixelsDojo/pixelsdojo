@@ -192,6 +192,25 @@ app.get('/npcs', (req, res) => {
   });
 });
 
+// ─── All Posts Page ────────────────────────────────────────
+// Lists every article in the wiki (paginated later if needed)
+app.get('/all-posts', (req, res) => {
+  db.all(`
+    SELECT p.*, u.display_name as author_display_name
+    FROM pages p
+    LEFT JOIN users u ON p.author_id = u.id
+    ORDER BY p.created_at DESC
+  `, [], (err, allPages) => {
+    if (err) {
+      console.error('All posts query error:', err);
+      allPages = [];
+    }
+    res.render('all-posts', {
+      pages: allPages,
+      user: req.session.user || null
+    });
+  });
+});
 
 // GET /register - Show registration form
 app.get('/register', (req, res) => {
