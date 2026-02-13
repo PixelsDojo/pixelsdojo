@@ -435,6 +435,90 @@ nav a:hover {
   text-align: center;
   margin: 2rem 0;
 }
+
+/* Wider recent guides block */
+.category-block.recent.wide-block {
+  grid-column: 1 / -1;                    /* spans full width in grid */
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.recent-card {
+  display: flex;
+  background: var(--card-bg);
+  border: 2px solid var(--neon-purple);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(101,0,255,0.15);
+}
+
+.recent-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(133,0,255,0.35);
+  border-color: var(--cyan);
+}
+
+.card-image {
+  width: 140px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-right: 2px solid var(--neon-purple);
+}
+
+.card-content {
+  padding: 1.2rem;
+  flex: 1;
+}
+
+.card-content h3 {
+  color: var(--cyan);
+  font-size: 1.35rem;
+  margin: 0 0 0.6rem;
+}
+
+.card-content .snippet {
+  font-size: 0.95rem;
+  color: #d0d0ff;
+  line-height: 1.4;
+  margin: 0 0 0.8rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-content small {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* Make this block wider than others in grid */
+.category-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.category-grid .wide-block {
+  grid-column: 1 / -1;
+}
+
 /* ─── Buttons ──────────────────────────────────────────────── */
 
 .btn {
