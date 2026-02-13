@@ -427,51 +427,135 @@ nav a:hover {
     color: #b8b8b8;
 }
 
-/* Footer */
+/* Footer – one horizontal row on desktop */
 footer {
-    background: var(--card-bg);
-    padding: 2rem;
+  background: var(--card-bg);
+  border-top: 3px solid var(--cyan);
+  padding: 3rem 1.5rem 1.5rem;
+  color: #b8b8b8;
+  font-size: 0.95rem;
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: nowrap; /* force one row */
+  gap: 2rem;
+}
+
+.footer-block {
+  flex: 1;
+  min-width: 160px;
+}
+
+/* Profile block – small & left */
+.profile-block .profile-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(101, 0, 255, 0.08);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--cyan);
+}
+
+.profile-pic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--cyan);
+  object-fit: cover;
+}
+
+.profile-name {
+  color: var(--yellow);
+  font-weight: 600;
+  margin: 0;
+}
+
+.profile-blurb {
+  color: var(--cyan-light);
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+}
+
+/* Social block */
+.social-block h4 {
+  color: var(--yellow);
+  margin-bottom: 0.8rem;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.social-icon {
+  width: 32px;
+  height: 32px;
+  transition: transform 0.3s;
+}
+
+.social-icon:hover {
+  transform: scale(1.15);
+}
+
+/* Site Map block */
+.sitemap-block h4 {
+  color: var(--yellow);
+  margin-bottom: 0.8rem;
+}
+
+.sitemap-block a {
+  display: block;
+  color: var(--cyan);
+  margin-bottom: 0.5rem;
+  text-decoration: none;
+}
+
+.sitemap-block a:hover {
+  color: var(--yellow);
+}
+
+/* Logo block */
+.logo-block .footer-logo {
+  max-width: 140px;
+  height: auto;
+}
+
+/* Copyright – always at bottom */
+.footer-copyright {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(237, 255, 132, 0.15);
+  font-size: 0.85rem;
+  color: #888;
+}
+
+/* Mobile – stack top to bottom in same order */
+@media (max-width: 992px) {
+  .footer-row {
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    margin-top: 3rem;
-    border-top: 3px solid var(--cyan);
-}
+    gap: 2rem;
+  }
 
-footer p {
-    color: #b8b8b8;
-}
+  .profile-block .profile-card {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
 
-footer a {
-    color: var(--yellow);
-    text-decoration: none;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    header h1 {
-        font-size: 2rem;
-    }
-    
-    .main-buttons {
-        grid-template-columns: 1fr;
-    }
-    
-    .header-container {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .logo-section img {
-        height: 60px;
-    }
-    
-    .author-card {
-        flex-direction: column;
-        text-align: center;
-    }
+  .social-icons {
+    justify-content: center;
+  }
 }
 
 /* Alerts */
