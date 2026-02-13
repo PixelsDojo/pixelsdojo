@@ -208,14 +208,14 @@
 
 <!-- Edit Wiki Page Modal – full Bootstrap -->
 <div class="modal fade" id="editPageModal" tabindex="-1" aria-labelledby="editPageModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl"> <!-- xl = large for Quill -->
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="editPageModalLabel">Edit Wiki Page</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-        <form id="editPageForm" method="POST" action="/admin/pages/:id/update" enctype="multipart/form-data">
+        <form id="editPageForm" method="POST" enctype="multipart/form-data">
           <input type="hidden" name="_method" value="PUT">
           <input type="hidden" name="id" id="editPageId">
 
@@ -229,8 +229,7 @@
             <input type="text" class="form-control bg-light" id="editSlug" name="slug" readonly>
           </div>
 
-          <!-- Add your other fields here – category, difficulty, summary, pro_tips, etc. -->
-          <!-- Example placeholders -->
+          <!-- Your other fields – add them here exactly as before -->
           <div class="mb-3">
             <label for="editCategory" class="form-label">Category</label>
             <input type="text" class="form-control" id="editCategory" name="category">
@@ -557,5 +556,6 @@
 </script>
 
 <script src="/js/admin.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
