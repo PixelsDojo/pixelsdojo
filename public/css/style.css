@@ -517,55 +517,142 @@ footer {
     }
 }
 
-/* ─── Mobile ───────────────────────────────────────────────── */
+/* ─── Mobile Responsive (992px and below) ──────────────────────────────────────── */
 
 @media (max-width: 992px) {
+
+    /* Main layout stacks vertically */
     .main-wrapper {
         flex-direction: column;
         padding: 1rem;
+        gap: 1.5rem;
     }
 
     .sidebar {
         position: static;
         width: 100%;
         border: none;
+        border-bottom: 1px solid rgba(101, 0, 255, 0.3); /* subtle separator */
+        padding-bottom: 1rem;
     }
 
+    /* Header – full vertical stack on mobile */
     .header-container {
         flex-direction: column;
+        align-items: center;
         text-align: center;
+        gap: 1.2rem;
+        padding: 1rem 0.8rem;
     }
 
-    .hero-split {
+    .logo-section {
+        width: 100%;
+        margin-bottom: 0.6rem;
+    }
+
+    .logo-section img {
+        height: 65px;               /* smaller but still prominent */
+        margin: 0 auto;
+    }
+
+    .logo-section h1 {
+        font-size: 2.3rem;          /* readable on small screens */
+        margin: 0.5rem 0 0;
+    }
+
+    .tagline {
+        font-size: 1.1rem;
+        margin-top: 0.3rem;
+    }
+
+    /* User nav / buttons / price widget – stack and center */
+    .user-nav,
+    .right-section,
+    .price-widget {
         flex-direction: column;
-        padding: 1.8rem;
+        width: 100%;
+        align-items: center;
+        gap: 0.9rem;
     }
 
+    .user-nav a,
+    .btn,
+    .btn-small,
+    .price-widget {
+        min-width: 140px;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    /* Navigation menu stacks */
     nav ul {
         flex-direction: column;
         gap: 0.8rem;
     }
 
+    nav li {
+        width: 100%;
+        text-align: center;
+    }
+
+    nav a {
+        padding: 0.9rem;
+        font-size: 1.1rem;          /* slightly larger for touch */
+    }
+
+    /* Hero area – stack content, adjust padding */
+    .hero-split {
+        flex-direction: column;
+        padding: 1.8rem 1.2rem;
+        min-height: auto;           /* let content determine height */
+        margin: 1.5rem 0;
+    }
+
+    .hero-content {
+        padding: 2rem 1rem;
+    }
+
+    .hero-title {
+        font-size: 2.6rem;
+    }
+
+    .hero-tagline {
+        font-size: 1.25rem;
+        margin-bottom: 2.5rem;
+    }
+
     .main-buttons {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 
+    .main-button {
+        padding: 2rem 1.3rem;
+    }
+
+    .main-button .icon {
+        font-size: 3.2rem;
+    }
+
+    .main-button h3 {
+        font-size: 1.5rem;
+    }
+
+    /* Footer – already stacking, just refine spacing */
     .footer-row {
         flex-direction: column;
+        gap: 1.6rem;
     }
-}
 
-/* ─── Final Polish Overrides ───────────────────────────────── */
+    /* General readability tweaks */
+    body {
+        font-size: 1.05rem;
+    }
 
-h1, h2, h3 {
-    text-shadow: 0 0 14px rgba(237,255,132,0.55), 0 0 6px var(--cyan);
-}
-
-a:not(.btn):not(.main-button):hover {
-    color: #ff69f5 !important;
-}
-
-.main-button:hover,
-.btn:hover {
-    box-shadow: 0 12px 36px rgba(133,0,255,0.48);
+    .content-section,
+    .card-grid {
+        padding: 1.5rem 1rem;
+    }
 }
