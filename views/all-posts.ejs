@@ -1,16 +1,56 @@
-<%- include('partials/header') %>
-<div class="main-wrapper">
-  <aside class="sidebar"> <!-- your sidebar here --> </aside>
-  <div class="main-content-area">
-    <h1>All Articles</h1>
-    <div class="post-list">
-      <% pages.forEach(page => { %>
-        <div class="post-item">
-          <h3><a href="/pages/<%= page.slug %>"><%= page.title %></a></h3>
-          <small>By <%= page.author_display_name || 'Community' %> · <%= new Date(page.created_at).toLocaleDateString() %></small>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Articles | Pixels Dojo Wiki</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <div class="main-wrapper">
+    <aside class="sidebar">
+      <!-- Your existing sidebar code here -->
+      <h4>Library</h4>
+      <a href="/">🏠 All Articles</a>
+      <a href="/npcs">🧑‍🤝‍🧑 NPC Gallery</a>
+      <hr>
+      <h5>Categories</h5>
+      <a href="/category/startup">Start Here</a>
+      <a href="/category/earn">Earn $PIXEL</a>
+      <a href="/category/mastery">Mastery</a>
+      <a href="/category/community">Community</a>
+    </aside>
+
+    <div class="main-content-area">
+      <h1>All Articles</h1>
+      
+      <% if (pages.length === 0) { %>
+        <p>No articles yet — check back soon!</p>
+      <% } else { %>
+        <div class="all-posts-list">
+          <% pages.forEach(page => { %>
+            <div class="post-item">
+              <h3>
+                <a href="/pages/<%= page.slug %>"><%= page.title %></a>
+              </h3>
+              <div class="post-meta">
+                <small>
+                  By <%= page.author_display_name || 'Community' %> 
+                  · <%= new Date(page.created_at).toLocaleDateString() %>
+                </small>
+              </div>
+              <p class="post-snippet">
+                <%= (page.summary || page.content.substring(0, 150) + '...') %>
+              </p>
+            </div>
+          <% }) %>
         </div>
-      <% }) %>
+      <% } %>
     </div>
   </div>
-</div>
-<%- include('partials/footer') %>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
