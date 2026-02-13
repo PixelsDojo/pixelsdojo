@@ -9,22 +9,29 @@
 <body>
   <%- include('partials/header') %>
 
-  <div class="container" style="max-width: 1300px; margin: 3rem auto;">
+  <div class="container" style="max-width: 1300px; margin: 3rem auto; padding: 0 1.5rem;">
+    <!-- Big category title with glow -->
     <h1 style="color: var(--yellow); text-shadow: 0 0 12px rgba(237, 255, 132, 0.5); text-align: center; margin-bottom: 3rem;">
       <%= category.charAt(0).toUpperCase() + category.slice(1) %> Guides
     </h1>
 
     <% if (pages && pages.length > 0) { %>
-      <div class="card-grid" style="margin-bottom: 4rem;">
+      <!-- Card grid – uses your existing .card-grid and .card classes -->
+      <div class="card-grid">
         <% pages.forEach(page => { %>
-          <div class="card" style="transition: all 0.3s; border: 2px solid var(--neon-purple); background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(101, 0, 255, 0.2);">
+          <div class="card">
             <% if (page.screenshots && page.screenshots.length > 0) { %>
-              <img src="<%= page.screenshots[0] %>" alt="<%= page.title %>" style="width: 100%; height: 180px; object-fit: cover; border-bottom: 3px solid var(--cyan);">
+              <img 
+                src="<%= page.screenshots[0] %>" 
+                alt="<%= page.title %>" 
+                style="width: 100%; height: 180px; object-fit: cover; border-bottom: 3px solid var(--cyan);"
+              >
             <% } else { %>
               <div style="height: 180px; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--cyan);">
                 No Image
               </div>
             <% } %>
+
             <div style="padding: 1.5rem;">
               <h3 style="color: var(--cyan); margin-bottom: 0.8rem;">
                 <a href="/pages/<%= page.slug %>" style="color: inherit; text-decoration: none;">
@@ -32,7 +39,7 @@
                 </a>
               </h3>
               <p style="color: #b8b8b8; font-size: 1rem; margin-bottom: 1rem;">
-                <%= page.summary || page.content.substring(0, 150) + '...' %>
+                <%= page.summary || (page.content.substring(0, 150) + '...') %>
               </p>
               <small style="color: var(--cyan-light);">
                 By <%= page.author_display_name || 'Community' %> • 
@@ -42,12 +49,18 @@
           </div>
         <% }) %>
       </div>
+
+      <!-- Pagination or "View more" if you add it later -->
+      <div style="text-align: center; margin-top: 3rem;">
+        <a href="/" class="btn btn-cyan">Back to Home</a>
+      </div>
     <% } else { %>
-      <div style="text-align: center; padding: 4rem; background: rgba(20, 20, 30, 0.7); border-radius: 12px; border: 2px solid var(--purple);">
-        <h3 style="color: var(--yellow);">No guides in this category yet</h3>
-        <p style="color: #b8b8b8; margin: 1rem 0;">Be the first to add one!</p>
+      <!-- Empty state – styled like wiki cards -->
+      <div style="text-align: center; padding: 4rem; background: rgba(20, 20, 30, 0.7); border-radius: 12px; border: 2px solid var(--purple); box-shadow: 0 8px 30px rgba(133, 0, 255, 0.25);">
+        <h3 style="color: var(--yellow); margin-bottom: 1rem;">No guides in this category yet</h3>
+        <p style="color: #b8b8b8; margin-bottom: 2rem;">Be the first to add some amazing content!</p>
         <% if (user && user.is_admin) { %>
-          <a href="/admin" class="btn btn-cyan">Add a Guide Now</a>
+          <a href="/admin" class="btn btn-primary">Add a Guide Now →</a>
         <% } %>
       </div>
     <% } %>
