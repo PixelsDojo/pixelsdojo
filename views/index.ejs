@@ -112,18 +112,39 @@
           </div>
 
           <!-- Recent Guides -->
-          <div class="category-block recent">
-              <h2>Recent Guides</h2>
-              <div class="card-grid mini">
-                  <% recentPages.slice(0, 3).forEach(page => { %>
-                      <div class="card mini">
-                          <h4><a href="/pages/<%= page.slug %>"><%= page.title %></a></h4>
-                          <small>By <%= page.author_display_name || 'Community' %></small>
-                      </div>
-                  <% }) %>
-              </div>
-              <a href="/all-posts" class="btn btn-outline">All Recent Posts →</a>
-          </div>
+          <!-- Recent Guides – wider, with snippet + image -->
+<div class="category-block recent wide-block">
+  <h2>Recent Guides</h2>
+  <div class="recent-grid">
+    <% recentPages.slice(0, 3).forEach(page => { %>
+      <a href="/pages/<%= page.slug %>" class="recent-card">
+        <% 
+          let thumbnail = '/images/placeholder.jpg'; // fallback
+          try {
+            const shots = JSON.parse(page.screenshots || '[]');
+            if (shots.length > 0) thumbnail = shots[0];
+          } catch (e) {}
+        %>
+        <div class="card-image">
+          <img 
+            src="<%= thumbnail %>" 
+            alt="<%= page.title %>" 
+            loading="lazy"
+            onerror="this.src='/images/placeholder.jpg'"
+          >
+        </div>
+        <div class="card-content">
+          <h3><%= page.title %></h3>
+          <p class="snippet">
+            <%= (page.summary || page.content.substring(0, 150) + '...') %>
+          </p>
+          <small>By <%= page.author_display_name || 'Community' %></small>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+  <a href="/all-posts" class="btn btn-outline">View All Guides →</a>
+</div>
       </section>
 
       <!-- Featured Posts – keep yours -->
