@@ -1,5 +1,5 @@
 <div class="author-card">
-    <img src="<%= user.profile_image || '/images/default-profile.png' %>" alt="Author">
+    <img src="<%= user.profile_image || '/images/pixeldojo_logo_round_.png' %>" alt="Author">
     <div class="author-info">
         <h3><%= author || 'Community Contributor' %></h3>
         <p>Creator of this guide</p>
