@@ -116,7 +116,7 @@
 <div class="category-block recent wide-block">
   <h2>Recent Guides</h2>
   <div class="recent-grid">
-    <% recentPages.slice(0, 3).forEach(page => { %>
+    <% recentPages.slice(0, 16).forEach(page => { %>
       <a href="/pages/<%= page.slug %>" class="recent-card">
         <% 
           let thumbnail = '/images/placeholder.jpg'; // fallback
