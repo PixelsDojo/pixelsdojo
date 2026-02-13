@@ -9,7 +9,7 @@
   <div class="container" style="max-width:600px;margin:4rem auto;padding:2rem;background:#1a1a2e;border-radius:12px;color:white;">
     <h1>Edit Profile</h1>
 
-    <form method="POST" action="/profile/update" enctype="multipart/form-data">
+    <form method="POST" action="/profile/edit" enctype="multipart/form-data">
       <div style="margin-bottom:1.5rem;">
         <label>Display Name</label><br>
         <input type="text" name="display_name" value="<%= user.display_name || user.username %>" style="width:100%;padding:0.8rem;background:#0f0f1a;border:1px solid #444;color:white;border-radius:6px;">
