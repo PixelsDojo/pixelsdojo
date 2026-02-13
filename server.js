@@ -288,6 +288,37 @@ app.get('/admin', requireAdmin, (req, res) => {
   });
 });
 
+// Admin: List and manage users
+app.get('/admin/users', requireAdmin, (req, res) => {
+  db.all(`
+    SELECT id, username, email, display_name, bio, profile_image, is_admin, is_contributor 
+    FROM users 
+    ORDER BY created_at DESC
+  `, (err, users) => {
+    if (err) {
+      console.error('Error fetching users:', err);
+      return res.status(500).send('Database error');
+    }
+    res.render('admin-users', { users, user: req.session.user || null });
+  });
+});
+
+// Toggle contributor status
+app.post('/admin/users/:id/toggle-contributor', requireAdmin, (req, res) => {
+  const userId = req.params.id;
+  db.get('SELECT is_contributor FROM users WHERE id = ?', [userId], (err, row) => {
+    if (err || !row) return res.status(404).send('User not found');
+    const newStatus = row.is_contributor ? 0 : 1;
+    db.run('UPDATE users SET is_contributor = ? WHERE id = ?', [newStatus, userId], (err) => {
+      if (err) {
+        console.error('Error updating contributor status:', err);
+        return res.status(500).send('Update failed');
+      }
+      res.redirect('/admin/users');
+    });
+  });
+});
+
 // Create new page
 app.post('/admin/pages', requireAdmin, upload.array('screenshots', 15), (req, res) => {
   const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
