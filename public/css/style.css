@@ -63,14 +63,13 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    flex-wrap: nowrap !important;     /* force no wrap */
     gap: 1.5rem;
+    white-space: nowrap;              /* extra safety */
 }
 
 .logo-section {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    flex-shrink: 0;                   /* logo won't shrink */
 }
 
 .logo-section img {
@@ -92,17 +91,28 @@ header {
     justify-content: center;
 }
 
-.user-nav a {
-    color: white;
-    padding: 0.6rem 1.2rem;
-    background: rgba(255,255,255,0.12);
-    border-radius: 6px;
-    transition: 0.3s;
+.user-nav,
+.right-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
-.user-nav a:hover {
-    background: var(--yellow);
-    color: var(--purple);
+.user-nav a,
+.btn-small,
+.btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+/* If search/price widget is in header, tighten it */
+.price-widget {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    min-width: 180px;
 }
 
 /* ─── Navigation Bar ───────────────────────────────────────── */
