@@ -789,12 +789,6 @@ h1, h2, h3 {
     text-shadow: 0 0 8px rgba(237, 255, 132, 0.3);
 }
 
-.btn-small {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  border-radius: 6px;
-  margin-left: 0.5rem;
-}
 
 .btn-admin {
   background: var(--purple);
@@ -804,4 +798,39 @@ h1, h2, h3 {
 .btn-logout {
   background: #ff4444;
   color: white;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap; /* prevents wrapping */
+  gap: 1rem;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.price-widget {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  min-width: 160px; /* keeps it from shrinking too much */
+}
+
+.user-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  white-space: nowrap;
+}
+
+.btn-small {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
