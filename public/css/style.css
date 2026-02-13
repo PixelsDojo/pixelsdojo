@@ -519,6 +519,18 @@ nav a:hover {
   grid-column: 1 / -1;
 }
 
+.sort-controls a {
+  color: var(--cyan);
+  margin: 0 0.6rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.sort-controls a:hover,
+.sort-controls a.active {
+  color: var(--yellow);
+  text-decoration: underline;
+}
 /* ─── Buttons ──────────────────────────────────────────────── */
 
 .btn {
