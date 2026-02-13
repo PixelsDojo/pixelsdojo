@@ -464,39 +464,54 @@
     }
 
     // ─── Edit Wiki Page ──────────────────────────────────────────────
-    function editPage(id, title) {
-        fetch(`/admin/pages/${id}/edit`)
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to load page`);
-                return res.json();
-            })
-            .then(page => {
-                document.getElementById('editPageId').value = page.id;
-                document.getElementById('editTitle').value = page.title || '';
-                document.getElementById('editSlug').value = page.slug || '';
-document.getElementById('editPageForm').action = `/admin/pages/${page.id}/update`;
+function editPage(id, title) {
+    fetch(`/admin/pages/${id}/edit`)
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to load page`);
+            return res.json();
+        })
+        .then(page => {
+            document.getElementById('editPageId').value = page.id;
+            document.getElementById('editTitle').value = page.title || '';
+            document.getElementById('editSlug').value = page.slug || '';
+            document.getElementById('editPageForm').action = `/admin/pages/${page.id}/update`;
 
-                // Show modal (custom style)
-                const modal = document.getElementById('editPageModal');
-                if (modal) modal.style.display = 'block';
+            // Show modal (custom style)
+            const modal = document.getElementById('editPageModal');
+            if (modal) modal.style.display = 'block';
 
-                // Initialize Quill if not already
-                if (!editQuill) {
-                    editQuill = new Quill('#editQuillEditor', {
-                        theme: 'snow',
-                        modules: {
-                            toolbar: [
-                                [{ 'header': [1, 2, 3, false] }],
-                                ['bold', 'italic', 'underline', 'strike'],
-                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                                ['link', 'image'],
-                                ['clean']
-                            ],
-                            clipboard: { matchVisual: false }
-                        },
-                        placeholder: 'Edit content here...'
-                    });
-                }
+            // Initialize Quill if not already
+            if (!editQuill) {
+                editQuill = new Quill('#editQuillEditor', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                            ['link', 'image'],
+                            ['clean']
+                        ],
+                        clipboard: { matchVisual: false }
+                    },
+                    placeholder: 'Edit content here...'
+                });
+            }
+
+            // Load content safely
+            try {
+                const delta = JSON.parse(page.content || '[]');
+                editQuill.setContents(delta);
+            } catch (e) {
+                console.warn('Content not valid Delta – using HTML fallback');
+                editQuill.root.innerHTML = page.content || '';
+            }
+        })
+        .catch(err => {
+            console.error('Edit page fetch error:', err);
+            alert('Error loading page: ' + err.message);
+        });
+}
 
                 // Load content safely
                 try {
