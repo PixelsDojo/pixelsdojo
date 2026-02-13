@@ -214,6 +214,53 @@ app.get('/profile', (req, res) => {
   );
 });
 
+// Edit profile form (GET /profile/edit)
+app.get('/profile/edit', (req, res) => {
+  if (!req.session.user) return res.redirect('/login?redirect=/profile/edit');
+
+  res.render('profile-edit', {
+    user: req.session.user,
+    error: null
+  });
+});
+
+// Update profile (POST /profile/edit)
+app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+
+  const { display_name, email } = req.body;
+  const userId = req.session.user.id;
+
+  let updateQuery = `UPDATE users SET display_name = ?, email = ?`;
+  let params = [display_name || null, email || null];
+
+  if (req.file) {
+    const imagePath = `/images/profiles/${req.file.filename}`;
+    updateQuery += `, profile_image = ?`;
+    params.push(imagePath);
+  }
+
+  updateQuery += ` WHERE id = ?`;
+  params.push(userId);
+
+  db.run(updateQuery, params, function(err) {
+    if (err) {
+      console.error('Profile update error:', err);
+      return res.render('profile-edit', {
+        user: req.session.user,
+        error: 'Failed to update profile. Try again.'
+      });
+    }
+
+    // Update session with new data
+    req.session.user.display_name = display_name || req.session.user.display_name;
+    req.session.user.email = email || req.session.user.email;
+    if (req.file) req.session.user.profile_image = `/images/profiles/${req.file.filename}`;
+
+    res.redirect('/profile');
+  });
+});
+
 // ─── Admin dashboard ───
 app.get('/admin', requireAdmin, (req, res) => {
   db.all('SELECT * FROM npcs ORDER BY display_order ASC', [], (err, npcRows) => {
