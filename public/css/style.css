@@ -909,6 +909,13 @@ h1, h2, h3 {
   gap: 1rem;
 }
 
+.hero-split {
+    background-image: url('/images/banner_with_pixels_dojo_in_white.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}  
+
 .right-section {
   display: flex;
   align-items: center;
