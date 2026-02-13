@@ -68,32 +68,28 @@
         <div class="header-container">
             <div class="logo-section">
                 <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo">
-                <h1>PIXELS DOJO - ADMIN DASHBOARD</h1>        </div>
-<div class="user-nav">
-  <% if (user) { %>
-    <span>Welcome, <%= user.display_name || user.username %>!</span>
-    <a href="/profile" class="btn btn-small">Profile</a>
-    <% if (user.is_admin || user.is_editor) { %>
-      <a href="/admin" class="btn btn-small btn-admin">Dashboard</a>
-    <% } %>
-    <a href="/logout" class="btn btn-small btn-logout">Logout</a>
-  <% } else { %>
-    <a href="/login" class="btn btn-small">Login</a>
-    <a href="/register" class="btn btn-small">Register</a>
-  <% } %>
-</div>
+                <h1>PIXELS DOJO - ADMIN DASHBOARD</h1>
+            </div>
+            <div class="user-nav">
+                <span>Welcome, <%= user.username %>!</span>
+                <a href="/">Home</a>
+                <a href="/npcs">View NPCs</a>
+                <a href="/profile">My Profile</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
     </header>
 
-  <nav>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/category/startup">Start Here</a></li>
-    <li><a href="/category/earn">Earn $PIXEL</a></li>
-    <li><a href="/category/mastery">Mastery</a></li>
-    <li><a href="/npcs">NPCs</a></li>
-    <li><a href="/category/community">Community</a></li>
-  </ul>
-</nav>
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="/npcs">NPCs</a></li>
+            <li><a href="#new">I'm New</a></li>
+            <li><a href="#earn">Earn $PIXEL</a></li>
+            <li><a href="#master">Become Master</a></li>
+            <li><a href="#community">Community</a></li>
+        </ul>
+    </nav>
 
     <div class="admin-container">
         <h1>🛠️ Admin Dashboard</h1>
@@ -120,16 +116,16 @@
                         <% if (pages && pages.length > 0) { %>
                             <% pages.forEach(page => { %>
                                 <tr>
-    <td><%= page.title %></td>
-    <td><%= page.slug %></td>
-    <td><%= page.category || '—' %></td>
-    <td><%= new Date(page.created_at).toLocaleDateString() %></td>
-    <td class="actions">
-        <button onclick="window.open('/pages/<%= page.slug %>', '_blank')" class="btn-action btn-view">👁️ View</button>
-        <button onclick="editPage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'").replace(/"/g, '\\"') %>')" class="btn-action btn-edit">✏️ Edit</button>
-        <button onclick="deletePage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'").replace(/"/g, '\\"') %>')" class="btn-action btn-delete">🗑️ Delete</button>
-    </td>
-</tr>
+                                    <td><%= page.title %></td>
+                                    <td><%= page.slug %></td>
+                                    <td><%= page.category || '—' %></td>
+                                    <td><%= new Date(page.created_at).toLocaleDateString() %></td>
+                                    <td class="actions">
+                                    <button onclick="window.open('/pages/<%= page.slug %>', '_blank')" class="btn-action btn-view">👁️ View</button>
+                                    <button onclick="editPage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'") %>')" class="btn-action btn-edit">✏️ Edit</button>
+                                    <button onclick="deletePage(<%= page.id %>, '<%= page.title.replace(/'/g, "\\'") %>')" class="btn-action btn-delete">🗑️ Delete</button>
+                                </td>
+                                </tr>
                             <% }); %>
                         <% } else { %>
                             <tr><td colspan="5">No pages yet — add one above!</td></tr>
@@ -206,17 +202,17 @@
         </div>
     </div>
 
-<!-- Edit Wiki Page Modal – full Bootstrap -->
+<!-- Edit Page Modal – Bootstrap style -->
 <div class="modal fade" id="editPageModal" tabindex="-1" aria-labelledby="editPageModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-xl"> <!-- extra large for Quill -->
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="editPageModalLabel">Edit Wiki Page</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-        <form id="editPageForm" method="POST" enctype="multipart/form-data">
-          <input type="hidden" name="_method" value="PUT">
+      <div class="modal-body">
+        <form id="editPageForm" method="POST" action="/admin/pages/:id/update" enctype="multipart/form-data">
+          <input type="hidden" name="_method" value="PUT"> <!-- if using method-override -->
           <input type="hidden" name="id" id="editPageId">
 
           <div class="mb-3">
@@ -226,10 +222,18 @@
 
           <div class="mb-3">
             <label for="editSlug" class="form-label">Slug (cannot be changed)</label>
-            <input type="text" class="form-control bg-light" id="editSlug" name="slug" readonly>
+            <input 
+              type="text" 
+              class="form-control bg-light" 
+              id="editSlug" 
+              name="slug" 
+              readonly
+              style="cursor: not-allowed;"
+            >
           </div>
 
-          <!-- Your other fields – add them here exactly as before -->
+          <!-- Add your other fields here (category, difficulty, summary, pro_tips, screenshots) -->
+          <!-- Example: -->
           <div class="mb-3">
             <label for="editCategory" class="form-label">Category</label>
             <input type="text" class="form-control" id="editCategory" name="category">
@@ -257,12 +261,12 @@
           <div class="mb-3">
             <label for="editScreenshots" class="form-label">Add New Screenshots</label>
             <input type="file" class="form-control" id="editScreenshots" name="screenshots" multiple accept="image/*">
-            <small>Existing screenshots stay unless replaced.</small>
+            <small>Existing screenshots will stay unless replaced.</small>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Main Content</label>
-            <div id="editQuillEditor" style="height: 450px; background: white; border: 1px solid #ccc;"></div>
+            <div id="editQuillEditor" style="height: 450px; background: white;"></div>
             <textarea name="content" id="editContent" style="display: none;"></textarea>
           </div>
         </form>
@@ -369,12 +373,13 @@
         </div>
     </div>
 
-       <!-- Scripts -->
+        <!-- Scripts -->
+    <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
 <script>
-    let quill = null;       // Add page
-    let editQuill = null;   // Edit page
+    let quill = null;       // for add modal
+    let editQuill = null;   // for edit modal
 
     // ─── Add Page Modal ──────────────────────────────────────
     function showAddPageModal() {
@@ -424,19 +429,6 @@
                 }
             });
         }
-
-        // Also listen for edit form submit
-        const editForm = document.getElementById('editPageForm');
-        if (editForm) {
-            editForm.addEventListener('submit', function(e) {
-                if (editQuill) {
-                    document.getElementById('editContent').value = editQuill.root.innerHTML;
-                    console.log('Saving Quill content (edit):', editQuill.root.innerHTML);
-                } else {
-                    console.warn('Edit Quill not initialized');
-                }
-            });
-        }
     });
 
     // ─── Generic modal helpers ──────────────────────────────────────
@@ -464,54 +456,43 @@
     }
 
     // ─── Edit Wiki Page ──────────────────────────────────────────────
-function editPage(id, title) {
-    fetch(`/admin/pages/${id}/edit`)
-        .then(res => {
-            if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to load page`);
-            return res.json();
-        })
-        .then(page => {
-            document.getElementById('editPageId').value = page.id;
-            document.getElementById('editTitle').value = page.title || '';
-            document.getElementById('editSlug').value = page.slug || '';
-            document.getElementById('editPageForm').action = `/admin/pages/${page.id}/update`;
+    function editPage(id, title) {
+        fetch(`/admin/pages/${id}/edit`)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to load page`);
+                return res.json();
+            })
+            .then(page => {
+                // Fill form fields (using correct IDs from your HTML)
+                const idEl    = document.getElementById('editPageId');
+                const titleEl = document.getElementById('editTitle');
+                const slugEl  = document.getElementById('editSlug');
 
-            // Show modal (custom style)
-            const modal = document.getElementById('editPageModal');
-            if (modal) modal.style.display = 'block';
+                if (idEl)    idEl.value    = page.id;
+                if (titleEl) titleEl.value = page.title || '';
+                if (slugEl)  slugEl.value  = page.slug || '';
 
-            // Initialize Quill if not already
-            if (!editQuill) {
-                editQuill = new Quill('#editQuillEditor', {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: [
-                            [{ 'header': [1, 2, 3, false] }],
-                            ['bold', 'italic', 'underline', 'strike'],
-                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                            ['link', 'image'],
-                            ['clean']
-                        ],
-                        clipboard: { matchVisual: false }
-                    },
-                    placeholder: 'Edit content here...'
-                });
-            }
+                // Show modal
+                const modal = document.getElementById('editPageModal');
+                if (modal) modal.style.display = 'block';
 
-            // Load content safely
-            try {
-                const delta = JSON.parse(page.content || '[]');
-                editQuill.setContents(delta);
-            } catch (e) {
-                console.warn('Content not valid Delta – using HTML fallback');
-                editQuill.root.innerHTML = page.content || '';
-            }
-        })
-        .catch(err => {
-            console.error('Edit page fetch error:', err);
-            alert('Error loading page: ' + err.message);
-        });
-}
+                // Initialize Quill for edit (once)
+                if (!editQuill) {
+                    editQuill = new Quill('#editQuillEditor', {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: [
+                                [{ 'header': [1, 2, 3, false] }],
+                                ['bold', 'italic', 'underline', 'strike'],
+                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                ['link', 'image'],
+                                ['clean']
+                            ],
+                            clipboard: { matchVisual: false }
+                        },
+                        placeholder: 'Edit content here...'
+                    });
+                }
 
                 // Load content safely
                 try {
@@ -520,6 +501,38 @@ function editPage(id, title) {
                 } catch (e) {
                     console.warn('Content not valid Delta – using HTML fallback');
                     editQuill.root.innerHTML = page.content || '';
+                }
+
+                // Handle form submit via AJAX
+                const editForm = document.getElementById('editPageForm');
+                if (editForm) {
+                    editForm.onsubmit = function(e) {
+                        e.preventDefault();
+
+                        // Save Quill content to hidden field
+                        document.getElementById('editContent').value = editQuill.root.innerHTML;
+
+                        const formData = new FormData(editForm);
+
+                        fetch(`/admin/pages/${page.id}/update`, {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Page updated successfully!');
+                                modal.style.display = 'none';
+                                location.reload(); // refresh admin list
+                            } else {
+                                alert('Save failed: ' + (data.error || 'Unknown error'));
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Save error:', err);
+                            alert('Error saving page: ' + err.message);
+                        });
+                    };
                 }
             })
             .catch(err => {
@@ -572,6 +585,5 @@ function editPage(id, title) {
 </script>
 
 <script src="/js/admin.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
