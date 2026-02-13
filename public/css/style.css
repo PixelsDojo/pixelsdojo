@@ -427,11 +427,11 @@ nav a:hover {
     color: #b8b8b8;
 }
 
-/* Footer – horizontal row, tighter spacing */
+/* Footer – one horizontal row with outlined blocks */
 footer {
   background: var(--card-bg);
   border-top: 3px solid var(--cyan);
-  padding: 2.5rem 1.5rem 1.5rem; /* less top/bottom padding */
+  padding: 2.5rem 1.5rem 1.5rem; /* less padding than before */
   color: #b8b8b8;
   font-size: 0.95rem;
 }
@@ -444,35 +444,41 @@ footer {
 .footer-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch; /* make blocks same height */
   flex-wrap: nowrap;
-  gap: 1.5rem; /* tighter gap between blocks */
+  gap: 1.2rem; /* tighter than before */
 }
 
 .footer-block {
   flex: 1;
-  min-width: 0; /* prevents over-stretching */
+  min-width: 0;
+  border: 1px solid var(--neon-purple); /* outline like wiki cards */
+  border-radius: 12px;
+  background: rgba(101, 0, 255, 0.05); /* subtle background */
+  padding: 1.2rem;
+  box-shadow: 0 4px 12px rgba(101, 0, 255, 0.1);
+  transition: box-shadow 0.3s;
 }
 
-/* 1. Wide Profile Card (rectangle on side) */
+.footer-block:hover {
+  box-shadow: 0 8px 20px rgba(133, 0, 255, 0.25);
+}
+
+/* 1. Profile card – wider rectangle */
 .profile-block {
-  flex: 2; /* wider than others */
+  flex: 2.2; /* wider than others */
 }
 
 .profile-card {
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  background: rgba(101, 0, 255, 0.08);
-  padding: 1.2rem 1.8rem;
-  border-radius: 12px;
-  border: 1px solid var(--cyan);
   width: 100%;
 }
 
 .profile-pic {
-  width: 80px; /* bigger pic */
-  height: 80px;
+  width: 90px; /* bigger pic */
+  height: 90px;
   border-radius: 50%;
   border: 3px solid var(--cyan);
   object-fit: cover;
@@ -482,25 +488,23 @@ footer {
   color: var(--yellow);
   font-weight: 600;
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
 }
 
 .profile-blurb {
   color: var(--cyan-light);
   margin: 0.4rem 0 0;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 /* 2. Socials */
 .social-block {
   text-align: center;
-  flex: 1;
 }
 
 .social-block h4 {
   color: var(--yellow);
   margin-bottom: 0.8rem;
-  font-size: 1.1rem;
 }
 
 .social-icons {
@@ -510,19 +514,22 @@ footer {
 }
 
 .social-icon {
-  width: 36px; /* slightly bigger for visibility */
+  width: 36px;
   height: 36px;
   transition: transform 0.3s;
 }
 
 .social-icon:hover {
-  transform: scale(1.2);
+  transform: scale(1.15);
 }
 
-/* 3. Logo */
+/* 3. Logo block */
 .logo-block {
-  flex: 0 0 auto; /* logo doesn't stretch */
-  text-align: right;
+  flex: 0 0 auto;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-logo {
@@ -530,7 +537,7 @@ footer {
   height: auto;
 }
 
-/* Bottom copyright */
+/* Bottom copyright – plain/boring */
 .footer-copyright {
   text-align: center;
   margin-top: 1.8rem;
@@ -546,7 +553,7 @@ footer {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 
   .profile-block {
