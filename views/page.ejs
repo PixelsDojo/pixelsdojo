@@ -94,21 +94,15 @@
           <p class="no-media">No screenshots available yet.</p>
         <% } %>
 
-        <!-- Like / Dislike -->
-        <div class="interaction-bar">
-          <button 
-            class="like-btn <%= liked ? 'liked' : '' %>" 
-            data-page-id="<%= page.id %>"
-          >
-            👍 <%= page.upvotes || 0 %>
-          </button>
-          <button 
-            class="dislike-btn <%= disliked ? 'disliked' : '' %>" 
-            data-page-id="<%= page.id %>"
-          >
-            👎 <%= page.downvotes || 0 %>
-          </button>
-        </div>
+       <!-- Like / Dislike -->
+<div class="interaction-bar">
+  <button class="like-btn" data-page-id="<%= page.id %>">
+    👍 <%= page.upvotes || 0 %>
+  </button>
+  <button class="dislike-btn" data-page-id="<%= page.id %>">
+    👎 <%= page.downvotes || 0 %>
+  </button>
+</div>
 
         <!-- Placeholder for comments / discussion -->
         <section class="comments-section">
