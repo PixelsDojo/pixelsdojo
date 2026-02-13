@@ -3,213 +3,114 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= page.title %> - Pixels Dojo</title>
+  <title><%= page.title %> | Pixels Dojo Wiki</title>
   <link rel="stylesheet" href="/css/style.css">
-  <style>
-    /* Your existing styles + new wiki layout */
-    .page-container { max-width: 900px; margin: 2rem auto; padding: 1rem; }
-    .metadata { color: #aaa; margin-bottom: 1rem; font-size: 0.95rem; }
-    .screenshot-gallery img { max-width: 350px; height: auto; margin: 0.5rem; border-radius: 8px; }
-    .pro-tips { background: #1e2a3a; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; }
-
-    /* New wiki layout with right sidebar */
-    .wiki-layout {
-      display: flex;
-      gap: 2rem;
-      max-width: 1400px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
-    }
-
-    .wiki-main {
-      flex: 3; /* ~75% width */
-      background: rgba(20, 20, 30, 0.7);
-      padding: 2.5rem;
-      border-radius: 12px;
-      border: 2px solid var(--neon-purple);
-      box-shadow: 0 8px 30px rgba(133, 0, 255, 0.25);
-    }
-
-    .wiki-sidebar {
-      flex: 1; /* ~25% width */
-      min-width: 280px;
-    }
-
-    .sidebar-block {
-      background: rgba(20, 20, 30, 0.6);
-      border: 1px solid var(--purple);
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin-bottom: 1.8rem;
-    }
-
-    .sidebar-block h3 {
-      color: var(--yellow);
-      margin-bottom: 1rem;
-      font-size: 1.4rem;
-    }
-
-    .sidebar-block ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .sidebar-block a {
-      color: var(--cyan);
-      display: block;
-      padding: 0.6rem 0;
-      transition: color 0.2s;
-    }
-
-    .sidebar-block a:hover {
-      color: var(--yellow);
-    }
-
-    /* Responsive - stack on mobile */
-    @media (max-width: 992px) {
-      .wiki-layout {
-        flex-direction: column;
-      }
-      .wiki-sidebar {
-        order: -1; /* sidebar on top for mobile */
-      }
-      .wiki-main {
-        padding: 1.5rem;
-      }
-    }
-
-    /* Better headings & spacing in main content */
-    .content-body {
-      font-size: 1.1rem;
-      line-height: 1.8;
-      color: #e4e4e4;
-    }
-
-    .content-body h1, .content-body h2, .content-body h3 {
-      margin: 2.5rem 0 1.2rem;
-      padding-bottom: 0.6rem;
-    }
-
-    .content-body h1 {
-      color: var(--yellow);
-      font-size: 2.8rem;
-      text-shadow: 0 0 10px rgba(237, 255, 132, 0.4);
-    }
-
-    .content-body h2 {
-      color: var(--cyan);
-      font-size: 2.2rem;
-      border-bottom: 2px solid var(--purple);
-    }
-
-    .content-body h3 {
-      color: var(--cyan-light);
-      font-size: 1.8rem;
-      background: rgba(101, 0, 255, 0.08);
-      padding: 0.8rem 1.2rem;
-      border-radius: 8px;
-      border-left: 5px solid var(--cyan);
-    }
-
-    .content-body p {
-      margin-bottom: 1.8rem; /* bigger breaks */
-    }
-
-    .content-body ul, .content-body ol {
-      margin: 1.5rem 0 2rem;
-      padding-left: 2rem;
-    }
-
-    .content-body li {
-      margin-bottom: 1rem;
-    }
-  </style>
 </head>
 <body>
-   <%- include('partials/header') %>
+  <%- include('partials/header') %>
 
   <nav>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/category/startup">Start Here</a></li>
-    <li><a href="/category/earn">Earn $PIXEL</a></li>
-    <li><a href="/category/mastery">Mastery</a></li>
-    <li><a href="/npcs">NPCs</a></li>
-    <li><a href="/category/community">Community</a></li>
-  </ul>
-</nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/category/<%= page.category %>">
+        <%= page.category.charAt(0).toUpperCase() + page.category.slice(1) %>
+      </a></li>
+      <li><a href="/pages/<%= page.slug %>"><%= page.title %></a></li>
+    </ul>
+  </nav>
 
-  <!-- New layout starts here - replaces old .page-container -->
-  <div class="wiki-layout">
-    <!-- Main content (left side) -->
-    <main class="wiki-main">
-      <h1><%= page.title %></h1>
+  <div class="main-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h4>Library</h4>
+      <a href="/">🏠 All Articles</a>
+      <a href="/npcs">🧑‍🤝‍🧑 NPC Gallery</a>
+      <hr>
+      <h5>Categories</h5>
+      <a href="/category/startup">Start Here</a>
+      <a href="/category/earn">Earn $PIXEL</a>
+      <a href="/category/mastery">Mastery</a>
+      <a href="/category/community">Community</a>
+    </aside>
 
-      <div class="metadata">
-        <strong>Last Updated:</strong> <%= new Date(page.updated_at || page.created_at).toLocaleDateString() %><br>
-        <strong>Difficulty:</strong> <%= page.difficulty || 'Beginner' %><br>
-        <strong>Author:</strong> <a href="/u/<%= page.author_username || 'unknown' %>"><%= page.author_display_name || 'Unknown' %></a>
-      </div>
+    <!-- Main content -->
+    <div class="main-content-area">
+      <article class="wiki-page">
+        <header class="page-header">
+          <h1><%= page.title %></h1>
+          <div class="page-meta">
+            <span>By <%= page.author_display_name || 'Community' %></span>
+            <span>· <%= new Date(page.created_at).toLocaleDateString() %></span>
+            <% if (page.updated_at && page.updated_at !== page.created_at) { %>
+              <span>· Updated <%= new Date(page.updated_at).toLocaleDateString() %></span>
+            <% } %>
+            <span>· <%= page.views || 0 %> views</span>
+          </div>
+        </header>
 
-      <!-- Quick Summary -->
-      <h2>Quick Summary</h2>
-      <p><%- page.summary || '[No summary yet]' %></p>
+        <!-- Author / Creator card -->
+        <%- include('partials/author-card', {
+          author: page.author_display_name || 'Community',
+          profile_image: page.author_profile_image || '/images/default-profile.png'
+        }) %>
 
-      <!-- Main Quill content -->
-      <div class="content-body">
-        <%- page.content || '<p style="color: var(--yellow);">No content saved yet.</p>' %>
-      </div>
-
-      <!-- Screenshots -->
-      <% if (page.screenshots && page.screenshots.length > 0) { %>
-        <h2>Screenshots</h2>
-        <div class="screenshot-gallery">
-          <% JSON.parse(page.screenshots).forEach(path => { %>
-            <img src="<%= path %>" alt="Screenshot">
-          <% }) %>
+        <!-- Main content -->
+        <div class="content-body">
+          <%- page.content %>
         </div>
-      <% } %>
 
-      <!-- Pro Tips -->
-      <div class="pro-tips">
-        <h3>Pro Tips / Hacks</h3>
-        <%- page.pro_tips || '[No tips yet]' %>
-      </div>
+        <!-- Screenshots -->
+        <% 
+          let screenshots = [];
+          try {
+            screenshots = JSON.parse(page.screenshots || '[]');
+          } catch (e) {}
+        %>
+        <% if (screenshots.length > 0) { %>
+          <section class="screenshot-gallery">
+            <h3>Screenshots</h3>
+            <div class="gallery-grid">
+              <% screenshots.forEach((shot) => { %>
+                <img 
+                  src="<%= shot %>" 
+                  alt="Screenshot from <%= page.title %>" 
+                  loading="lazy"
+                  class="gallery-img"
+                >
+              <% }) %>
+            </div>
+          </section>
+        <% } else { %>
+          <p class="no-media">No screenshots available yet.</p>
+        <% } %>
 
-      <!-- Author -->
-      <p>
-        <strong>Author:</strong> 
-        <a href="/u/<%= page.author_username || 'unknown' %>">
-          <img src="<%= page.author_profile_image || '/images/default-avatar.png' %>" alt="Avatar" style="width:32px; height:32px; border-radius:50%; vertical-align:middle; margin-right:8px;">
-          <%= page.author_display_name || page.author_username || 'Unknown' %>
-        </a>
-      </p>
+        <!-- Like / Dislike -->
+        <div class="interaction-bar">
+          <button 
+            class="like-btn <%= liked ? 'liked' : '' %>" 
+            data-page-id="<%= page.id %>"
+          >
+            👍 <%= page.upvotes || 0 %>
+          </button>
+          <button 
+            class="dislike-btn <%= disliked ? 'disliked' : '' %>" 
+            data-page-id="<%= page.id %>"
+          >
+            👎 <%= page.downvotes || 0 %>
+          </button>
+        </div>
 
-      <!-- Likes / Comments -->
-      <div style="margin:2rem 0;">
-        <button>👍 Upvote (<%= likes || 0 %>)</button>
-        <button>💬 Comment</button>
-      </div>
-<%- include('partials/author-card', { author: page.author_display_name || 'Community' }) %>
+        <!-- Placeholder for comments / discussion -->
+        <section class="comments-section">
+          <h3>Community Discussion</h3>
+          <p>Comments coming soon...</p>
+        </section>
+      </article>
 
-      <!-- Related -->
-      <p>See also: [related links]</p>
-    </main>
+      <%- include('partials/footer') %>
+    </div>
+  </div>
 
-    <!-- Sidebar on the right -->
-    <aside class="wiki-sidebar">
-      <div class="sidebar-block">
-        <h3>Related Guides</h3>
-        <ul>
-          <li><a href="/pages/getting-started">Getting Started</a></li>
-          <li><a href="/pages/energy-management">Energy Management</a></li>
-          <li><a href="/pages/farming-basics">Farming Basics</a></li>
-          <li><a href="/pages/nft-guide">NFTs & Add-ons</a></li>
-          <!-- Add your real links here or make dynamic later -->
-        </ul>
-      </div>
-
-      <div class="sidebar-block affiliate">
-        <h3>Sponsored / Affiliates</h3>
-        <p>Space for affiliate links or Google Adsense</p>
-        <div style="height: 250px; background: rgba(100,100,100,0.2); text-align:center;
+  <script src="/js/main.js"></script>
+</body>
+</html>
