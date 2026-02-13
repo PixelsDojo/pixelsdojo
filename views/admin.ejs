@@ -207,9 +207,10 @@
   <div class="modal-dialog modal-xl"> <!-- extra large for Quill -->
     <div class="modal-content">
       <div class="modal-header">
+        <div class="modal-content">
+        <span class="close" onclick="closeModal('editPageModal')">×</span>
         <h5 class="modal-title" id="editPageModalLabel">Edit Wiki Page</h5>
-       <div class="modal-content">
-            <span class="close" onclick="closePageModal('editPageModal')">×</span>
+       
       </div>
       <div class="modal-body">
         <form id="editPageForm" method="POST" action="/admin/pages/:id/update" enctype="multipart/form-data">
