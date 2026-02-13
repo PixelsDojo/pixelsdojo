@@ -13,7 +13,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 db.serialize(() => {
-  // Users
+    // Users
   db.run(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE,
@@ -25,6 +25,15 @@ db.serialize(() => {
     is_admin BOOLEAN DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
+
+  // Add contributor role if not present
+  db.run(`ALTER TABLE users ADD COLUMN is_contributor BOOLEAN DEFAULT 0;`, (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Error adding is_contributor column:', err.message);
+    } else {
+      console.log('is_contributor column ready (already exists or added)');
+    }
+  });
 
  
 
