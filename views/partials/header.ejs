@@ -8,13 +8,25 @@
       </div>
     </div>
 
-    <!-- Right side – price + user nav inline -->
+<!-- Right side – price + user nav inline -->
 <div class="right-section" style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.8rem;">
   <!-- Price widget on top -->
-  <div class="price-widget" style="font-size: 0.85rem; padding: 0.5rem 1rem; text-align: right; min-width: 180px;">
-    <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
-    <coingecko-coin-price-marquee-widget coin-ids="pixels" currency="usd" background-color="transparent" font-color="#edff84"></coingecko-coin-price-marquee-widget>
+  <div class="price-widget" style="font-size: 0.85rem; padding: 0.5rem 1rem; text-align: right; min-width: 220px; max-width: 300px;">
+    <!-- Load the CoinGecko marquee widget script once (should be in <head> or bottom of body, but ok here too) -->
+    <script src="https://widgets.coingecko.com/gecko-coin-price-marquee-widget.js"></script>
+    
+    <!-- Single coin marquee – PIXEL in USD -->
+    <gecko-coin-price-marquee-widget 
+      coin-id="pixels"
+      locale="en"
+      dark-mode="true"
+      outlined="true"
+      initial-currency="usd">
+    </gecko-coin-price-marquee-widget>
   </div>
+  
+  <!-- Your user nav / profile links go below or beside as before -->
+</div>
 
   <!-- User buttons below -->
   <div class="user-nav" style="display: flex; gap: 0.8rem; flex-wrap: nowrap;">
