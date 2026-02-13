@@ -206,17 +206,17 @@
         </div>
     </div>
 
-<!-- Edit Page Modal – Bootstrap style -->
+<!-- Edit Wiki Page Modal – full Bootstrap -->
 <div class="modal fade" id="editPageModal" tabindex="-1" aria-labelledby="editPageModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl"> <!-- extra large for Quill -->
+  <div class="modal-dialog modal-xl"> <!-- xl = large for Quill -->
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="editPageModalLabel">Edit Wiki Page</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
         <form id="editPageForm" method="POST" action="/admin/pages/:id/update" enctype="multipart/form-data">
-          <input type="hidden" name="_method" value="PUT"> <!-- if using method-override -->
+          <input type="hidden" name="_method" value="PUT">
           <input type="hidden" name="id" id="editPageId">
 
           <div class="mb-3">
@@ -226,18 +226,11 @@
 
           <div class="mb-3">
             <label for="editSlug" class="form-label">Slug (cannot be changed)</label>
-            <input 
-              type="text" 
-              class="form-control bg-light" 
-              id="editSlug" 
-              name="slug" 
-              readonly
-              style="cursor: not-allowed;"
-            >
+            <input type="text" class="form-control bg-light" id="editSlug" name="slug" readonly>
           </div>
 
-          <!-- Add your other fields here (category, difficulty, summary, pro_tips, screenshots) -->
-          <!-- Example: -->
+          <!-- Add your other fields here – category, difficulty, summary, pro_tips, etc. -->
+          <!-- Example placeholders -->
           <div class="mb-3">
             <label for="editCategory" class="form-label">Category</label>
             <input type="text" class="form-control" id="editCategory" name="category">
@@ -265,12 +258,12 @@
           <div class="mb-3">
             <label for="editScreenshots" class="form-label">Add New Screenshots</label>
             <input type="file" class="form-control" id="editScreenshots" name="screenshots" multiple accept="image/*">
-            <small>Existing screenshots will stay unless replaced.</small>
+            <small>Existing screenshots stay unless replaced.</small>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Main Content</label>
-            <div id="editQuillEditor" style="height: 450px; background: white;"></div>
+            <div id="editQuillEditor" style="height: 450px; background: white; border: 1px solid #ccc;"></div>
             <textarea name="content" id="editContent" style="display: none;"></textarea>
           </div>
         </form>
