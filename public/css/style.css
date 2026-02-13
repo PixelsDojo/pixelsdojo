@@ -427,11 +427,11 @@ nav a:hover {
     color: #b8b8b8;
 }
 
-/* Footer – one horizontal row on desktop */
+/* Footer – horizontal row, tighter spacing */
 footer {
   background: var(--card-bg);
   border-top: 3px solid var(--cyan);
-  padding: 3rem 1.5rem 1.5rem;
+  padding: 2.5rem 1.5rem 1.5rem; /* less top/bottom padding */
   color: #b8b8b8;
   font-size: 0.95rem;
 }
@@ -444,32 +444,37 @@ footer {
 .footer-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: nowrap; /* force one row */
-  gap: 2rem;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 1.5rem; /* tighter gap between blocks */
 }
 
 .footer-block {
   flex: 1;
-  min-width: 160px;
+  min-width: 0; /* prevents over-stretching */
 }
 
-/* Profile block – small & left */
-.profile-block .profile-card {
+/* 1. Wide Profile Card (rectangle on side) */
+.profile-block {
+  flex: 2; /* wider than others */
+}
+
+.profile-card {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
   background: rgba(101, 0, 255, 0.08);
-  padding: 1rem;
+  padding: 1.2rem 1.8rem;
   border-radius: 12px;
   border: 1px solid var(--cyan);
+  width: 100%;
 }
 
 .profile-pic {
-  width: 60px;
-  height: 60px;
+  width: 80px; /* bigger pic */
+  height: 80px;
   border-radius: 50%;
-  border: 2px solid var(--cyan);
+  border: 3px solid var(--cyan);
   object-fit: cover;
 }
 
@@ -477,69 +482,65 @@ footer {
   color: var(--yellow);
   font-weight: 600;
   margin: 0;
+  font-size: 1.1rem;
 }
 
 .profile-blurb {
   color: var(--cyan-light);
-  margin: 0.3rem 0 0;
+  margin: 0.4rem 0 0;
   font-size: 0.9rem;
 }
 
-/* Social block */
+/* 2. Socials */
+.social-block {
+  text-align: center;
+  flex: 1;
+}
+
 .social-block h4 {
   color: var(--yellow);
   margin-bottom: 0.8rem;
+  font-size: 1.1rem;
 }
 
 .social-icons {
   display: flex;
-  gap: 1.2rem;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 .social-icon {
-  width: 32px;
-  height: 32px;
+  width: 36px; /* slightly bigger for visibility */
+  height: 36px;
   transition: transform 0.3s;
 }
 
 .social-icon:hover {
-  transform: scale(1.15);
+  transform: scale(1.2);
 }
 
-/* Site Map block */
-.sitemap-block h4 {
-  color: var(--yellow);
-  margin-bottom: 0.8rem;
+/* 3. Logo */
+.logo-block {
+  flex: 0 0 auto; /* logo doesn't stretch */
+  text-align: right;
 }
 
-.sitemap-block a {
-  display: block;
-  color: var(--cyan);
-  margin-bottom: 0.5rem;
-  text-decoration: none;
-}
-
-.sitemap-block a:hover {
-  color: var(--yellow);
-}
-
-/* Logo block */
-.logo-block .footer-logo {
+.footer-logo {
   max-width: 140px;
   height: auto;
 }
 
-/* Copyright – always at bottom */
+/* Bottom copyright */
 .footer-copyright {
   text-align: center;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  margin-top: 1.8rem;
+  padding-top: 1.2rem;
   border-top: 1px solid rgba(237, 255, 132, 0.15);
   font-size: 0.85rem;
   color: #888;
 }
 
-/* Mobile – stack top to bottom in same order */
+/* Mobile – stack top to bottom */
 @media (max-width: 992px) {
   .footer-row {
     flex-direction: column;
@@ -548,13 +549,22 @@ footer {
     gap: 2rem;
   }
 
-  .profile-block .profile-card {
+  .profile-block {
+    flex: none;
+    width: 100%;
+  }
+
+  .profile-card {
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 1rem;
   }
 
   .social-icons {
     justify-content: center;
+  }
+
+  .logo-block {
+    text-align: center;
   }
 }
 
