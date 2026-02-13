@@ -1,0 +1,16 @@
+<%- include('partials/header') %>
+<div class="main-wrapper">
+  <aside class="sidebar"> <!-- your sidebar here --> </aside>
+  <div class="main-content-area">
+    <h1>All Articles</h1>
+    <div class="post-list">
+      <% pages.forEach(page => { %>
+        <div class="post-item">
+          <h3><a href="/pages/<%= page.slug %>"><%= page.title %></a></h3>
+          <small>By <%= page.author_display_name || 'Community' %> · <%= new Date(page.created_at).toLocaleDateString() %></small>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
+<%- include('partials/footer') %>
