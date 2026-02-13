@@ -354,6 +354,37 @@ nav a:hover {
     color: var(--cyan);
 }
 
+.author-profile {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: rgba(0, 255, 255, 0.08); /* subtle cyan neon bg */
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.author-info strong {
+  font-size: 1.1rem;
+  color: #00ffff; /* neon cyan */
+}
+
+.author-bio {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.view-profile-link {
+  font-size: 0.9rem;
+  color: #00ffff;
+  text-decoration: none;
+}
+
+.view-profile-link:hover {
+  text-decoration: underline;
+}
+
 /* ─── Content Sections ─────────────────────────────────────── */
 
 .content-section {
