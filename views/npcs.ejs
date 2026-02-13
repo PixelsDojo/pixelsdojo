@@ -27,6 +27,14 @@
             <p class="subtitle">Your complete guide to all the friendly faces in TerraVilla</p>
         </div>
 
+<div class="sort-controls" style="margin: 1.5rem 0; text-align: center;">
+  <strong>Sort by:</strong>
+  <a href="/npcs?sort=name" class="<%= currentSort === 'name' ? 'active' : '' %>">Name A–Z</a> |
+  <a href="/npcs?sort=name-desc" class="<%= currentSort === 'name-desc' ? 'active' : '' %>">Name Z–A</a> |
+  <a href="/npcs?sort=location" class="<%= currentSort === 'location' ? 'active' : '' %>">Location A–Z</a> |
+  <a href="/npcs?sort=location-desc" class="<%= currentSort === 'location-desc' ? 'active' : '' %>">Location Z–A</a> |
+  <a href="/npcs" class="<%= !currentSort || currentSort === 'display_order' ? 'active' : '' %>">Default Order</a>
+</div>
         <div class="npc-grid">
             <% npcs.forEach(npc => { %>
                 <div class="npc-card">
