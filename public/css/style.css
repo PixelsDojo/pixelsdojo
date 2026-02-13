@@ -1004,11 +1004,6 @@ body, .main-wrapper, .hero-split, .category-grid, .featured-post, .container, .c
     max-width: 100%;
 }
 
-/* Force neon pink links site-wide (override cyan/yellow where needed) */
-a:not(.btn), a:not(.main-button), nav a, .sidebar a, .card a {
-    color: #FF10F0 !important;
-}
-
 a:not(.btn):hover, a:not(.main-button):hover {
     color: #FF69F5 !important;
     text-decoration: underline;
