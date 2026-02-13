@@ -2,10 +2,15 @@
   <div class="footer-container">
     <div class="footer-row">
 
-      <!-- 1. Profile card -->
+      <!-- 1. Wide Profile Card (left, takes more space) -->
       <div class="footer-block profile-block">
         <div class="profile-card">
-          <img src="/images/lizzy_profile_2.png" alt="Lizzy Sims" class="profile-pic">
+          <img 
+            src="<%= typeof user !== 'undefined' && user.profile_image ? user.profile_image : '/images/lizzy_profile_2.png' %>" 
+            alt="Lizzy Sims" 
+            class="profile-pic"
+            onerror="this.src='/images/lizzy_profile_2.png'" <!-- fallback if user pic missing -->
+          >
           <div class="profile-info">
             <p class="profile-name">Lizzy Sims</p>
             <p class="profile-blurb">Founder & curator • Helping new Pixels players master TerraVilla since 2026</p>
@@ -13,7 +18,7 @@
         </div>
       </div>
 
-      <!-- 2. Socials with small icons -->
+      <!-- 2. Socials (small icons, centered-ish) -->
       <div class="footer-block social-block">
         <h4>Get Social</h4>
         <div class="social-icons">
@@ -23,29 +28,23 @@
           <a href="https://discord.gg/aqeBVdeu" target="_blank" title="Discord">
             <img src="/images/social/discord-icon.png" alt="Discord" class="social-icon">
           </a>
-          <!-- Add more icons here later if needed -->
+          <!-- Placeholders for future Insta & FB -->
+          <a href="#" target="_blank" title="Instagram (coming soon)">
+            <img src="/images/social/insta-icon.png" alt="Instagram" class="social-icon">
+          </a>
+          <a href="#" target="_blank" title="Facebook (coming soon)">
+            <img src="/images/social/fb-icon.png" alt="Facebook" class="social-icon">
+          </a>
         </div>
       </div>
 
-      <!-- 3. Site Map -->
-      <div class="footer-block sitemap-block">
-        <h4>Site Map</h4>
-        <a href="/">Home</a>
-        <a href="/category/startup">Start Here</a>
-        <a href="/category/earn">Earn $PIXEL</a>
-        <a href="/category/mastery">Mastery</a>
-        <a href="/npcs">NPCs</a>
-        <a href="/community">Community</a>
-        <a href="/profile">My Account</a>
-      </div>
-
-      <!-- 4. Pixel Dojo logo -->
+      <!-- 3. Pixel Dojo Logo (right) -->
       <div class="footer-block logo-block">
         <img src="/images/pixeldojo_logo_round_.png" alt="Pixel Dojo Logo" class="footer-logo">
       </div>
     </div>
 
-    <!-- Copyright / disclaimer – always at the very bottom -->
+    <!-- Copyright / disclaimer – always bottom -->
     <div class="footer-copyright">
       <p>All rights reserved © 2026 Pixels Dojo • Built with ❤️ by the community</p>
     </div>
