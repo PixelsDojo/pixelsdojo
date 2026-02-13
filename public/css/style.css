@@ -6,16 +6,18 @@
 
 :root {
     --neon-purple: #6500ff;
-    --cyan: #00ffff;
-    --lime: #edff84;
-    --bg-color: #0a0a15;
-    --purple: #8500ff;
-    --yellow: #edff84;
-    --green: #b7eb05;
-    --dark-bg: #1a1a2e;
-    --card-bg: #0f3460;
-    --cyan: #00d4ff;
+    --purple:     #8500ff;
+    --cyan:       #00d4ff;
     --cyan-light: #4dd0e1;
+    --yellow:     #edff84;
+    --green:      #b7eb05;
+    --bg-color:   #0a0a15;
+    --dark-bg:    #1a1a2e;
+    --card-bg:    #0f3460;
+
+    --accent:     var(--cyan);
+    --accent-glow:var(--purple);
+    --highlight:  var(--yellow);
 }
 
 body {
@@ -23,26 +25,46 @@ body {
     background: linear-gradient(135deg, var(--dark-bg) 0%, #16213e 100%);
     color: #e4e4e4;
     line-height: 1.6;
+    font-size: 1.05rem;
 }
 
-/* Header */
+/* ─── Global Elements ──────────────────────────────────────── */
+
+a {
+    color: var(--cyan);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--yellow);
+}
+
+h1, h2, h3 {
+    text-shadow: 0 0 12px rgba(237, 255, 132, 0.5);
+}
+
+h1 { font-size: 2.8rem; margin-bottom: 1.5rem; }
+h2 { font-size: 2.2rem; margin: 2.5rem 0 1.2rem; }
+h3 { font-size: 1.7rem; margin: 2rem 0 1rem; }
+
+/* ─── Header ───────────────────────────────────────────────── */
+
 header {
     background: linear-gradient(90deg, var(--purple) 0%, #6a00cc 100%);
-    padding: 2rem;
+    padding: 1.8rem 1rem;
     text-align: center;
     border-bottom: 3px solid var(--yellow);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 .header-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .logo-section {
@@ -52,39 +74,30 @@ header {
 }
 
 .logo-section img {
-    height: 80px;
-    width: auto;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+    height: 70px;
+    filter: drop-shadow(2px 2px 6px rgba(0,0,0,0.6));
 }
 
 .logo-section h1 {
-    font-size: 2.5rem;
+    font-size: 2.4rem;
     color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     margin: 0;
-}
-
-.tagline {
-    color: var(--yellow);
-    font-size: 1.1rem;
-    margin-top: 0.5rem;
-    text-align: center;
-    width: 100%;
 }
 
 .user-nav {
     display: flex;
-    gap: 1rem;
     align-items: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .user-nav a {
     color: white;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-    transition: all 0.3s;
+    padding: 0.6rem 1.2rem;
+    background: rgba(255,255,255,0.12);
+    border-radius: 6px;
+    transition: 0.3s;
 }
 
 .user-nav a:hover {
@@ -92,24 +105,15 @@ header {
     color: var(--purple);
 }
 
-/* Live Price Widget */
-.price-widget {
-    background: rgba(0, 0, 0, 0.3);
-    padding: 1rem;
-    border-radius: 8px;
-    margin: 1rem auto;
-    max-width: 400px;
-    text-align: center;
-}
+/* ─── Navigation Bar ───────────────────────────────────────── */
 
-/* Main Navigation */
 nav {
     background: var(--card-bg);
     padding: 1rem;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.35);
 }
 
 nav ul {
@@ -117,711 +121,137 @@ nav ul {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 2rem;
-    max-width: 1200px;
+    gap: 1.8rem;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 nav a {
     color: var(--cyan);
-    text-decoration: none;
     font-weight: 600;
-    transition: color 0.3s;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    transition: 0.3s;
 }
 
 nav a:hover {
-    color: #fff;
-    background: rgba(0, 212, 255, 0.2);
+    color: white;
+    background: rgba(0,212,255,0.18);
 }
 
-/* Hero Section with 3 Big Buttons */
-.hero-section {
-    max-width: 1200px;
-    margin: 3rem auto;
-    padding: 0 2rem;
+/* ─── Main Layout + Sidebar ────────────────────────────────── */
+
+.main-wrapper {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 2rem;
+    padding: 1.5rem;
 }
 
-.hero-intro {
-    background: var(--card-bg);
-    padding: 2rem;
-    border-radius: 8px;
-    text-align: center;
-    margin-bottom: 3rem;
-    border: 2px solid var(--purple);
+.sidebar {
+    flex: 0 0 260px;
+    background: var(--dark-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba(101,0,255,0.25);
+    height: fit-content;
+    position: sticky;
+    top: 1rem;
 }
 
-.hero-intro h2 {
+.sidebar h4, .sidebar h5 {
     color: var(--yellow);
-    font-size: 2rem;
     margin-bottom: 1rem;
 }
 
-.hero-intro p {
-    font-size: 1.2rem;
-    color: #e4e4e4;
+.sidebar a {
+    display: block;
+    padding: 0.7rem 0;
+    color: var(--cyan);
+    transition: 0.25s;
+}
+
+.sidebar a:hover {
+    color: var(--yellow);
+    padding-left: 0.6rem;
+}
+
+.main-content-area {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ─── Hero Section ─────────────────────────────────────────── */
+
+.hero-split {
+    display: flex;
+    gap: 2.5rem;
+    background: linear-gradient(to bottom right, rgba(15,52,96,0.7), rgba(10,10,21,0.85));
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin: 2rem 0;
+    border: 2px solid var(--neon-purple);
+    box-shadow: 0 10px 40px rgba(101,0,255,0.3);
+    overflow: hidden;
+}
+
+.hero-left {
+    flex: 1;
+}
+
+.hero-right {
+    flex: 1;
+    position: relative;
+}
+
+.hero-right img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
 }
 
 .main-buttons {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.8rem;
+    margin: 2.5rem 0;
 }
 
 .main-button {
-    background: linear-gradient(135deg, var(--card-bg) 0%, #16213e 100%);
-    padding: 3rem 2rem;
+    background: linear-gradient(135deg, var(--card-bg), #16213e);
+    padding: 2.5rem 1.8rem;
     border-radius: 12px;
     border: 3px solid var(--cyan);
     text-align: center;
-    text-decoration: none;
     color: white;
-    transition: all 0.3s;
-    cursor: pointer;
+    transition: all 0.35s ease;
     position: relative;
     overflow: hidden;
 }
 
-.main-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(133, 0, 255, 0.3), transparent);
-    transition: left 0.5s;
-}
-
-.main-button:hover::before {
-    left: 100%;
-}
-
 .main-button:hover {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
     border-color: var(--purple);
-    box-shadow: 0 10px 30px rgba(133, 0, 255, 0.4);
+    box-shadow: 0 16px 40px rgba(133,0,255,0.45);
 }
 
 .main-button .icon {
-    font-size: 4rem;
+    font-size: 3.8rem;
     margin-bottom: 1rem;
-    display: block;
 }
 
 .main-button h3 {
     color: var(--yellow);
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
+    font-size: 1.7rem;
+    margin-bottom: 0.8rem;
 }
 
-.main-button p {
-    color: #b8b8b8;
-    font-size: 1.1rem;
-}
-
-/* Container */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-}
-
-/* Content Sections */
-.content-section {
-    background: var(--card-bg);
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border-radius: 8px;
-    border-left: 4px solid var(--cyan);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-.content-section h2 {
-    color: var(--cyan);
-    margin-bottom: 1rem;
-    font-size: 2rem;
-}
-
-.content-section h3 {
-    color: var(--cyan-light);
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    font-size: 1.5rem;
-}
-
-.content-section ul, .content-section ol {
-    margin-left: 2rem;
-    margin-top: 0.5rem;
-}
-
-.content-section li {
-    margin-bottom: 0.5rem;
-}
-
-/* Cards Grid */
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.card {
-    background: #16213e;
-    padding: 1.5rem;
-    border-radius: 8px;
-    border: 2px solid var(--card-bg);
-    transition: transform 0.3s, border-color 0.3s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    border-color: var(--cyan);
-}
-
-.card h3 {
-    color: var(--cyan);
-    margin-bottom: 0.75rem;
-}
-
-/* Like/Dislike Buttons */
-.interaction-bar {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    margin: 2rem 0;
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-}
-
-.like-btn, .dislike-btn {
-    background: var(--card-bg);
-    border: 2px solid var(--cyan);
-    color: var(--cyan);
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.like-btn:hover {
-    background: var(--cyan);
-    color: var(--dark-bg);
-}
-
-.dislike-btn:hover {
-    background: #ff4444;
-    border-color: #ff4444;
-    color: white;
-}
-
-.like-btn.liked {
-    background: var(--cyan);
-    color: var(--dark-bg);
-}
-
-.dislike-btn.disliked {
-    background: #ff4444;
-    border-color: #ff4444;
-    color: white;
-}
-
-/* Question Form */
-.question-form {
-    background: var(--card-bg);
-    padding: 2rem;
-    border-radius: 8px;
-    margin: 2rem 0;
-    border: 2px solid var(--purple);
-}
-
-.question-form h3 {
-    color: var(--yellow);
-    margin-bottom: 1rem;
-}
-
-.question-form textarea {
-    width: 100%;
-    padding: 1rem;
-    background: var(--dark-bg);
-    border: 2px solid var(--cyan);
-    border-radius: 5px;
-    color: white;
-    font-family: inherit;
-    min-height: 120px;
-    margin-bottom: 1rem;
-}
-
-.question-form input {
-    width: 100%;
-    padding: 0.75rem;
-    background: var(--dark-bg);
-    border: 2px solid var(--cyan);
-    border-radius: 5px;
-    color: white;
-    font-family: inherit;
-    margin-bottom: 1rem;
-}
-
-/* Buttons */
-.btn {
-    display: inline-block;
-    background: var(--cyan);
-    color: var(--dark-bg);
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background 0.3s;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.btn:hover {
-    background: var(--cyan-light);
-}
-
-.btn-purple {
-    background: var(--purple);
-    color: white;
-}
-
-.btn-purple:hover {
-    background: #6a00cc;
-}
-
-/* Author Card */
-.author-card {
-    background: rgba(133, 0, 255, 0.1);
-    padding: 2rem;
-    border-radius: 8px;
-    border: 2px solid var(--purple);
-    margin: 2rem 0;
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-}
-
-.author-card img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 3px solid var(--yellow);
-}
-
-.author-info h3 {
-    color: var(--yellow);
-    margin-bottom: 0.5rem;
-}
-
-.author-info p {
-    color: #b8b8b8;
-}
-
-/* Footer – one horizontal row with outlined blocks */
-footer {
-  background: var(--card-bg);
-  border-top: 3px solid var(--cyan);
-  padding: 2.5rem 1.5rem 1.5rem; /* less padding than before */
-  color: #b8b8b8;
-  font-size: 0.95rem;
-}
-
-.footer-container {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.footer-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch; /* make blocks same height */
-  flex-wrap: nowrap;
-  gap: 1.2rem; /* tighter than before */
-}
-
-.footer-block {
-  flex: 1;
-  min-width: 0;
-  border: 1px solid var(--neon-purple); /* outline like wiki cards */
-  border-radius: 12px;
-  background: rgba(101, 0, 255, 0.05); /* subtle background */
-  padding: 1.2rem;
-  box-shadow: 0 4px 12px rgba(101, 0, 255, 0.1);
-  transition: box-shadow 0.3s;
-}
-
-.footer-block:hover {
-  box-shadow: 0 8px 20px rgba(133, 0, 255, 0.25);
-}
-
-/* 1. Profile card – wider rectangle */
-.profile-block {
-  flex: 2.2; /* wider than others */
-}
-
-.profile-card {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-  width: 100%;
-}
-
-.profile-pic {
-  width: 90px; /* bigger pic */
-  height: 90px;
-  border-radius: 50%;
-  border: 3px solid var(--cyan);
-  object-fit: cover;
-}
-
-.profile-name {
-  color: var(--yellow);
-  font-weight: 600;
-  margin: 0;
-  font-size: 1.15rem;
-}
-
-.profile-blurb {
-  color: var(--cyan-light);
-  margin: 0.4rem 0 0;
-  font-size: 0.95rem;
-}
-
-/* 2. Socials */
-.social-block {
-  text-align: center;
-}
-
-.social-block h4 {
-  color: var(--yellow);
-  margin-bottom: 0.8rem;
-}
-
-.social-icons {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-}
-
-.social-icon {
-  width: 36px;
-  height: 36px;
-  transition: transform 0.3s;
-}
-
-.social-icon:hover {
-  transform: scale(1.15);
-}
-
-/* 3. Logo block */
-.logo-block {
-  flex: 0 0 auto;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.footer-logo {
-  max-width: 140px;
-  height: auto;
-}
-
-/* Bottom copyright – plain/boring */
-.footer-copyright {
-  text-align: center;
-  margin-top: 1.8rem;
-  padding-top: 1.2rem;
-  border-top: 1px solid rgba(237, 255, 132, 0.15);
-  font-size: 0.85rem;
-  color: #888;
-}
-
-/* Mobile – stack top to bottom */
-@media (max-width: 992px) {
-  .footer-row {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 1.5rem;
-  }
-
-  .profile-block {
-    flex: none;
-    width: 100%;
-  }
-
-  .profile-card {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .social-icons {
-    justify-content: center;
-  }
-
-  .logo-block {
-    text-align: center;
-  }
-}
-
-/* Alerts */
-.alert {
-    padding: 1rem;
-    border-radius: 5px;
-    margin: 1rem 0;
-}
-
-.alert-success {
-    background: rgba(76, 175, 80, 0.2);
-    border: 2px solid #4CAF50;
-    color: #4CAF50;
-}
-
-.alert-error {
-    background: rgba(244, 67, 54, 0.2);
-    border: 2px solid #f44336;
-    color: #f44336;
-}
-
-/* === Wiki Page Layout & Content Improvements (updated to match OG style) === */
-
-.wiki-layout {
-    display: flex;
-    gap: 2.5rem;
-    max-width: 1400px;
-    margin: 3rem auto;
-    padding: 0 1.5rem;
-}
-
-.wiki-main {
-    flex: 3;
-    background: var(--card-bg);
-    padding: 2.5rem;
-    border-radius: 12px;
-    border: 3px solid var(--cyan);
-    box-shadow: 0 8px 30px rgba(0, 212, 255, 0.15);
-    transition: box-shadow 0.3s;
-}
-
-.wiki-main:hover {
-    box-shadow: 0 12px 40px rgba(133, 0, 255, 0.3);
-}
-
-.wiki-sidebar {
-    flex: 1;
-    min-width: 300px;
-}
-
-.sidebar-block {
-    background: var(--card-bg);
-    border: 2px solid var(--neon-purple);
-    border-radius: 12px;
-    padding: 1.8rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 15px rgba(101, 0, 255, 0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.sidebar-block:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(133, 0, 255, 0.35);
-}
-
-.sidebar-block h3 {
-    color: var(--yellow);
-    font-size: 1.5rem;
-    margin-bottom: 1.2rem;
-    text-shadow: 0 0 8px rgba(237, 255, 132, 0.3);
-}
-
-.sidebar-block ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar-block a {
-    color: var(--cyan);
-    display: block;
-    padding: 0.7rem 0;
-    transition: color 0.3s, padding-left 0.3s;
-}
-
-.sidebar-block a:hover {
-    color: var(--yellow);
-    padding-left: 0.8rem;
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-    .wiki-layout {
-        flex-direction: column;
-    }
-    .wiki-sidebar {
-        order: -1;
-    }
-    .wiki-main {
-        padding: 1.8rem;
-    }
-}
-
-/* Unified content styling – matches OG look */
-.content-body {
-    font-size: 1.15rem;
-    line-height: 1.85;
-    color: #e4e4e4;
-}
-
-.content-body h1 {
-    color: var(--yellow);
-    font-size: 2.8rem;
-    margin: 0 0 1.8rem;
-    text-shadow: 0 0 12px rgba(237, 255, 132, 0.5);
-    text-align: center;
-}
-
-.content-body h2 {
-    color: var(--cyan);
-    font-size: 2.2rem;
-    margin: 3.5rem 0 1.5rem;
-    padding-bottom: 0.8rem;
-    border-bottom: 3px solid var(--purple);
-    text-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
-}
-
-.content-body h3 {
-    color: var(--cyan-light);
-    font-size: 1.8rem;
-    margin: 2.8rem 0 1.2rem;
-    background: rgba(101, 0, 255, 0.08);
-    padding: 1rem 1.4rem;
-    border-radius: 10px;
-    border-left: 6px solid var(--cyan);
-    box-shadow: 0 4px 12px rgba(0, 212, 255, 0.1);
-}
-
-.content-body p {
-    margin-bottom: 2rem; /* bigger breathing room */
-}
-
-.content-body ul, .content-body ol {
-    margin: 1.8rem 0 2.2rem;
-    padding-left: 2.2rem;
-}
-
-.content-body li {
-    margin-bottom: 1.2rem;
-}
-
-/* Section separation – subtle outline feel */
-.content-body > h2, .content-body > h3 {
-    position: relative;
-}
-
-.content-body > h2::after, .content-body > h3::after {
-    content: '';
-    position: absolute;
-    bottom: -0.8rem;
-    left: 0;
-    width: 80px;
-    height: 3px;
-    background: linear-gradient(90deg, var(--cyan), transparent);
-    border-radius: 2px;
-}
-
-/* Make screenshots match OG card style */
-.screenshot-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin: 2.5rem 0;
-}
-
-.screenshot-gallery img {
-    width: 100%;
-    border-radius: 12px;
-    border: 2px solid var(--neon-purple);
-    box-shadow: 0 6px 20px rgba(101, 0, 255, 0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.screenshot-gallery img:hover {
-    transform: scale(1.04);
-    box-shadow: 0 12px 35px rgba(133, 0, 255, 0.4);
-}
-
-/* === Front Page Enhancements – match wiki aesthetic === */
-
-/* Hero – add padding, glow, consistent feel */
-.hero-section {
-    padding: 4rem 2rem; /* more breathing room around hero */
-    background: linear-gradient(to bottom, rgba(20, 20, 30, 0.7), var(--dark-bg));
-    border-radius: 16px;
-    border: 2px solid var(--neon-purple);
-    box-shadow: 0 8px 30px rgba(133, 0, 255, 0.25);
-    margin: 2rem auto;
-    max-width: 1300px;
-}
-
-.hero-intro {
-    background: rgba(101, 0, 255, 0.08);
-    border: 1px solid var(--cyan);
-    border-radius: 12px;
-    padding: 2.5rem;
-    margin-bottom: 3rem;
-}
-
-.hero-intro h2 {
-    color: var(--yellow);
-    font-size: 3rem;
-    text-shadow: 0 0 12px rgba(237, 255, 132, 0.5);
-    margin-bottom: 1rem;
-}
-
-.hero-intro p {
-    font-size: 1.4rem;
-    color: var(--cyan-light);
-}
-
-/* Main Buttons – match wiki card/hover style */
-.main-buttons {
-    gap: 2rem;
-}
-
-.main-button {
-    border: 3px solid var(--cyan);
-    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.2);
-    transition: all 0.4s ease;
-    background: linear-gradient(135deg, var(--card-bg), #0f3460);
-}
-
-.main-button:hover {
-    transform: translateY(-10px);
-    border-color: var(--purple);
-    box-shadow: 0 15px 40px rgba(133, 0, 255, 0.4);
-    background: linear-gradient(135deg, #16213e, var(--dark-bg));
-}
-
-.main-button h3 {
-    color: var(--yellow);
-    text-shadow: 0 0 8px rgba(237, 255, 132, 0.4);
-}
+/* ─── Search ───────────────────────────────────────────────── */
 
-/* Search Bar – make it prominent and matching */
 .search-bar-container {
     max-width: 800px;
-    margin: 0 auto 4rem;
-    text-align: center;
+    margin: 2.5rem auto;
 }
 
 .search-form {
@@ -830,13 +260,13 @@ footer {
     border: 2px solid var(--cyan);
     border-radius: 50px;
     overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.15);
+    box-shadow: 0 6px 20px rgba(0,212,255,0.2);
 }
 
 .search-form input {
     flex: 1;
-    padding: 1.2rem 2rem;
-    font-size: 1.2rem;
+    padding: 1.1rem 1.8rem;
+    font-size: 1.1rem;
     background: transparent;
     border: none;
     color: white;
@@ -850,287 +280,168 @@ footer {
     background: var(--cyan);
     color: var(--dark-bg);
     border: none;
-    padding: 0 2.5rem;
-    font-size: 1.2rem;
+    padding: 0 2rem;
+    font-size: 1.1rem;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: 0.3s;
 }
 
 .search-form button:hover {
     background: var(--cyan-light);
 }
 
-/* Recent Posts / Cards – unify with wiki */
-.card-grid {
-    gap: 2rem;
+/* ─── Cards & Grids ────────────────────────────────────────── */
+
+.card-grid,
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.8rem;
+    margin: 2rem 0;
 }
 
 .card {
     background: var(--card-bg);
-    border: 2px solid var(--neon-purple);
+    padding: 1.6rem;
     border-radius: 12px;
-    padding: 1.8rem;
-    box-shadow: 0 6px 20px rgba(101, 0, 255, 0.2);
-    transition: all 0.3s;
+    border: 2px solid var(--neon-purple);
+    transition: all 0.35s ease;
 }
 
 .card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
     border-color: var(--cyan);
-    box-shadow: 0 12px 35px rgba(133, 0, 255, 0.35);
+    box-shadow: 0 12px 32px rgba(101,0,255,0.3);
 }
 
 .card h3 {
     color: var(--cyan);
-    margin-bottom: 1rem;
 }
 
-/* Make sure all headings have glow */
-h1, h2, h3 {
-    text-shadow: 0 0 8px rgba(237, 255, 132, 0.3);
-}
+/* ─── Content Sections ─────────────────────────────────────── */
 
-
-.btn-admin {
-  background: var(--purple);
-  color: white;
-}
-
-.btn-logout {
-  background: #ff4444;
-  color: white;
-}
-
-.header-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap; /* prevents wrapping */
-  gap: 1rem;
-}
-
-.hero-split {
-    background-image: url('/images/banner_with_pixels_dojo_in_white.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}  
-
-.right-section {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-}
-
-.price-widget {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
-  min-width: 160px; /* keeps it from shrinking too much */
-}
-
-.user-nav {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  white-space: nowrap;
-}
-
-.btn-small {
-  padding: 0.4rem 0.9rem;
-  font-size: 0.9rem;
-  white-space: nowrap;
-}
-
-/* ============================================= */
-/* Front Page Width & Layout Fixes + Sidebar     */
-/* ============================================= */
-
-/* Cap everything to prevent ultra-wide on big screens */
-body, .main-wrapper, .hero-split, .category-grid, .featured-post, .container, .content-section {
-    max-width: 1400px !important;  /* or 1300px if still feels too wide */
-    margin-left: auto !important;
-    margin-right: auto !important;
-}
-
-/* Main wrapper with sidebar – push content right only on desktop */
-.main-wrapper {
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    padding: 1rem 1.5rem;
-    max-width: 1400px;
-}
-
-.sidebar {
-    flex: 0 0 240px;          /* fixed width sidebar */
-    background: var(--dark-bg);
-    border-right: 1px solid rgba(133, 0, 255, 0.3);
-    padding: 1.5rem 1rem;
+.content-section {
+    background: var(--card-bg);
+    padding: 2rem;
+    margin: 2.5rem 0;
     border-radius: 12px;
-    height: fit-content;      /* don't stretch full height unless wanted */
-    position: sticky;
-    top: 1rem;
+    border-left: 5px solid var(--cyan);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
-.main-content-area {          /* new wrapper for the rest – add this in ejs */
+/* ─── Buttons ──────────────────────────────────────────────── */
+
+.btn {
+    display: inline-block;
+    background: var(--cyan);
+    color: var(--dark-bg);
+    padding: 0.8rem 1.6rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: var(--cyan-light);
+    transform: translateY(-2px);
+}
+
+.btn-purple {
+    background: var(--purple);
+    color: white;
+}
+
+.btn-purple:hover {
+    background: #6a00cc;
+}
+
+/* ─── Footer ───────────────────────────────────────────────── */
+
+footer {
+    background: var(--card-bg);
+    border-top: 3px solid var(--cyan);
+    padding: 2.5rem 1.5rem;
+    color: #b8b8b8;
+    margin-top: 4rem;
+}
+
+.footer-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.footer-block {
     flex: 1;
-    min-width: 0;             /* prevents overflow */
+    min-width: 240px;
+    border: 1px solid var(--neon-purple);
+    border-radius: 12px;
+    padding: 1.4rem;
+    background: rgba(101,0,255,0.06);
 }
 
-/* Make default/plain hyperlinks visible on dark bg, without forcing pink */
-a:not([class]),
-a:not([class]):visited,
-.content-section a,
-.content-body a,
-p a,
-li a {
-    color: #a78bfa !important;          /* soft purple/lavender – visible but calm */
-    text-decoration: underline;         /* helps them stand out as links */
+.profile-block { flex: 2; }
+
+.footer-copyright {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(237,255,132,0.15);
+    font-size: 0.9rem;
 }
 
-a:not([class]):hover,
-.content-section a:hover,
-.content-body a:hover,
-p a:hover,
-li a:hover {
-    color: #c4b5fd !important;          /* lighter on hover */
-    text-decoration: underline;
-}
-
-/* ============================================= */
-/* Mobile Responsive (992px and below)           */
-/* ============================================= */
+/* ─── Mobile ───────────────────────────────────────────────── */
 
 @media (max-width: 992px) {
-
-    /* Existing: Sidebar stacking (keep this) */
     .main-wrapper {
         flex-direction: column;
-        gap: 1.5rem;
+        padding: 1rem;
     }
-    
+
     .sidebar {
         position: static;
-        flex: none;
         width: 100%;
-        border-right: none;
-        border-bottom: 1px solid rgba(133, 0, 255, 0.3);
-    }
-    
-    .main-content-area {
-        padding: 0 1rem;
+        border: none;
     }
 
-    /* New: Header stacking + mobile-friendly adjustments */
     .header-container {
         flex-direction: column;
-        align-items: center;
         text-align: center;
-        gap: 1.2rem;
     }
 
-    .logo-section {
-        width: 100%;
-        margin-bottom: 0.8rem;
-    }
-
-    .logo-section h1 {
-        font-size: 2.2rem;          /* readable but not huge */
-    }
-
-    .user-nav,
-    .price-widget,
-    .right-section {
+    .hero-split {
         flex-direction: column;
-        width: 100%;
-        justify-content: center;
-        gap: 0.8rem;
+        padding: 1.8rem;
     }
 
-    .user-nav a,
-    .price-widget {
-        width: auto;
-        padding: 0.6rem 1.2rem;
-        font-size: 0.95rem;
-    }
-
-    header {
-        padding: 1.2rem 1rem;       /* tighter padding for mobile */
-    }
-
-    /* Prevent tiny text overall */
-    body {
-        font-size: 1.05rem;
-    }
-
-    /* Nav items stack vertically */
     nav ul {
         flex-direction: column;
         gap: 0.8rem;
     }
 
-    nav li {
-        width: 100%;
-        text-align: center;
+    .main-buttons {
+        grid-template-columns: 1fr;
     }
 
-    /* Hero: make it breathe better on small screens */
-    .hero-split {
-        flex-direction: column;     /* stack left/right vertically */
-        padding: 1.5rem 1rem;
-        gap: 2rem;
-    }
-
-    .hero-left,
-    .hero-right {
-        width: 100%;
-    }
-
-    /* Grids/cards: already good, but reinforce min-width */
-    .card-grid,
-    .category-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.2rem;
-    }
-
-    /* Breathing room for sections */
-    .content-section {
-        margin: 2.5rem auto;
-        padding: 1.8rem 1.2rem;
-    }
-
-    /* Footer stacking (if not already handled) */
-    footer .footer-row {
+    .footer-row {
         flex-direction: column;
-        gap: 1.5rem;
     }
 }
 
-/* Loose rules that apply always (keep these outside media query) */
-.hero-split {
-    max-width: 100%;
-    padding: 2rem 1rem;
+/* ─── Final Polish Overrides ───────────────────────────────── */
+
+h1, h2, h3 {
+    text-shadow: 0 0 14px rgba(237,255,132,0.55), 0 0 6px var(--cyan);
 }
 
-.card-grid,
-.category-grid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    max-width: 100%;
+a:not(.btn):not(.main-button):hover {
+    color: #ff69f5 !important;
 }
 
-a:not(.btn):hover,
-a:not(.main-button):hover {
-    color: #FF69F5 !important;
-    text-decoration: underline;
-}
-
-.content-section {
-    margin: 3rem auto;
-    padding: 2.5rem;
-}
-
-footer .footer-container {
-    max-width: 1400px;
+.main-button:hover,
+.btn:hover {
+    box-shadow: 0 12px 36px rgba(133,0,255,0.48);
 }
