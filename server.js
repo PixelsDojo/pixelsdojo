@@ -247,6 +247,18 @@ app.post('/login', (req, res) => {
   });
 });
 
+// Logout – destroy session and redirect to home/login
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Logout session destroy error:', err);
+      // Optional: still redirect even if error
+    }
+    res.clearCookie('connect.sid'); // optional but good – clears session cookie
+    res.redirect('/login?message=logged_out'); // or '/' for home
+  });
+});
+
 // User Profile (GET /profile) – fetch full user data every time
 app.get('/profile', (req, res) => {
   if (!req.session.user) {
