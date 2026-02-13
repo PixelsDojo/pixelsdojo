@@ -935,3 +935,92 @@ h1, h2, h3 {
   font-size: 0.9rem;
   white-space: nowrap;
 }
+
+/* ============================================= */
+/* Front Page Width & Layout Fixes + Sidebar     */
+/* ============================================= */
+
+/* Cap everything to prevent ultra-wide on big screens */
+body, .main-wrapper, .hero-split, .category-grid, .featured-post, .container, .content-section {
+    max-width: 1400px !important;  /* or 1300px if still feels too wide */
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Main wrapper with sidebar – push content right only on desktop */
+.main-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    padding: 1rem 1.5rem;
+    max-width: 1400px;
+}
+
+.sidebar {
+    flex: 0 0 240px;          /* fixed width sidebar */
+    background: var(--dark-bg);
+    border-right: 1px solid rgba(133, 0, 255, 0.3);
+    padding: 1.5rem 1rem;
+    border-radius: 12px;
+    height: fit-content;      /* don't stretch full height unless wanted */
+    position: sticky;
+    top: 1rem;
+}
+
+.main-content-area {          /* new wrapper for the rest – add this in ejs */
+    flex: 1;
+    min-width: 0;             /* prevents overflow */
+}
+
+/* On mobile: stack sidebar on top */
+@media (max-width: 992px) {
+    .main-wrapper {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .sidebar {
+        position: static;
+        flex: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(133, 0, 255, 0.3);
+    }
+    
+    .main-content-area {
+        padding: 0 1rem;
+    }
+}
+
+/* Tighter hero on wide screens */
+.hero-split {
+    max-width: 100% !important;  /* let it breathe but not stretch forever */
+    padding: 2rem 1rem;
+}
+
+/* Prevent cards/grids from becoming comically wide */
+.card-grid, .category-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    max-width: 100%;
+}
+
+/* Force neon pink links site-wide (override cyan/yellow where needed) */
+a:not(.btn), a:not(.main-button), nav a, .sidebar a, .card a {
+    color: #FF10F0 !important;
+}
+
+a:not(.btn):hover, a:not(.main-button):hover {
+    color: #FF69F5 !important;
+    text-decoration: underline;
+}
+
+/* Subtle breathing room for OG sections */
+.content-section {
+    margin: 3rem auto;
+    padding: 2.5rem;
+}
+
+/* If footer feels too wide too */
+footer .footer-container {
+    max-width: 1400px;
+}
