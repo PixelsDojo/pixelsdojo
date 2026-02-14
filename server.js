@@ -930,11 +930,24 @@ app.get('/pages/:slug', (req, res) => {
 app.get('/category/:cat', (req, res) => {
   const cat = req.params.cat;
   db.all(
-    `SELECT * FROM pages WHERE category = ? ORDER BY created_at DESC`,
+    `SELECT p.*, 
+            u.display_name as author_display_name,
+            u.username as author_username,
+            u.profile_image as author_profile_image,
+            u.bio as author_bio,
+            u.social_links as author_social_links,
+            u.tip_address as author_tip_address
+     FROM pages p
+     LEFT JOIN users u ON p.author_id = u.id
+     WHERE p.category = ?
+     ORDER BY p.created_at DESC`,
     [cat],
     (err, pages) => {
-      if (err) pages = [];
-      res.render('category', { category: cat, pages, user: req.session.user });
+      if (err) {
+        console.error('Category pages error:', err);
+        pages = [];
+      }
+      res.render('category', { category: cat, pages, user: req.session.user || null });
     }
   );
 });
