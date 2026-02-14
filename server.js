@@ -20,6 +20,8 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 const fs = require('fs');
 const db = require('./database.js');
+const sharp = require('sharp');
+const path = require('path');  
 
 const app = express();
 
