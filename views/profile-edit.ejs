@@ -2,35 +2,76 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Edit Profile - Pixels Dojo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile | Pixels Dojo</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div class="container" style="max-width:600px;margin:4rem auto;padding:2rem;background:#1a1a2e;border-radius:12px;color:white;">
+  <%- include('partials/header') %>
+
+  <div class="container">
     <h1>Edit Profile</h1>
 
-    <form method="POST" action="/profile/edit" enctype="multipart/form-data">
-      <div style="margin-bottom:1.5rem;">
-        <label>Display Name</label><br>
-        <input type="text" name="display_name" value="<%= user.display_name || user.username %>" style="width:100%;padding:0.8rem;background:#0f0f1a;border:1px solid #444;color:white;border-radius:6px;">
+    <% if (locals.error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+
+    <form action="/profile/edit" method="POST" enctype="multipart/form-data">
+      <!-- Avatar - everyone -->
+      <div class="form-group">
+        <label for="profile_image">Profile Picture</label>
+        <input type="file" id="profile_image" name="profile_image" accept="image/*">
+        <img src="<%= user.profile_image %>" alt="Current" style="max-width:120px; border-radius:50%; margin-top:0.5rem;">
       </div>
 
-      <div style="margin-bottom:1.5rem;">
-        <label>Bio / About Me</label><br>
-        <textarea name="bio" rows="6" style="width:100%;padding:0.8rem;background:#0f0f1a;border:1px solid #444;color:white;border-radius:6px;"><%= user.bio || '' %></textarea>
-        <small style="color:#aaa;">Add your creator code, favorite games, or fun facts.</small>
+      <!-- Display Name - contributors only -->
+      <div class="form-group">
+        <label for="display_name">Display Name</label>
+        <input type="text" id="display_name" name="display_name" 
+               value="<%= user.display_name || user.username %>" 
+               <%= user.is_contributor ? '' : 'disabled' %>>
+        <% if (!user.is_contributor) { %>
+          <small>(Only contributors can set this)</small>
+        <% } %>
       </div>
 
-      <div style="margin-bottom:1.5rem;">
-        <label>Profile Picture</label><br>
-        <input type="file" name="profile_image" accept="image/*">
-        <br><small>Current: <img src="<%= user.profile_image %>" alt="Current PFP" style="width:60px;height:60px;border-radius:50%;margin-top:0.5rem;"></small>
+      <!-- Bio - contributors only -->
+      <div class="form-group">
+        <label for="bio">Bio / About</label>
+        <textarea id="bio" name="bio" rows="4" 
+                  <%= user.is_contributor ? '' : 'disabled' %>><%= user.bio || '' %></textarea>
+        <% if (!user.is_contributor) { %>
+          <small>(Contributors only)</small>
+        <% } %>
       </div>
 
-      <button type="submit" style="width:100%;padding:1rem;background:#6a0dad;color:white;border:none;border-radius:8px;font-weight:bold;">Save Changes</button>
+      <!-- Social Links - contributors only -->
+      <div class="form-group">
+        <label for="social_links">Social Links (one per line: Platform | URL)</label>
+        <textarea id="social_links" name="social_links" rows="4" 
+                  <%= user.is_contributor ? '' : 'disabled' %>>
+<%= user.social_links ? user.social_links.split(',').join('\n') : '' %>
+        </textarea>
+        <% if (!user.is_contributor) { %>
+          <small>(Contributors only)</small>
+        <% } %>
+      </div>
+
+      <!-- Tip Address - contributors only -->
+      <div class="form-group">
+        <label for="tip_address">Tip Address (PayPal, wallet, etc.)</label>
+        <input type="text" id="tip_address" name="tip_address" 
+               value="<%= user.tip_address || '' %>" 
+               <%= user.is_contributor ? '' : 'disabled' %>>
+        <% if (!user.is_contributor) { %>
+          <small>(Contributors only)</small>
+        <% } %>
+      </div>
+
+      <button type="submit" class="btn">Save Changes</button>
     </form>
-
-    <a href="/profile" style="display:block;text-align:center;margin-top:1.5rem;color:#00ffff;">Cancel</a>
   </div>
+
+  <%- include('partials/footer') %>
 </body>
 </html>
