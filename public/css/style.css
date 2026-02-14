@@ -197,40 +197,37 @@ nav a:hover {
 /* ─── Hero Section ─────────────────────────────────────────── */
 
 /* Hero section overall */
+
 .hero-split {
-  display: flex;              /* or grid if you prefer */
-  flex-direction: row;        /* side-by-side on desktop */
-  flex-wrap: wrap;            /* stack on small screens */
-  min-height: 60vh;           /* or whatever height feels good */
-  width: 100%;
-  position: relative;
-  overflow: hidden;           /* prevents image overflow */
-}
-
-/* Content side */
-.hero-content {
-  flex: 1;
-  padding: 4rem 2rem;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  z-index: 2;                 /* above image if needed */
+  align-items: center;          /* vertically center content/image */
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1400px;            /* or whatever your content max is */
+  margin: 0 auto;               /* center if needed */
+  padding: 2rem 1rem;           /* breathing room */
+  gap: 2rem;                    /* space between left/right */
 }
 
-/* Image side */
+.hero-content {
+  flex: 1 1 50%;                /* takes ~half, flexible */
+  max-width: 600px;             /* prevents stretching too wide */
+}
+
 .hero-right {
-  flex: 1;
-  position: relative;
-  min-height: 400px;          /* fallback height for mobile */
-  overflow: hidden;           /* crops nicely */
+  flex: 1 1 50%;
+  max-width: 600px;             /* cap width so it's not massive */
+  height: 300px;                /* fixed height – adjust to your liking (keeps it "not too tall") */
+  overflow: hidden;             /* crops if needed */
+  border-radius: 12px;          /* optional nice look */
 }
 
 .hero-image {
-  width: 100%;                /* fills container width */
-  height: 100%;               /* fills container height */
-  object-fit: cover;          /* crops to fill without distortion */
-  object-position: center;    /* centers the image */
-  display: block;             /* removes bottom gap */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;            /* fills area, crops edges, keeps aspect ratio */
+  object-position: center;      /* focus on center – change to 'top' if text/logo is top-heavy */
+  display: block;
 }
 
 .hero-title {
