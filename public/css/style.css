@@ -8,15 +8,15 @@
 :root {
     --neon-purple: #6500ff;
     --purple:     #8500ff;
-    --cyan:       #00d4ff;
-    --cyan-light: #4dd0e1;
+    --lime-green: #65eb05;
+    --light green:#bbff8a;
     --yellow:     #edff84;
     --green:      #b7eb05;
     --bg-color:   #0a0a15;
     --dark-bg:    #1a1a2e;
     --card-bg:    #0f3460;
 
-    --accent:     var(--cyan);
+    --accent:     var(--lime-green);
     --accent-glow:var(--purple);
     --highlight:  var(--yellow);
 }
@@ -32,7 +32,7 @@ body {
 /* ─── Global Elements ──────────────────────────────────────── */
 
 a {
-    color: var(--green);
+    color: var(--lime-green);
     text-decoration: none;
 }
 
@@ -251,16 +251,31 @@ nav a:hover {
   text-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
+.main-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
 .main-button {
     background: rgba(15,52,96,0.75);
-    backdrop-filter: blur(6px);           /* glass effect – remove if you don't like it */
-    padding: 2rem 1.5rem;                 /* smaller than before */
+    backdrop-filter: blur(6px);
+    padding: 2rem 1.5rem;
     border-radius: 14px;
-    border: 3px solid var(--cyan);
+    border: 3px solid var(--cyan);  /* now lime green */
     text-align: center;
     color: white;
     transition: all 0.4s ease;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: visible !important;
 }
 
 .main-button:hover {
@@ -283,6 +298,18 @@ nav a:hover {
 .main-button p {
     font-size: 1.05rem;
     color: #d0d0ff;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Kill truncation site-wide for hero/buttons */
+.main-buttons,
+.main-button,
+.main-button * {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+    word-break: break-word !important;
 }
 
 /* ─── Search ───────────────────────────────────────────────── */
