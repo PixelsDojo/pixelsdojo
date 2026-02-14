@@ -628,6 +628,27 @@ app.delete('/admin/pages/:id', requireAdmin, (req, res) => {
   });
 });
 
+// Catch-all for 404 (not found) - optional but good to have
+app.use((req, res, next) => {
+  res.status(404).render('404', { url: req.originalUrl });  // if you want a 404 page too
+});
+
+// Custom error handler (this catches thrown errors or next(err))
+app.use((err, req, res, next) => {
+  console.error('Error:', err);  // log for debugging
+
+  // If it's a 403 (Forbidden/Access Denied)
+  if (err.status === 403 || err.message?.includes('denied') || err.message?.includes('forbidden')) {
+    return res.status(403).render('403');  // renders views/403.ejs
+  }
+
+  // For other errors (500, etc.)
+  res.status(err.status || 500).render('error', {
+    message: err.message || 'Something went wrong!',
+    error: {}  // don't show stack in production
+  });
+});
+
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
