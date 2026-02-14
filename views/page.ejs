@@ -95,17 +95,6 @@
           <p class="no-media">No screenshots available yet.</p>
         <% } %>
 
-<%- include('/profile.ejs', { 
-  author: {
-    id: page.author_id,
-    profile_image: page.author_profile_image,
-    display_name: page.author_display_name,
-    bio: page.author_bio,
-    social_links: page.author_social_links || '',  // if you added this field to pages query
-    tip_address: page.author_tip_address || ''
-  }
-}) %>
-
        <!-- Like / Dislike -->
 <div class="interaction-bar">
   <button class="like-btn" data-page-id="<%= page.id %>">
