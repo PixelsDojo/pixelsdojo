@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -7,22 +8,31 @@
 :root {
     --neon-purple: #6500ff;
     --purple:     #8500ff;
-    --lime-green: #65eb05;        /* main lime green */
-    --lime-light: #bbff8a;        /* lighter version – fixed name (no space) */
+    --lime-green: #65eb05;
+    --light green: #bbff8a;
     --yellow:     #edff84;
     --green:      #b7eb05;
     --bg-color:   #0a0a15;
     --dark-bg:    #1a1a2e;
     --card-bg:    #0f3460;
 
-    --accent:     var(--lime-green);     /* primary accent now lime */
+    --accent:     var(--lime-green);
     --accent-glow:var(--purple);
     --highlight:  var(--yellow);
 }
 
-/* Global elements – use the new --accent var consistently */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #16213e 100%);
+    color: #e4e4e4;
+    line-height: 1.6;
+    font-size: 1.05rem;
+}
+
+/* ─── Global Elements ──────────────────────────────────────── */
+
 a {
-    color: var(--accent);          /* lime green links */
+    color: var(--lime-green);
     text-decoration: none;
 }
 
@@ -30,9 +40,8 @@ a:hover {
     color: var(--yellow);
 }
 
-/* Headings glow – keep yellow or switch to lime if you prefer */
 h1, h2, h3 {
-    text-shadow: 0 0 12px rgba(101, 235, 5, 0.5); /* lime green glow – matches new accent */
+    text-shadow: 0 0 12px rgba(237, 255, 132, 0.5);
 }
 
 h1 { font-size: 2.8rem; margin-bottom: 1.5rem; }
@@ -130,7 +139,7 @@ nav ul {
 }
 
 nav a {
-    color: var(--lime-green);
+    color: var(--cyan);
     font-weight: 600;
     padding: 0.6rem 1.2rem;
     border-radius: 6px;
@@ -171,7 +180,7 @@ nav a:hover {
 .sidebar a {
     display: block;
     padding: 0.7rem 0;
-    color: var(--lime-green);
+    color: var(--cyan);
     transition: 0.25s;
 }
 
@@ -254,7 +263,7 @@ nav a:hover {
   backdrop-filter: blur(6px);
   padding: 2rem 1.5rem;
   border-radius: 14px;
-  border: 2px solid var(--lime-green);   /* lime green now */
+  border: 2px solid var(--cyan);   /* lime green now */
   text-align: center;
   color: white;
   transition: all 0.4s ease;
@@ -316,7 +325,7 @@ nav a:hover {
 .search-form {
     display: flex;
     background: var(--card-bg);
-    border: 2px solid var(--lime-green);
+    border: 2px solid var(--cyan);
     border-radius: 50px;
     overflow: hidden;
     box-shadow: 0 6px 20px rgba(0,212,255,0.2);
@@ -336,7 +345,7 @@ nav a:hover {
 }
 
 .search-form button {
-    background: var(--lime-green);
+    background: var(--cyan);
     color: var(--dark-bg);
     border: none;
     padding: 0 2rem;
@@ -369,12 +378,12 @@ nav a:hover {
 
 .card:hover {
     transform: translateY(-6px);
-    border-color: var(--lime-green);
+    border-color: var(--cyan);
     box-shadow: 0 12px 32px rgba(101,0,255,0.3);
 }
 
 .card h3 {
-    color: var(--lime-green);
+    color: var(--cyan);
 }
 
 .author-profile {
@@ -415,7 +424,7 @@ nav a:hover {
     padding: 2rem;
     margin: 2.5rem 0;
     border-radius: 12px;
-    border-left: 5px solid var(--lime-green);
+    border-left: 5px solid var(--cyan);
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
@@ -423,7 +432,7 @@ nav a:hover {
   background: var(--card-bg);
   padding: 2rem;
   border-radius: 12px;
-  border: 1px solid var(--lime-green);
+  border: 1px solid var(--cyan);
 }
 
 .page-header {
@@ -488,7 +497,7 @@ nav a:hover {
 .recent-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 12px 35px rgba(133,0,255,0.35);
-  border-color: var(--lime-green);
+  border-color: var(--cyan);
 }
 
 .card-image {
@@ -510,7 +519,7 @@ nav a:hover {
 }
 
 .card-content h3 {
-  color: var(--lime-green);
+  color: var(--cyan);
   font-size: 1.35rem;
   margin: 0 0 0.6rem;
 }
@@ -542,7 +551,7 @@ nav a:hover {
 }
 
 .sort-controls a {
-  color: var(--lime-green);
+  color: var(--cyan);
   margin: 0 0.6rem;
   text-decoration: none;
   font-weight: 500;
@@ -566,7 +575,7 @@ nav a:hover {
 
 .btn {
     display: inline-block;
-    background: var(--lime-green);
+    background: var(--cyan);
     color: var(--dark-bg);
     padding: 0.8rem 1.6rem;
     border-radius: 6px;
@@ -594,7 +603,7 @@ nav a:hover {
 
 footer {
     background: var(--card-bg);
-    border-top: 4px solid var(--lime-green);
+    border-top: 4px solid var(--cyan);
     padding: 3rem 1.5rem 2rem;
     color: #d0d0d0;
     margin-top: 5rem;
@@ -723,7 +732,7 @@ footer {
     padding: 1rem;
     background: rgba(26, 26, 46, 0.7);
     border-radius: 12px;
-    border: 1px solid var(--lime-green);
+    border: 1px solid var(--cyan);
 }
 
 .like-btn, .dislike-btn {
@@ -736,15 +745,15 @@ footer {
     font-weight: 600;
     transition: all 0.3s;
     cursor: pointer;
-    border: 2px solid var(--lime-green);
+    border: 2px solid var(--cyan);
     background: transparent;
-    color: var(--lime-green);
+    color: var(--cyan);
 }
 
 .like-btn:hover, .like-btn.liked {
-    background: var(--lime-green);
+    background: var(--cyan);
     color: var(--dark-bg);
-    border-color: var(--lime-green);
+    border-color: var(--cyan);
     transform: scale(1.05);
 }
 
