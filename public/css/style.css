@@ -279,7 +279,41 @@ nav a:hover {
   background: rgba(30, 30, 80, 0.95);
 }
 
+.main-button,
+.main-button h3,
+.main-button p {
+  color: #ffffff !important;          /* bright white for dark bg – adjust if your bg is light */
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6); /* subtle shadow for readability on image/bg */
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 2;                         /* above any overlays */
+}
 
+.main-button {
+  position: relative;                 /* reset any absolute positioning issues */
+  overflow: visible;                  /* prevent clipping */
+  min-height: 140px;                  /* give space for text */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.8rem 1.2rem;
+  background: rgba(20, 20, 60, 0.85) !important; /* semi-transparent dark if over image */
+  border: 2px solid #00f0ff;
+  border-radius: 16px;
+}
+
+.main-button h3 {
+  font-size: 1.4rem;
+  margin: 0.8rem 0 0.4rem;
+  font-weight: bold;
+}
+
+.main-button p {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.9;
+}
 
 /* ─── Search ───────────────────────────────────────────────── */
 
