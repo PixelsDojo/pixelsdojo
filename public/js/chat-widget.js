@@ -17,8 +17,8 @@ class ChatWidget {
     const widgetHTML = `
       <div class="chat-widget-container">
         <button class="chat-toggle-button" id="chatToggle" aria-label="Toggle chat">
-          🤖
-        </button>
+  <img src="/images/pixeldojo_logo_round_.png" alt="Dojo" style="width:35px; height:35px;">
+</button>
         
         <div class="chat-window" id="chatWindow">
           <div class="chat-header">
@@ -181,7 +181,10 @@ class ChatWidget {
       welcomeMsg.remove();
     }
     
-    const avatar = type === 'user' ? '👤' : '🤖';
+  // NEW:
+const avatar = type === 'user' 
+  ? '👤' 
+  : '<img src="/images/pixeldojo_logo_round_.png" style="width:28px; height:28px; border-radius:50%;">';
     const messageClass = type === 'user' ? 'user-message' : 'bot-message';
     
     let citationsHTML = '';
