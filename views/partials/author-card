@@ -1,7 +1,15 @@
 <div class="author-card">
-    <img src="<%= user.profile_image || '/images/pixeldojo_logo_round_.png' %>" alt="Author">
-    <div class="author-info">
-        <h3><%= author || 'Community Contributor' %></h3>
-        <p>Creator of this guide</p>
-    </div>
+  <img 
+    src="<%= user.profile_image || '/images/default-avatar.png' %>" 
+    alt="<%= user.display_name %>" 
+    class="author-avatar"
+  >
+  <div class="author-info">
+    <h4>
+      <a href="/profile/<%= user.username %>"><%= user.display_name || user.username %></a>
+    </h4>
+    <% if (user.bio) { %>
+      <p class="author-bio"><%= user.bio.substring(0, 120) %>...</p>
+    <% } %>
+  </div>
 </div>
