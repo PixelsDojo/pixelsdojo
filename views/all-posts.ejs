@@ -6,23 +6,136 @@
   <title>All Articles | Pixels Dojo Wiki</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/chat-widget.css">
+  <style>
+    /* Page-specific overrides – feel free to move to style.css later */
+    .all-posts-page {
+      background: var(--dark-bg, #0f0f1a);
+      color: #e0e0ff;
+      min-height: 100vh;
+    }
+
+    .main-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .sidebar {
+      flex: 0 0 240px;
+      background: rgba(0, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid rgba(0, 255, 255, 0.15);
+    }
+
+    .sidebar h4, .sidebar h5 {
+      color: var(--cyan, #00ffff);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 0.75rem 1rem;
+      color: #e0e0ff;
+      text-decoration: none;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .sidebar a:hover {
+      background: rgba(0, 255, 255, 0.15);
+      color: var(--yellow, #ffff00);
+    }
+
+    .main-content-area {
+      flex: 1;
+    }
+
+    .main-content-area h1 {
+      color: var(--yellow, #ffff00);
+      margin-bottom: 2rem;
+      text-align: center;
+      font-size: 2.5rem;
+    }
+
+    .all-posts-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .post-item {
+      background: rgba(20, 20, 40, 0.8);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .post-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--cyan, #00ffff);
+      box-shadow: 0 10px 25px rgba(0, 255, 255, 0.15);
+    }
+
+    .post-item h3 {
+      margin: 0 0 0.75rem;
+      font-size: 1.4rem;
+    }
+
+    .post-item h3 a {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .post-item h3 a:hover {
+      color: var(--cyan, #00ffff);
+    }
+
+    .post-meta {
+      color: #a0a0ff;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .post-snippet {
+      color: #d0d0ff;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 900px) {
+      .main-wrapper {
+        flex-direction: column;
+      }
+      .sidebar {
+        flex: none;
+        width: 100%;
+      }
+    }
+  </style>
 </head>
-<body>
+<body class="all-posts-page">
   <%- include('partials/header') %>
-<nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/category/startup">Start Here</a></li>
-        <li><a href="/category/earn">Earn $PIXEL</a></li>
-        <li><a href="/category/mastery">Mastery</a></li>
-        <li><a href="/npcs">NPCs</a></li>
-        <li><a href="/category/community">Community</a></li>
-      </ul>
-    </nav
+
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/category/startup">Start Here</a></li>
+      <li><a href="/category/earn">Earn $PIXEL</a></li>
+      <li><a href="/category/mastery">Mastery</a></li>
+      <li><a href="/npcs">NPCs</a></li>
+      <li><a href="/category/community">Community</a></li>
+    </ul>
+  </nav>
 
   <div class="main-wrapper">
     <aside class="sidebar">
-      <!-- Your existing sidebar code here -->
       <h4>Library</h4>
       <a href="/">🏠 All Articles</a>
       <a href="/npcs">🧑‍🤝‍🧑 NPC Gallery</a>
@@ -38,7 +151,9 @@
       <h1>All Articles</h1>
       
       <% if (pages.length === 0) { %>
-        <p>No articles yet — check back soon!</p>
+        <p style="text-align: center; color: #a0a0ff; font-size: 1.2rem;">
+          No articles yet — check back soon!
+        </p>
       <% } else { %>
         <div class="all-posts-list">
           <% pages.forEach(page => { %>
@@ -47,10 +162,8 @@
                 <a href="/pages/<%= page.slug %>"><%= page.title %></a>
               </h3>
               <div class="post-meta">
-                <small>
-                  By <%= page.author_display_name || 'Community' %> 
-                  · <%= new Date(page.created_at).toLocaleDateString() %>
-                </small>
+                By <%= page.author_display_name || 'Community' %> 
+                · <%= new Date(page.created_at).toLocaleDateString() %>
               </div>
               <p class="post-snippet">
                 <%= (page.summary || page.content.substring(0, 150) + '...') %>
@@ -63,8 +176,6 @@
   </div>
 
   <%- include('partials/footer') %>
-<script src="/js/chat-widget.js"></script>
+  <script src="/js/chat-widget.js"></script>
 </body>
 </html>
-
-
