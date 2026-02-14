@@ -8,20 +8,18 @@
       </div>
     </div>
 
-   <!-- Price widget on top – make it compact -->
-  <div class="right-section" style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.8rem;">
-  <div class="price-widget">
-    <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
-    <coingecko-coin-price-marquee-widget 
-      coin-ids="pixels" 
-      currency="usd" 
-      background-color="transparent" 
-      font-color="#edff84">
-    </coingecko-coin-price-marquee-widget>
-  </div>
+    <div class="right-section" style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.8rem;">
+      <div class="price-widget" id="price-widget-container" style="opacity: 0; transition: opacity 0.4s ease;">
+        <script async defer src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
+        <coingecko-coin-price-marquee-widget 
+          coin-ids="pixels" 
+          currency="usd" 
+          background-color="transparent" 
+          font-color="#edff84">
+        </coingecko-coin-price-marquee-widget>
+      </div>
 
-  </div>
-   <div class="user-nav" style="display: flex; gap: 0.8rem; flex-wrap: nowrap;">
+      <div class="user-nav" style="display: flex; gap: 0.8rem; flex-wrap: nowrap;">
         <% if (user) { %>
           <span>Welcome, <%= user.display_name || user.username %>!</span>
           <a href="/profile" class="btn btn-small">Profile</a>
@@ -37,4 +35,11 @@
     </div>
   </div>
 </header>
-  
+
+
+<script>
+  window.addEventListener('load', () => {
+    const widget = document.getElementById('price-widget-container');
+    if (widget) widget.style.opacity = '1';
+  });
+</script>
