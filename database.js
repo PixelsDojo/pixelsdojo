@@ -52,6 +52,31 @@ db.serialize(() => {
     }
   });
 
+  // Add missing columns to pages table
+  db.run(`ALTER TABLE pages ADD COLUMN views INTEGER DEFAULT 0;`, (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Error adding views column:', err.message);
+    } else {
+      console.log('views column ready (already exists or added)');
+    }
+  });
+
+  db.run(`ALTER TABLE pages ADD COLUMN upvotes INTEGER DEFAULT 0;`, (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Error adding upvotes column:', err.message);
+    } else {
+      console.log('upvotes column ready (already exists or added)');
+    }
+  });
+
+  db.run(`ALTER TABLE pages ADD COLUMN downvotes INTEGER DEFAULT 0;`, (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Error adding downvotes column:', err.message);
+    } else {
+      console.log('downvotes column ready (already exists or added)');
+    }
+  });
+
   // Wiki Pages
   db.run(`CREATE TABLE IF NOT EXISTS pages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
