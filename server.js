@@ -39,22 +39,20 @@ uploadDirs.forEach(dir => {
 });
 
 // Multer setup
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    let destFolder = '/app/data/images/npcs/';
-    if (file.fieldname === 'profile_image') destFolder = '/app/data/images/profiles/';
-    if (file.fieldname === 'screenshots')     destFolder = '/app/data/images/pages/';
-    cb(null, destFolder);
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
-    cb(null, uniqueName);
-  }
-});
+const storage = multer.memoryStorage();  // ← changed from diskStorage
 
 const upload = multer({
   storage,
-  limits: { fileSize: 20 * 1024 * 1024 } // 20MB
+  limits: { fileSize: 10 * 1024 * 1024 },  // 10MB max per file (lower than your old 20MB to prevent abuse)
+  fileFilter: (req, file, cb) => {
+    const allowed = /jpeg|jpg|png|gif|webp/;
+    const extOk = allowed.test(path.extname(file.originalname).toLowerCase());
+    const mimeOk = allowed.test(file.mimetype);
+    if (extOk && mimeOk) {
+      return cb(null, true);
+    }
+    cb(new Error('Only images (jpg, png, gif, webp) allowed'));
+  }
 });
 
 // Middleware
