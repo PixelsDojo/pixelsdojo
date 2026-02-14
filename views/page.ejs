@@ -95,6 +95,21 @@
           <p class="no-media">No screenshots available yet.</p>
         <% } %>
 
+<!-- Author Card -->
+<section class="author-section">
+  <h3>About the Author</h3>
+  <%- include('partials/author-card', { 
+    author: {
+      profile_image: page.author_profile_image,
+      display_name: page.author_display_name,
+      username: page.author_username || 'anonymous',
+      bio: page.author_bio,
+      social_links: page.author_social_links,
+      tip_address: page.author_tip_address
+    }
+  }) %>
+</section>
+
        <!-- Like / Dislike -->
 <div class="interaction-bar">
   <button class="like-btn" data-page-id="<%= page.id %>">
