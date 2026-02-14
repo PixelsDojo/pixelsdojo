@@ -224,21 +224,12 @@ nav a:hover {
   overflow: hidden;           /* crops nicely */
 }
 
-/* The hero image itself – this is the key part */
 .hero-image {
   width: 100%;                /* fills container width */
   height: 100%;               /* fills container height */
   object-fit: cover;          /* crops to fill without distortion */
   object-position: center;    /* centers the image */
   display: block;             /* removes bottom gap */
-}
-
-/* Overlay (if you want text readable on image) */
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4); /* semi-transparent dark overlay */
-  z-index: 1;
 }
 
 .hero-title {
