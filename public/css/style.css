@@ -775,6 +775,76 @@ footer {
     }
 }
 
+.profile-edit-container {
+  background: rgba(20, 20, 40, 0.8);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1.8rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--cyan, #00ffff);
+  font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea,
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 0.9rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 6px;
+  color: white;
+  font-size: 1rem;
+}
+
+.form-group input:disabled,
+.form-group textarea:disabled {
+  background: rgba(50, 50, 70, 0.6);
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+}
+
+.form-group small {
+  color: #aaa;
+  font-size: 0.85rem;
+  display: block;
+  margin-top: 0.3rem;
+}
+
+.btn-save {
+  background: var(--cyan, #00ffff);
+  color: black;
+  padding: 0.9rem 1.8rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-save:hover {
+  background: var(--yellow, #ffff00);
+  transform: translateY(-2px);
+}
+
 /* Better like/dislike buttons */
 .interaction-bar {
     display: flex;
