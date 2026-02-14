@@ -103,16 +103,17 @@ header {
 }
 
 .price-widget {
-    padding: 0.4rem 0.8rem;          /* tighter than before */
     min-width: 140px;                /* narrower to avoid right-side overflow */
     max-width: 180px;
+    padding: 0.4rem 0.8rem;          /* tighter than before */
     font-size: 0.85rem;
     text-align: right;
+    overflow: hidden;          /* prevent content from spilling right */
+    white-space: nowrap; 
     background: rgba(0, 0, 0, 0.4);  /* semi-dark overlay — makes light text pop without being solid */
     border-radius: 6px;
     border: 1px solid rgba(237, 255, 132, 0.3);  /* faint yellow border for theme match */
-    backdrop-filter: blur(4px);      /* optional: frosted glass effect if browser supports (modern look, less "flat") */
-    -webkit-backdrop-filter: blur(4px); /* Safari support */
+    position: relative;
 }
 
 .price-widget-compact coingecko-coin-price-marquee-widget {
