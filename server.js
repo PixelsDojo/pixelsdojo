@@ -661,20 +661,16 @@ app.get('/profile/edit', (req, res) => {
 });
 
 // POST /profile/edit - save changes (allow admin + contributor)
-app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
+app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
-  // Allow admin OR contributor
-  if (!req.session.user.is_admin && !req.session.user.is_contributor) {
-    return res.status(403).send('Access denied - admin or contributor only');
-  }
-
   const userId = req.session.user.id;
+  const isContributor = !!req.session.user.is_contributor;
+
   const { display_name, bio, social_links, tip_address } = req.body;
 
   let profileImagePath = req.session.user.profile_image || '/images/default-avatar.png';
 
-  // Handle image upload with sharp (your existing code – keep it)
   if (req.file) {
     try {
       const processedBuffer = await sharp(req.file.buffer)
@@ -692,20 +688,18 @@ app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
     }
   }
 
-  // Build update query – always update image + fields
-  let updateQuery = `UPDATE users SET 
-    profile_image = ?,
-    display_name = ?,
-    bio = ?,
-    social_links = ?,
-    tip_address = ?`;
-  let params = [
-    profileImagePath,
-    display_name?.trim() || req.session.user.display_name || req.session.user.username || '',
-    bio?.trim() || '',
-    social_links?.trim() || '',
-    tip_address?.trim() || ''
-  ];
+  let updateQuery = `UPDATE users SET profile_image = ?`;
+  let params = [profileImagePath];
+
+  if (isContributor) {
+    updateQuery += `, display_name = ?, bio = ?, social_links = ?, tip_address = ?`;
+    params.push(
+      display_name?.trim() || req.session.user.username,
+      bio?.trim() || '',
+      social_links?.trim() || '',
+      tip_address?.trim() || ''
+    );
+  }
 
   updateQuery += ` WHERE id = ?`;
   params.push(userId);
@@ -713,18 +707,16 @@ app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
   db.run(updateQuery, params, function (err) {
     if (err) {
       console.error('Profile update error:', err.message);
-      return res.render('profile-edit', {
-        user: req.session.user,
-        error: 'Failed to save changes. Try again.'
-      });
+      return res.render('profile-edit', { user: req.session.user, error: 'Save failed' });
     }
 
-    // Update session so changes show immediately
     req.session.user.profile_image = profileImagePath;
-    req.session.user.display_name = display_name?.trim() || req.session.user.display_name;
-    req.session.user.bio = bio?.trim() || '';
-    req.session.user.social_links = social_links?.trim() || '';
-    req.session.user.tip_address = tip_address?.trim() || '';
+    if (isContributor) {
+      req.session.user.display_name = display_name?.trim() || req.session.user.username;
+      req.session.user.bio = bio?.trim() || '';
+      req.session.user.social_links = social_links?.trim() || '';
+      req.session.user.tip_address = tip_address?.trim() || '';
+    }
 
     res.redirect('/profile?success=1');
   });
