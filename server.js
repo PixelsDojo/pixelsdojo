@@ -315,19 +315,87 @@ app.delete('/admin/npcs/:id', requireAdmin, (req, res) => {
 });
 
 // Contributor: Get own page data as JSON (for edit form/modal)
-app.get('/dashboard/pages/:id/edit', requireAdminOrOwner, (req, res) => {
-  db.get('SELECT * FROM pages WHERE id = ?', [req.params.id], (err, page) => {
-    if (err) return res.status(500).json({ error: 'Database error' });
-    if (!page) return res.status(404).json({ error: 'Page not found' });
+// Contributor Dashboard – only own pages, only for contributors/admins
+app.get('/dashboard', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login?redirect=/dashboard');
+  }
 
-    try {
-      page.screenshots = JSON.parse(page.screenshots || '[]');
-    } catch {
-      page.screenshots = [];
+  if (!req.session.user.is_contributor && !req.session.user.is_admin) {
+    return res.status(403).send('Access denied - contributors only');
+  }
+
+  const userId = req.session.user.id;
+
+  db.all(
+    `SELECT * FROM pages 
+     WHERE author_id = ? 
+     ORDER BY updated_at DESC`,
+    [userId],
+    (err, userPages) => {
+      if (err) {
+        console.error('Dashboard pages error:', err);
+        userPages = [];
+      }
+
+      res.render('dashboard', {
+        user: req.session.user,
+        pages: userPages,
+        isAdmin: !!req.session.user.is_admin
+      });
     }
+  );
+});
 
-    res.json(page);
-  });
+// Contributor: Create new page (protected by login + contributor check)
+app.post('/dashboard/pages', (req, res, next) => {
+  if (!req.session.user || (!req.session.user.is_contributor && !req.session.user.is_admin)) {
+    return res.status(403).json({ error: 'Only contributors can create pages' });
+  }
+  next();
+}, upload.array('screenshots', 15), async (req, res) => {
+  const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
+  if (!title || !slug || !content) return res.status(400).json({ error: 'Missing required fields' });
+
+  const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+  let screenshots = [];
+  if (req.files && req.files.length > 0) {
+    try {
+      screenshots = await Promise.all(
+        req.files.map(async (file) => {
+          const processed = await sharp(file.buffer)
+            .resize({ width: 1200, height: 1200, fit: 'inside', withoutEnlargement: true })
+            .jpeg({ quality: 75 })
+            .toBuffer();
+
+          const filename = Date.now() + '-' + Math.round(Math.random() * 1E9) + '.jpg';
+          const dest = path.join('/app/data/images/pages', filename);
+          await sharp(processed).toFile(dest);
+
+          return `/images/pages/${filename}`;
+        })
+      );
+    } catch (err) {
+      console.error('Screenshot processing error on create:', err);
+    }
+  }
+
+  const screenshotsJson = JSON.stringify(screenshots);
+
+  db.run(
+    `INSERT INTO pages (slug, title, content, category, difficulty, screenshots, summary, pro_tips, author_id, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+    [cleanSlug, title, content, category || null, difficulty || 'Beginner', screenshotsJson, summary || null, pro_tips || null, req.session.user.id],
+    function (err) {
+      if (err) {
+        console.error('Page create error:', err.message);
+        return res.status(500).json({ error: 'Failed to create page' });
+      }
+      res.json({ success: true, id: this.lastID });
+      // Or: res.redirect('/dashboard');
+    }
+  );
 });
 
 // Contributor: Update own page
