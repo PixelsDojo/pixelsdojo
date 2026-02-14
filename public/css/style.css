@@ -251,61 +251,65 @@ nav a:hover {
   text-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
-/* Main buttons container – centered row */
 .main-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
   max-width: 900px;
-  margin: 2rem auto;           /* more breathing room */
+  margin: 2rem auto;
+  padding: 0 1rem;               /* breathing room on sides */
 }
 
-/* Individual button */
 .main-button {
   flex: 1 1 260px;
   max-width: 320px;
-  min-height: 160px;           /* ensures space for text */
-  padding: 1.8rem 1.2rem;
-  background: rgba(20, 20, 60, 0.92);  /* slightly more opaque for contrast */
+  min-height: 180px;             /* increased – gives more vertical space */
+  padding: 1.8rem 1.5rem;        /* more internal space */
+  background: rgba(20, 20, 60, 0.92);
   border: 2px solid #00d4ff;
   border-radius: 16px;
-  color: #ffffff !important;   /* force white text */
+  color: #ffffff;
   text-align: center;
-  backdrop-filter: blur(6px);  /* glass effect – keep but not too strong */
+  backdrop-filter: blur(6px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   transition: all 0.25s ease;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;   /* start from top so icon/text aren't centered too tight */
   align-items: center;
   position: relative;
-  overflow: visible;
+  overflow: visible !important;  /* prevent any clipping */
 }
 
-/* Hover effect */
+/* Hover */
 .main-button:hover {
   transform: translateY(-10px);
   box-shadow: 0 15px 30px rgba(0, 212, 255, 0.45);
   background: rgba(30, 30, 80, 0.98);
 }
 
-/* Text inside buttons – force visibility */
+/* Force text visibility & no truncation */
 .main-button h3,
-.main-button p,
-.main-button .icon {
+.main-button p {
   color: #ffffff !important;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7); /* stronger shadow = better contrast */
+  text-shadow: 0 1px 4px rgba(0,0,0,0.7);
   opacity: 1 !important;
   visibility: visible !important;
   margin: 0;
+  padding: 0;
+  white-space: normal !important;      /* allow wrapping – critical fix */
+  overflow: visible !important;
+  text-overflow: clip !important;      /* disable ellipsis */
+  line-height: 1.4;
+  word-break: break-word;
 }
 
 /* Title */
 .main-button h3 {
   font-size: 1.45rem;
   font-weight: bold;
-  margin: 0.8rem 0 0.4rem;
+  margin: 0.8rem 0 0.5rem;
 }
 
 /* Description */
@@ -313,12 +317,11 @@ nav a:hover {
   font-size: 1rem;
   opacity: 0.92;
   margin: 0;
-  line-height: 1.4;
 }
 
-/* Icon at top */
+/* Icon */
 .main-button .icon {
-  font-size: 3rem;
+  font-size: 3.2rem;
   margin-bottom: 0.8rem;
   line-height: 1;
 }
