@@ -514,6 +514,35 @@ app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
   });
 });
 
+// Contributor Dashboard – only own pages
+app.get('/dashboard', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login?redirect=/dashboard');
+  }
+
+  // Contributors and admins can access, but only see their own pages
+  const userId = req.session.user.id;
+
+  db.all(
+    `SELECT * FROM pages 
+     WHERE author_id = ? 
+     ORDER BY updated_at DESC`,
+    [userId],
+    (err, userPages) => {
+      if (err) {
+        console.error('Dashboard pages error:', err);
+        userPages = [];
+      }
+
+      res.render('dashboard', {
+        user: req.session.user,
+        pages: userPages,
+        isAdmin: !!req.session.user.is_admin  // so you can show extra stuff if admin
+      });
+    }
+  );
+});
+
 // ─── Admin dashboard ───
 app.get('/admin', requireAdmin, (req, res) => {
   db.all('SELECT * FROM npcs ORDER BY display_order ASC', [], (err, npcRows) => {
