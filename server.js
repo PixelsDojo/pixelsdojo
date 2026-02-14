@@ -513,9 +513,9 @@ app.post('/register', (req, res) => {
 
     // Insert new user (roles default to 0)
     db.run(
-      `INSERT INTO users (username, email, password, display_name, profile_image, is_admin, is_contributor)
-       VALUES (?, ?, ?, ?, ?, '/images/default-avatar.png', 0, 0)`,
-      [username.trim(), email.trim(), hash, display_name.trim(), bio ? bio.trim() : ''],
+      `INSERT INTO users (username, email, password, display_name, is_admin, is_contributor)
+       VALUES (?, ?, ?, ?, 0, 0)`,
+      [username.trim(), email.trim(), hash, display_name.trim()],
       function(err) {
         if (err) {
           if (err.message.includes('UNIQUE constraint failed')) {
@@ -530,6 +530,8 @@ app.post('/register', (req, res) => {
           id: this.lastID,
           username,
           display_name,
+          profile_image: '/images/default-avatar.png',
+          bio: '',
           is_admin: 0,
           is_contributor: 0
         };
@@ -557,7 +559,11 @@ app.post('/login', (req, res) => {
         req.session.user = {
           id: user.id,
           username: user.username,
-          is_admin: !!user.is_admin
+          display_name: user.display_name || user.username,
+          profile_image: user.profile_image || '/images/default-avatar.png',
+          bio: user.bio || '',
+          is_admin: !!user.is_admin,
+          is_contributor: !!user.is_contributor
         };
         return res.redirect('/');
       }
@@ -586,7 +592,7 @@ app.get('/profile', (req, res) => {
 
   // Fetch the complete user record from the database
   db.get(
-    `SELECT id, username, email, display_name, profile_image, is_admin, is_contributor 
+    `SELECT id, username, email, display_name, bio, profile_image, social_links, tip_address, is_admin, is_contributor 
      FROM users WHERE id = ?`,
     [req.session.user.id],
     (err, fullUser) => {
@@ -607,6 +613,8 @@ app.get('/profile', (req, res) => {
         bio: fullUser.bio || '',
         profile_image: fullUser.profile_image || '/images/default-avatar.png',
         email: fullUser.email || '',
+        social_links: fullUser.social_links || '',
+        tip_address: fullUser.tip_address || '',
         is_contributor: !!fullUser.is_contributor
       };
 
