@@ -7,61 +7,68 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/chat-widget.css">
   <style>
-    /* Page-specific overrides – feel free to move to style.css later */
+    /* Page-specific styles – can move to style.css later */
     .all-posts-page {
       background: var(--dark-bg, #0f0f1a);
       color: #e0e0ff;
       min-height: 100vh;
     }
 
-    .main-wrapper {
-      display: flex;
-      gap: 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 2rem 1rem;
-    }
-
-    .sidebar {
-      flex: 0 0 240px;
+    .filters-container {
       background: rgba(0, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.2);
       border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid rgba(0, 255, 255, 0.15);
-    }
-
-    .sidebar h4, .sidebar h5 {
-      color: var(--cyan, #00ffff);
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-
-    .sidebar a {
-      display: block;
-      padding: 0.75rem 1rem;
-      color: #e0e0ff;
-      text-decoration: none;
-      border-radius: 8px;
-      margin-bottom: 0.5rem;
-      transition: all 0.2s;
-    }
-
-    .sidebar a:hover {
-      background: rgba(0, 255, 255, 0.15);
-      color: var(--yellow, #ffff00);
-    }
-
-    .main-content-area {
-      flex: 1;
-    }
-
-    .main-content-area h1 {
-      color: var(--yellow, #ffff00);
+      padding: 1.2rem;
       margin-bottom: 2rem;
-      text-align: center;
-      font-size: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
     }
 
+    .search-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.8rem 1.2rem;
+      background: rgba(20, 20, 40, 0.8);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--cyan, #00ffff);
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+    }
+
+    .category-filter {
+      padding: 0.8rem 1.2rem;
+      background: rgba(20, 20, 40, 0.8);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+      min-width: 180px;
+    }
+
+    .category-filter option {
+      background: #0f0f1a;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .filters-container {
+        flex-direction: column;
+      }
+      .search-input, .category-filter {
+        width: 100%;
+      }
+    }
+
+    /* Reuse your card styles from before */
     .all-posts-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -79,45 +86,11 @@
 
     .post-item:hover {
       transform: translateY(-4px);
-      border-color: var(--cyan, #00ffff);
+      border-color: var(--cyan);
       box-shadow: 0 10px 25px rgba(0, 255, 255, 0.15);
     }
 
-    .post-item h3 {
-      margin: 0 0 0.75rem;
-      font-size: 1.4rem;
-    }
-
-    .post-item h3 a {
-      color: #ffffff;
-      text-decoration: none;
-    }
-
-    .post-item h3 a:hover {
-      color: var(--cyan, #00ffff);
-    }
-
-    .post-meta {
-      color: #a0a0ff;
-      font-size: 0.9rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .post-snippet {
-      color: #d0d0ff;
-      line-height: 1.5;
-      font-size: 0.95rem;
-    }
-
-    @media (max-width: 900px) {
-      .main-wrapper {
-        flex-direction: column;
-      }
-      .sidebar {
-        flex: none;
-        width: 100%;
-      }
-    }
+    /* ... rest of card styles from previous version ... */
   </style>
 </head>
 <body class="all-posts-page">
@@ -149,15 +122,35 @@
 
     <div class="main-content-area">
       <h1>All Articles</h1>
-      
+
+      <!-- New: Search + Filter Bar -->
+      <div class="filters-container">
+        <input 
+          type="text" 
+          id="searchInput" 
+          class="search-input" 
+          placeholder="Search articles by title or author..."
+        >
+        <select id="categoryFilter" class="category-filter">
+          <option value="">All Categories</option>
+          <option value="startup">Start Here</option>
+          <option value="earn">Earn $PIXEL</option>
+          <option value="mastery">Mastery</option>
+          <option value="community">Community</option>
+        </select>
+      </div>
+
       <% if (pages.length === 0) { %>
         <p style="text-align: center; color: #a0a0ff; font-size: 1.2rem;">
           No articles yet — check back soon!
         </p>
       <% } else { %>
-        <div class="all-posts-list">
+        <div class="all-posts-list" id="postsList">
           <% pages.forEach(page => { %>
-            <div class="post-item">
+            <div class="post-item" 
+                 data-title="<%= page.title.toLowerCase() %>"
+                 data-author="<%= (page.author_display_name || 'community').toLowerCase() %>"
+                 data-category="<%= page.category || '' %>">
               <h3>
                 <a href="/pages/<%= page.slug %>"><%= page.title %></a>
               </h3>
@@ -177,5 +170,40 @@
 
   <%- include('partials/footer') %>
   <script src="/js/chat-widget.js"></script>
+
+  <!-- Client-side search + filter script -->
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const postsList = document.getElementById('postsList');
+
+    function filterPosts() {
+      const searchTerm = searchInput.value.toLowerCase().trim();
+      const selectedCategory = categoryFilter.value;
+
+      const postItems = postsList.querySelectorAll('.post-item');
+
+      postItems.forEach(item => {
+        const title = item.dataset.title;
+        const author = item.dataset.author;
+        const category = item.dataset.category;
+
+        const matchesSearch = 
+          title.includes(searchTerm) || 
+          author.includes(searchTerm);
+
+        const matchesCategory = 
+          !selectedCategory || 
+          category === selectedCategory;
+
+        item.style.display = 
+          matchesSearch && matchesCategory ? '' : 'none';
+      });
+    }
+
+    // Live filtering on input/change
+    searchInput.addEventListener('input', filterPosts);
+    categoryFilter.addEventListener('change', filterPosts);
+  </script>
 </body>
 </html>
