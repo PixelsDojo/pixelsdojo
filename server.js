@@ -497,7 +497,7 @@ app.get('/register', (req, res) => {
 
 // POST /register - Handle new user creation
 app.post('/register', (req, res) => {
-  const { username, email, password, display_name, bio } = req.body;
+  const { username, email, password, display_name } = req.body;
 
   // Basic validation
   if (!username || !email || !password || !display_name) {
@@ -513,7 +513,7 @@ app.post('/register', (req, res) => {
 
     // Insert new user (roles default to 0)
     db.run(
-      `INSERT INTO users (username, email, password, display_name, bio, profile_image, is_admin, is_contributor)
+      `INSERT INTO users (username, email, password, display_name, profile_image, is_admin, is_contributor)
        VALUES (?, ?, ?, ?, ?, '/images/default-avatar.png', 0, 0)`,
       [username.trim(), email.trim(), hash, display_name.trim(), bio ? bio.trim() : ''],
       function(err) {
@@ -586,7 +586,7 @@ app.get('/profile', (req, res) => {
 
   // Fetch the complete user record from the database
   db.get(
-    `SELECT id, username, email, display_name, bio, profile_image, is_admin, is_contributor 
+    `SELECT id, username, email, display_name, profile_image, is_admin, is_contributor 
      FROM users WHERE id = ?`,
     [req.session.user.id],
     (err, fullUser) => {
@@ -665,12 +665,13 @@ app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
   const userId = req.session.user.id;
-  const isContributor = !!req.session.user.is_contributor;
+  const isEligible = !!req.session.user.is_admin || !!req.session.user.is_contributor;
 
   const { display_name, bio, social_links, tip_address } = req.body;
 
   let profileImagePath = req.session.user.profile_image || '/images/default-avatar.png';
 
+  // Process avatar upload (everyone can do this)
   if (req.file) {
     try {
       const processedBuffer = await sharp(req.file.buffer)
@@ -684,14 +685,14 @@ app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
 
       profileImagePath = `/images/profiles/${filename}`;
     } catch (err) {
-      console.error('Avatar processing error:', err);
+      console.error('Avatar processing error:', err.message);
     }
   }
 
   let updateQuery = `UPDATE users SET profile_image = ?`;
   let params = [profileImagePath];
 
-  if (isContributor) {
+  if (isEligible) {
     updateQuery += `, display_name = ?, bio = ?, social_links = ?, tip_address = ?`;
     params.push(
       display_name?.trim() || req.session.user.username,
@@ -706,12 +707,17 @@ app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
 
   db.run(updateQuery, params, function (err) {
     if (err) {
-      console.error('Profile update error:', err.message);
-      return res.render('profile-edit', { user: req.session.user, error: 'Save failed' });
+      console.error('Profile update DB error:', err.message);
+      return res.render('profile-edit', { 
+        user: req.session.user, 
+        error: 'Failed to save changes. Please try again.' 
+      });
     }
 
+    // Update session so changes show immediately
     req.session.user.profile_image = profileImagePath;
-    if (isContributor) {
+
+    if (isEligible) {
       req.session.user.display_name = display_name?.trim() || req.session.user.username;
       req.session.user.bio = bio?.trim() || '';
       req.session.user.social_links = social_links?.trim() || '';
