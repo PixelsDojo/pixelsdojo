@@ -864,6 +864,9 @@ app.delete('/admin/pages/:id', requireAdmin, (req, res) => {
   });
 });
 
+// Chatbot 
+app.use('/chat', chatRoutes);
+
 // Improved error handler – JSON for API calls, HTML for browser pages
 app.use((err, req, res, next) => {
   console.error('Server Error:', err.stack || err);
