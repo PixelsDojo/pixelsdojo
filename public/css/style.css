@@ -970,69 +970,197 @@ footer {
 }
 
 /* ────────────────────────────────────────────────
-   MOBILE FIXES – Stack sidebar AFTER content, no overlap
+   MOBILE & TABLET RESPONSIVE STYLES (Restored + Fixed)
 ───────────────────────────────────────────────── */
 
-@media (max-width: 768px) {
-  /* Force vertical stacking on main wrapper */
-  .page-wrapper,
-  .container,
-  .main-layout,
-  main {  /* use whatever your actual wrapper class is */
-    display: flex;
-    flex-direction: column;      /* everything stacks top-to-bottom */
-    width: 100%;
-    overflow-x: hidden;          /* no horizontal scroll issues */
-  }
+/* Main mobile/tablet breakpoint – up to 992px */
+@media (max-width: 992px) {
 
-  /* Sidebar – push it AFTER content */
+  /* Reset sidebar – no overlap, full width, no fixed positioning */
   .sidebar,
   aside,
-  .left-nav {                    /* adjust to your sidebar class */
-    order: 3;                    /* appears after content (order: 1 = first, 2 = middle, 3 = last) */
-    width: 100%;                 /* full width on mobile */
-    margin: 1.5rem 0;            /* breathing room above/below */
-    padding: 1rem;
-    background: #111;            /* optional – make it distinct */
-    border-top: 1px solid #333;  /* visual separator */
-  }
-
-  /* Main content – comes BEFORE sidebar */
-  .content,
-  main,
-  #content {
-    order: 2;                    /* after header/buttons, before sidebar */
+  .left-nav {
+    position: static !important;     /* kill any fixed/sticky */
     width: 100%;
-    margin: 0;
+    margin: 1.5rem 0 0;
+    padding: 1rem 0;
+    border: none;
+    border-bottom: 1px solid rgba(101, 0, 255, 0.3); /* your old separator */
+    background: transparent;         /* no forced bg */
+  }
+
+  /* Main wrapper – simple vertical stack, no forced order */
+  .main-wrapper,
+  .container,
+  .page-wrapper,
+  main {
+    flex-direction: column;
+    width: 100%;
     padding: 1rem;
+    gap: 1.5rem;
   }
 
-  /* If you have a first-section or intro block inside content */
-  .first-section,
-  .intro,
-  .home-content {
-    margin-top: 1rem;            /* space after buttons */
+  /* Header – logo, tagline, price widget, login/register, user nav */
+  .header-container,
+  header,
+  .top-bar {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.2rem;
+    padding: 1rem 0.8rem;
   }
 
-  /* Hide hero completely */
+  .logo-section {
+    width: 100%;
+    margin-bottom: 0.6rem;
+  }
+
+  .logo-section img {
+    height: 65px;
+    margin: 0 auto;
+  }
+
+  .logo-section h1 {
+    font-size: 2.3rem;
+    margin: 0.5rem 0 0;
+  }
+
+  /* FIXED: Tagline now wraps properly */
+  .tagline {
+    font-size: 1.1rem;
+    margin-top: 0.3rem;
+    line-height: 1.4;
+    word-break: break-word;         /* better than word-wrap */
+    hyphens: auto;
+    white-space: normal;
+    max-width: 100%;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+
+  /* Price widget + login/register + user nav – stack vertically */
+  .user-nav,
+  .right-section,
+  .price-widget,
+  .login-box,
+  .auth-links {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.8rem 0;
+  }
+
+  .user-nav a,
+  .btn,
+  .btn-small,
+  .login-button,
+  .register-button,
+  .price-widget {
+    min-width: 160px;
+    padding: 0.9rem 1.6rem;
+    font-size: 1.05rem;
+    min-height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    white-space: normal;           /* allow wrapping if long */
+  }
+
+  /* Navigation menu */
+  nav ul {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  nav li {
+    width: 100%;
+    text-align: center;
+  }
+
+  nav a {
+    padding: 0.9rem;
+    font-size: 1.1rem;
+  }
+
+  /* Hero – hide completely on mobile */
   .hero-split,
   .hero-full,
   .hero-section {
     display: none !important;
   }
 
-  /* Prevent huge empty spaces */
-  body, html {
+  /* Main buttons (the 3 cards) – stack or 2-per-row */
+  .main-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1.5rem 1rem;
+  }
+
+  .main-button {
+    width: 100%;
+    max-width: 380px;
+    padding: 2rem 1.3rem;
+  }
+
+  .main-button .icon {
+    font-size: 3.2rem;
+  }
+
+  .main-button h3 {
+    font-size: 1.5rem;
+  }
+
+  /* Content – no squish */
+  .content-section,
+  .card-grid,
+  main,
+  .first-section {
+    padding: 1.5rem 1rem;
     margin: 0;
-    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Footer */
+  .footer-row {
+    flex-direction: column;
+    gap: 1.6rem;
+    padding: 1.5rem 1rem;
+  }
+
+  /* General fixes */
+  body {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    margin: 0;
     overflow-x: hidden;
   }
 
-  /* Ensure no fixed/absolute sidebar overlaps */
-  .sidebar,
-  aside {
-    position: relative !important;  /* override any fixed/sticky */
-    top: auto !important;
-    left: auto !important;
+  html, body {
+    overflow-x: hidden;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* Finer adjustments for very small phones if needed */
+@media (max-width: 480px) {
+  .logo-section h1 {
+    font-size: 2rem;
+  }
+
+  .tagline {
+    font-size: 1rem;
+  }
+
+  .main-button {
+    padding: 1.8rem 1rem;
   }
 }
