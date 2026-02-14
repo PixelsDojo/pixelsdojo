@@ -1,22 +1,15 @@
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 :root {
     --neon-purple: #6500ff;
     --purple:     #8500ff;
-    --lime-green: #65eb05;
-    --light green: #bbff8a;
+    --cyan:       #00d4ff;
+    --cyan-light: #4dd0e1;
     --yellow:     #edff84;
     --green:      #b7eb05;
     --bg-color:   #0a0a15;
     --dark-bg:    #1a1a2e;
     --card-bg:    #0f3460;
 
-    --accent:     var(--lime-green);
+    --accent:     var(--cyan);
     --accent-glow:var(--purple);
     --highlight:  var(--yellow);
 }
@@ -32,7 +25,7 @@ body {
 /* ─── Global Elements ──────────────────────────────────────── */
 
 a {
-    color: var(--lime-green);
+    color: var(--cyan);
     text-decoration: none;
 }
 
