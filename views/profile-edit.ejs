@@ -5,71 +5,181 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Profile | Pixels Dojo</title>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/chat-widget.css">
+  <style>
+    /* Page-specific tweaks – can move to style.css later */
+    .profile-edit-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: rgba(20, 20, 40, 0.8);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(6px);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--cyan, #00ffff);
+      font-weight: 500;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 6px;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .form-group input:disabled,
+    .form-group textarea:disabled {
+      background: rgba(50, 50, 70, 0.6);
+      color: #aaa;
+      cursor: not-allowed;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+
+    .form-group small {
+      color: #aaa;
+      font-size: 0.85rem;
+    }
+
+    .current-avatar {
+      margin-top: 0.5rem;
+      border-radius: 50%;
+      border: 2px solid var(--cyan);
+    }
+
+    .btn-save {
+      background: var(--cyan);
+      color: black;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-save:hover {
+      background: var(--yellow);
+      transform: translateY(-2px);
+    }
+  </style>
 </head>
 <body>
   <%- include('partials/header') %>
 
-  <div class="container">
-    <h1>Edit Profile</h1>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/category/startup">Start Here</a></li>
+      <li><a href="/category/earn">Earn $PIXEL</a></li>
+      <li><a href="/category/mastery">Mastery</a></li>
+      <li><a href="/npcs">NPCs</a></li>
+      <li><a href="/category/community">Community</a></li>
+    </ul>
+  </nav>
 
-    <% if (locals.error) { %>
-      <p class="error"><%= error %></p>
-    <% } %>
+  <div class="main-wrapper">
+    <!-- Sidebar (same as other pages) -->
+    <aside class="sidebar">
+      <h4>Library</h4>
+      <a href="/">🏠 All Articles</a>
+      <a href="/npcs">🧑‍🤝‍🧑 NPC Gallery</a>
+      <hr>
+      <h5>Categories</h5>
+      <a href="/category/startup">Start Here</a>
+      <a href="/category/earn">Earn $PIXEL</a>
+      <a href="/category/mastery">Mastery</a>
+      <a href="/category/community">Community</a>
+    </aside>
 
-    <form action="/profile/edit" method="POST" enctype="multipart/form-data">
-      <!-- Avatar - everyone -->
-      <div class="form-group">
-        <label for="profile_image">Profile Picture</label>
-        <input type="file" id="profile_image" name="profile_image" accept="image/*">
-        <img src="<%= user.profile_image %>" alt="Current" style="max-width:120px; border-radius:50%; margin-top:0.5rem;">
-      </div>
+    <!-- Main content -->
+    <div class="main-content-area">
+      <div class="profile-edit-container">
+        <h1>Edit Profile</h1>
 
-      <!-- Display Name - contributors only -->
-      <div class="form-group">
-        <label for="display_name">Display Name</label>
-        <input type="text" id="display_name" name="display_name" 
-               value="<%= user.display_name || user.username %>" 
-               <%= user.is_contributor ? '' : 'disabled' %>>
-        <% if (!user.is_contributor) { %>
-          <small>(Only contributors can set this)</small>
+        <% if (locals.error) { %>
+          <p class="error"><%= error %></p>
         <% } %>
-      </div>
 
-      <!-- Bio - contributors only -->
-      <div class="form-group">
-        <label for="bio">Bio / About</label>
-        <textarea id="bio" name="bio" rows="4" 
-                  <%= user.is_contributor ? '' : 'disabled' %>><%= user.bio || '' %></textarea>
-        <% if (!user.is_contributor) { %>
-          <small>(Contributors only)</small>
+        <% if (locals.success) { %>
+          <p class="success">Profile updated successfully!</p>
         <% } %>
-      </div>
 
-      <!-- Social Links - contributors only -->
-      <div class="form-group">
-        <label for="social_links">Social Links (one per line: Platform | URL)</label>
-        <textarea id="social_links" name="social_links" rows="4" 
-                  <%= user.is_contributor ? '' : 'disabled' %>>
+        <form action="/profile/edit" method="POST" enctype="multipart/form-data">
+          <!-- Avatar - everyone -->
+          <div class="form-group">
+            <label for="profile_image">Profile Picture</label>
+            <input type="file" id="profile_image" name="profile_image" accept="image/*">
+            <img src="<%= user.profile_image %>" alt="Current avatar" class="current-avatar">
+          </div>
+
+          <!-- Display Name - contributors only -->
+          <div class="form-group">
+            <label for="display_name">Display Name</label>
+            <input type="text" id="display_name" name="display_name" 
+                   value="<%= user.display_name || user.username %>" 
+                   <%= user.is_contributor ? '' : 'disabled' %>>
+            <% if (!user.is_contributor) { %>
+              <small>(Only available to contributors)</small>
+            <% } %>
+          </div>
+
+          <!-- Bio - contributors only -->
+          <div class="form-group">
+            <label for="bio">Bio / About You</label>
+            <textarea id="bio" name="bio" rows="5" 
+                      <%= user.is_contributor ? '' : 'disabled' %>><%= user.bio || '' %></textarea>
+            <% if (!user.is_contributor) { %>
+              <small>(Contributors only)</small>
+            <% } %>
+          </div>
+
+          <!-- Social Links - contributors only -->
+          <div class="form-group">
+            <label for="social_links">Social Links (one per line: Platform | URL)</label>
+            <textarea id="social_links" name="social_links" rows="4" 
+                      <%= user.is_contributor ? '' : 'disabled' %>>
 <%= user.social_links ? user.social_links.split(',').join('\n') : '' %>
-        </textarea>
-        <% if (!user.is_contributor) { %>
-          <small>(Contributors only)</small>
-        <% } %>
-      </div>
+            </textarea>
+            <% if (!user.is_contributor) { %>
+              <small>(Contributors only)</small>
+            <% } %>
+          </div>
 
-      <!-- Tip Address - contributors only -->
-      <div class="form-group">
-        <label for="tip_address">Tip Address (PayPal, wallet, etc.)</label>
-        <input type="text" id="tip_address" name="tip_address" 
-               value="<%= user.tip_address || '' %>" 
-               <%= user.is_contributor ? '' : 'disabled' %>>
-        <% if (!user.is_contributor) { %>
-          <small>(Contributors only)</small>
-        <% } %>
-      </div>
+          <!-- Tip Address - contributors only -->
+          <div class="form-group">
+            <label for="tip_address">Tip / Donation Address (PayPal, wallet, etc.)</label>
+            <input type="text" id="tip_address" name="tip_address" 
+                   value="<%= user.tip_address || '' %>" 
+                   <%= user.is_contributor ? '' : 'disabled' %>>
+            <% if (!user.is_contributor) { %>
+              <small>(Contributors only)</small>
+            <% } %>
+          </div>
 
-      <button type="submit" class="btn">Save Changes</button>
-    </form>
+          <button type="submit" class="btn-save">Save Changes</button>
+        </form>
+      </div>
+    </div>
   </div>
 
   <%- include('partials/footer') %>
