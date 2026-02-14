@@ -263,7 +263,7 @@ nav a:hover {
   backdrop-filter: blur(6px);
   padding: 2rem 1.5rem;
   border-radius: 14px;
-  border: 3px solid var(--cyan);   /* lime green now */
+  border: 2px solid var(--cyan);   /* lime green now */
   text-align: center;
   color: white;
   transition: all 0.4s ease;
@@ -284,7 +284,7 @@ nav a:hover {
 
 /* Icon */
 .main-button .icon {
-  font-size: 3.5rem;
+  font-size: 2rem;
   margin-bottom: 1rem;
 }
 
