@@ -251,68 +251,76 @@ nav a:hover {
   text-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
+/* Main buttons container – centered row */
 .main-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
   max-width: 900px;
-  margin: 0 auto;
+  margin: 2rem auto;           /* more breathing room */
 }
 
+/* Individual button */
 .main-button {
   flex: 1 1 260px;
   max-width: 320px;
+  min-height: 160px;           /* ensures space for text */
   padding: 1.8rem 1.2rem;
-  background: rgba(20, 20, 60, 0.85);
+  background: rgba(20, 20, 60, 0.92);  /* slightly more opaque for contrast */
   border: 2px solid #00d4ff;
   border-radius: 16px;
-  color: white;
+  color: #ffffff !important;   /* force white text */
   text-align: center;
-  backdrop-filter: blur(4px);   /* glass effect – modern & nice */
+  backdrop-filter: blur(6px);  /* glass effect – keep but not too strong */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   transition: all 0.25s ease;
-}
-
-.main-button:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0, 212, 255, 0.35);
-  background: rgba(30, 30, 80, 0.95);
-}
-
-.main-button,
-.main-button h3,
-.main-button p {
-  color: #ffffff !important;          /* bright white for dark bg – adjust if your bg is light */
-  text-shadow: 0 1px 3px rgba(0,0,0,0.6); /* subtle shadow for readability on image/bg */
-  opacity: 1 !important;
-  visibility: visible !important;
-  z-index: 2;                         /* above any overlays */
-}
-
-.main-button {
-  position: relative;                 /* reset any absolute positioning issues */
-  overflow: visible;                  /* prevent clipping */
-  min-height: 140px;                  /* give space for text */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1.8rem 1.2rem;
-  background: rgba(20, 20, 60, 0.85) !important; /* semi-transparent dark if over image */
-  border: 2px solid #00f0ff;
-  border-radius: 16px;
+  position: relative;
+  overflow: visible;
 }
 
+/* Hover effect */
+.main-button:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 212, 255, 0.45);
+  background: rgba(30, 30, 80, 0.98);
+}
+
+/* Text inside buttons – force visibility */
+.main-button h3,
+.main-button p,
+.main-button .icon {
+  color: #ffffff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7); /* stronger shadow = better contrast */
+  opacity: 1 !important;
+  visibility: visible !important;
+  margin: 0;
+}
+
+/* Title */
 .main-button h3 {
-  font-size: 1.4rem;
-  margin: 0.8rem 0 0.4rem;
+  font-size: 1.45rem;
   font-weight: bold;
+  margin: 0.8rem 0 0.4rem;
 }
 
+/* Description */
 .main-button p {
   font-size: 1rem;
+  opacity: 0.92;
   margin: 0;
-  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* Icon at top */
+.main-button .icon {
+  font-size: 3rem;
+  margin-bottom: 0.8rem;
+  line-height: 1;
 }
 
 /* ─── Search ───────────────────────────────────────────────── */
