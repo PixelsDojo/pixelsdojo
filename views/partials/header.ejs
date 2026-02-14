@@ -23,10 +23,8 @@
         <% if (user) { %>
           <span>Welcome, <%= user.display_name || user.username %>!</span>
 
-          <!-- Profile link: only for admins -->
-          <% if (user.is_admin) { %>
-            <a href="/profile" class="btn btn-small">Profile</a>
-          <% } %>
+          <!-- Profile link: for ALL logged-in users -->
+          <a href="/profile" class="btn btn-small">Profile</a>
 
           <!-- Dashboard: for contributors AND admins -->
           <% if (user.is_contributor || user.is_admin) { %>
