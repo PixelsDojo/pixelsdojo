@@ -891,22 +891,24 @@ app.post('/admin/pages/:id/update', requireAdmin, upload.array('screenshots', 15
 
 // Public view single page (GET /pages/:slug)
 app.get('/pages/:slug', (req, res) => {
- db.get(
-  `SELECT p.*,
-          u.display_name AS author_display_name,
-          u.username AS author_username,
-          u.profile_image AS author_profile_image,
-          u.bio AS author_bio,
-          u.social_links AS author_social_links,
-          u.tip_address AS author_tip_address
-   FROM pages p
-   LEFT JOIN users u ON p.author_id = u.id
-   WHERE p.slug = ?`,
-  [req.params.slug],
-  (err, page) => {
+  db.get(
+    `SELECT p.*,
+            u.display_name AS author_display_name,
+            u.username AS author_username,
+            u.profile_image AS author_profile_image,
+            u.bio AS author_bio,
+            u.social_links AS author_social_links,
+            u.tip_address AS author_tip_address
+     FROM pages p
+     LEFT JOIN users u ON p.author_id = u.id
+     WHERE p.slug = ?`,
+    [req.params.slug],
+    (err, page) => {
+      if (err) {
         console.error('Database error viewing page:', err.message);
         return res.status(500).send('Server error');
       }
+
       if (!page) {
         return res.status(404).send('Page not found');
       }
