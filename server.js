@@ -87,6 +87,42 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+// Right after your existing requireAdmin middleware
+
+function requireAdminOrOwner(req, res, next) {
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Please log in' });
+  }
+
+  const pageId = req.params.id;
+  if (!pageId || isNaN(pageId)) {
+    return res.status(400).json({ error: 'Invalid page ID' });
+  }
+
+  db.get(
+    `SELECT author_id FROM pages WHERE id = ?`,
+    [pageId],
+    (err, row) => {
+      if (err) {
+        console.error('Ownership check DB error:', err);
+        return res.status(500).json({ error: 'Server error' });
+      }
+
+      if (!row) {
+        return res.status(404).json({ error: 'Page not found' });
+      }
+
+      const isAdmin = !!req.session.user.is_admin;
+      const isOwner = row.author_id === req.session.user.id;  // strict === assuming numeric IDs
+
+      if (!isAdmin && !isOwner) {
+        return res.status(403).json({ error: 'You can only edit or delete your own pages' });
+      }
+
+      next();
+    }
+  );
+}
 // Homepage – enhanced with categories, upvoted, viewed, etc.
 app.get('/', (req, res) => {
   // Recent posts (top 6)
@@ -270,6 +306,91 @@ app.delete('/admin/npcs/:id', requireAdmin, (req, res) => {
       return res.status(404).json({ error: 'NPC not found' });
     }
     res.json({ success: true });
+  });
+});
+
+// Contributor: Get own page data as JSON (for edit form/modal)
+app.get('/dashboard/pages/:id/edit', requireAdminOrOwner, (req, res) => {
+  db.get('SELECT * FROM pages WHERE id = ?', [req.params.id], (err, page) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (!page) return res.status(404).json({ error: 'Page not found' });
+
+    try {
+      page.screenshots = JSON.parse(page.screenshots || '[]');
+    } catch {
+      page.screenshots = [];
+    }
+
+    res.json(page);
+  });
+});
+
+// Contributor: Update own page
+app.post(
+  '/dashboard/pages/:id/update',
+  requireAdminOrOwner,
+  upload.array('screenshots', 15),
+  (req, res) => {
+    const id = req.params.id;
+    const { title, content, category, difficulty, summary, pro_tips } = req.body;
+
+    if (!title || !content) {
+      return res.status(400).json({ error: 'Title and content are required' });
+    }
+
+    // Keep original slug (same logic as admin update)
+    db.get('SELECT slug, screenshots FROM pages WHERE id = ?', [id], (err, current) => {
+      if (err || !current) {
+        return res.status(500).json({ error: 'Database error or page not found' });
+      }
+
+      const cleanSlug = current.slug;
+
+      const handleSave = (screenshotsJson) => {
+        db.run(
+          `UPDATE pages 
+           SET title = ?, slug = ?, content = ?, category = ?, difficulty = ?, 
+               screenshots = ?, summary = ?, pro_tips = ?, updated_at = CURRENT_TIMESTAMP 
+           WHERE id = ?`,
+          [title, cleanSlug, content, category || null, difficulty || 'Beginner',
+           screenshotsJson, summary || null, pro_tips || null, id],
+          function (err) {
+            if (err) {
+              console.error('Contributor update error:', err.message);
+              return res.status(500).json({ error: 'Failed to save changes' });
+            }
+            if (this.changes === 0) {
+              return res.status(404).json({ error: 'Page not found' });
+            }
+            res.json({ success: true, message: 'Page updated' });
+          }
+        );
+      };
+
+      if (req.files && req.files.length > 0) {
+        const newPaths = req.files.map(f => '/images/pages/' + f.filename);
+        // Optional: you could merge with existing screenshots here instead of replacing
+        handleSave(JSON.stringify(newPaths));
+      } else {
+        // Keep existing screenshots if no new upload
+        handleSave(current.screenshots || '[]');
+      }
+    });
+  }
+);
+
+// Contributor: Delete own page
+app.delete('/dashboard/pages/:id', requireAdminOrOwner, (req, res) => {
+  const id = req.params.id;
+  db.run('DELETE FROM pages WHERE id = ?', [id], function (err) {
+    if (err) {
+      console.error('Contributor delete error:', err);
+      return res.status(500).json({ error: 'Delete failed' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Page not found' });
+    }
+    res.json({ success: true, message: 'Page deleted' });
   });
 });
 
