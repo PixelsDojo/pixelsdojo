@@ -1,0 +1,19 @@
+name: Compress Images
+
+on:
+  pull_request:
+    paths:
+      - 'public/images/**'   # adjust if your images are in a different folder
+
+jobs:
+  compress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Compress Images
+        uses: calibreapp/image-actions@main
+        with:
+          directory: public/images   # change to match your folder
