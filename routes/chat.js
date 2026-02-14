@@ -58,7 +58,7 @@ router.post('/ask', async (req, res) => {
   }
 });
 
-// Search wiki database for relevant content
+// Search wiki database for relevant content (FIXED - removed status column)
 async function searchWikiContent(question) {
   return new Promise((resolve, reject) => {
     const searchTerms = question.toLowerCase().split(' ').filter(w => w.length > 3);
@@ -72,8 +72,7 @@ async function searchWikiContent(question) {
                ELSE 1
              END) as relevance
       FROM pages 
-      WHERE status = 'published'
-        AND (LOWER(title) LIKE ? OR LOWER(content) LIKE ?)
+      WHERE (LOWER(title) LIKE ? OR LOWER(content) LIKE ?)
       ORDER BY relevance DESC, id DESC
       LIMIT 5
     `;
