@@ -969,4 +969,70 @@ footer {
   }
 }
 
+/* ────────────────────────────────────────────────
+   MOBILE FIXES – Stack sidebar AFTER content, no overlap
+───────────────────────────────────────────────── */
 
+@media (max-width: 768px) {
+  /* Force vertical stacking on main wrapper */
+  .page-wrapper,
+  .container,
+  .main-layout,
+  main {  /* use whatever your actual wrapper class is */
+    display: flex;
+    flex-direction: column;      /* everything stacks top-to-bottom */
+    width: 100%;
+    overflow-x: hidden;          /* no horizontal scroll issues */
+  }
+
+  /* Sidebar – push it AFTER content */
+  .sidebar,
+  aside,
+  .left-nav {                    /* adjust to your sidebar class */
+    order: 3;                    /* appears after content (order: 1 = first, 2 = middle, 3 = last) */
+    width: 100%;                 /* full width on mobile */
+    margin: 1.5rem 0;            /* breathing room above/below */
+    padding: 1rem;
+    background: #111;            /* optional – make it distinct */
+    border-top: 1px solid #333;  /* visual separator */
+  }
+
+  /* Main content – comes BEFORE sidebar */
+  .content,
+  main,
+  #content {
+    order: 2;                    /* after header/buttons, before sidebar */
+    width: 100%;
+    margin: 0;
+    padding: 1rem;
+  }
+
+  /* If you have a first-section or intro block inside content */
+  .first-section,
+  .intro,
+  .home-content {
+    margin-top: 1rem;            /* space after buttons */
+  }
+
+  /* Hide hero completely */
+  .hero-split,
+  .hero-full,
+  .hero-section {
+    display: none !important;
+  }
+
+  /* Prevent huge empty spaces */
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* Ensure no fixed/absolute sidebar overlaps */
+  .sidebar,
+  aside {
+    position: relative !important;  /* override any fixed/sticky */
+    top: auto !important;
+    left: auto !important;
+  }
+}
