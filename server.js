@@ -673,20 +673,7 @@ app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
 
   // Process avatar upload (everyone can do this)
   if (req.file) {
-    try {
-      const processedBuffer = await sharp(req.file.buffer)
-        .resize(400, 400, { fit: 'cover', position: 'center' })
-        .jpeg({ quality: 80 })
-        .toBuffer();
-
-      const filename = `profile-${userId}-${Date.now()}.jpg`;
-      const destPath = path.join('/app/data/images/profiles', filename);
-      await sharp(processedBuffer).toFile(destPath);
-
-      profileImagePath = `/images/profiles/${filename}`;
-    } catch (err) {
-      console.error('Avatar processing error:', err.message);
-    }
+    profileImagePath = `/images/profiles/${req.file.filename}`;
   }
 
   let updateQuery = `UPDATE users SET profile_image = ?`;
