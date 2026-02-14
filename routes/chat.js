@@ -1,14 +1,8 @@
 const express = require('express');
-const Anthropic = require('@anthropic-ai/sdk');
 const db = require('../database');
 const router = express.Router();
 
-// Initialize Anthropic client
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY
-});
-
-// Chat endpoint
+// Chat endpoint - FREE VERSION (no API needed!)
 router.post('/ask', async (req, res) => {
   try {
     const { question } = req.body;
@@ -23,30 +17,13 @@ router.post('/ask', async (req, res) => {
     // Search wiki for relevant content
     const wikiContext = await searchWikiContent(question);
     
-    // Build context for Claude
-    const systemPrompt = buildSystemPrompt(wikiContext);
-    
-    // Call Claude API
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      system: systemPrompt,
-      messages: [{
-        role: 'user',
-        content: question
-      }]
-    });
-    
-    // Extract response
-    const answer = message.content[0].text;
-    
-    // Format response with citations
-    const formattedResponse = formatResponseWithCitations(answer, wikiContext);
+    // Generate helpful response based on search results
+    const response = generateSearchResponse(question, wikiContext);
     
     res.json({
       success: true,
-      answer: formattedResponse.text,
-      citations: formattedResponse.citations
+      answer: response.text,
+      citations: response.citations
     });
     
   } catch (error) {
@@ -58,7 +35,7 @@ router.post('/ask', async (req, res) => {
   }
 });
 
-// Search wiki database for relevant content (FIXED - removed status column)
+// Search wiki database for relevant content
 async function searchWikiContent(question) {
   return new Promise((resolve, reject) => {
     const searchTerms = question.toLowerCase().split(' ').filter(w => w.length > 3);
@@ -88,58 +65,85 @@ async function searchWikiContent(question) {
   });
 }
 
-// Build system prompt with wiki context
-function buildSystemPrompt(wikiContext) {
-  let prompt = `You are the Pixels Dojo Wiki Assistant, an AI helper for Pixels Online players.
-
-Your purpose is to help players by answering questions about Pixels Online gameplay, earning $PIXEL, game mechanics, NPCs, locations, and strategies.
-
-IMPORTANT GUIDELINES:
-- Be helpful, friendly, and concise
-- Use information from the wiki pages provided below when relevant
-- If you cite information from the wiki, mention which guide it's from
-- If the wiki doesn't have the answer, say so and offer general Pixels Online knowledge
-- Keep answers clear and actionable
-- Use bullet points for lists
-- Add relevant emoji occasionally (but not too many!)
-
-`;
-
-  if (wikiContext && wikiContext.length > 0) {
-    prompt += `\nWIKI CONTENT AVAILABLE:\n\n`;
-    wikiContext.forEach((page, index) => {
-      const excerpt = page.content.substring(0, 500).replace(/\n/g, ' ');
-      prompt += `[${index + 1}] "${page.title}" (Category: ${page.category})\n`;
-      prompt += `   Slug: ${page.slug}\n`;
-      prompt += `   Excerpt: ${excerpt}...\n\n`;
-    });
-  } else {
-    prompt += `\nNOTE: No directly relevant wiki pages found for this question. Use your general knowledge of Pixels Online to help.\n`;
-  }
-
-  return prompt;
-}
-
-// Format response with citation links
-function formatResponseWithCitations(answer, wikiContext) {
+// Generate helpful response based on search results (NO AI NEEDED!)
+function generateSearchResponse(question, wikiContext) {
   const citations = [];
+  let responseText = '';
   
-  // Extract any page references from the response
-  wikiContext.forEach((page, index) => {
-    const pageNum = index + 1;
-    if (answer.includes(`[${pageNum}]`) || answer.toLowerCase().includes(page.title.toLowerCase())) {
+  if (wikiContext && wikiContext.length > 0) {
+    // Build a helpful response from wiki content
+    responseText = `I found ${wikiContext.length} guide${wikiContext.length > 1 ? 's' : ''} that might help answer your question:\n\n`;
+    
+    wikiContext.forEach((page, index) => {
+      // Extract a relevant excerpt
+      const excerpt = extractRelevantExcerpt(question, page.content);
+      
+      responseText += `**${page.title}**\n`;
+      responseText += `${excerpt}\n`;
+      responseText += `📖 Category: ${page.category || 'General'}\n\n`;
+      
       citations.push({
         title: page.title,
         slug: page.slug,
         category: page.category
       });
-    }
-  });
+    });
+    
+    responseText += `Click any guide below to read the full article! 📚`;
+    
+  } else {
+    // No results found - provide helpful guidance
+    responseText = generateNoResultsResponse(question);
+  }
   
   return {
-    text: answer,
+    text: responseText,
     citations: citations
   };
+}
+
+// Extract relevant excerpt from page content
+function extractRelevantExcerpt(question, content) {
+  const questionWords = question.toLowerCase().split(' ').filter(w => w.length > 3);
+  
+  // Try to find a sentence containing question keywords
+  const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 20);
+  
+  for (let sentence of sentences) {
+    const lowerSentence = sentence.toLowerCase();
+    if (questionWords.some(word => lowerSentence.includes(word))) {
+      // Found relevant sentence, return it with context
+      return sentence.trim().substring(0, 200) + '...';
+    }
+  }
+  
+  // Fallback: return first 200 chars
+  return content.substring(0, 200).trim() + '...';
+}
+
+// Generate helpful response when no results found
+function generateNoResultsResponse(question) {
+  const lowerQuestion = question.toLowerCase();
+  
+  // Check what they're asking about and provide guidance
+  if (lowerQuestion.includes('earn') || lowerQuestion.includes('pixel') || lowerQuestion.includes('money')) {
+    return `I couldn't find a specific guide for that question, but here's what I know:\n\n**To earn $PIXEL tokens**, you can:\n\n• **Complete Task Board orders** (primary method)\n• **Participate in Hearth Hall** (faction competitions)\n• **Play Neon Zone arcade games** (ranked competitions)\n• **Stake your $PIXEL** (passive income)\n• **Create and sell UGCs** (advanced)\n\nCheck out the "Earn $PIXEL" category for detailed guides! 💰`;
+  }
+  
+  if (lowerQuestion.includes('npc') || lowerQuestion.includes('where') || lowerQuestion.includes('find')) {
+    return `I couldn't find a specific guide for that NPC or location, but here's how to navigate TerraVilla:\n\n• Visit the **NPC Directory** to see all NPCs and their locations\n• Use the **Map Guide** for detailed TerraVilla layout\n• Check the **Getting Started** guide for beginner orientation\n\nMost NPCs are in the main fountain square area! 🗺️`;
+  }
+  
+  if (lowerQuestion.includes('start') || lowerQuestion.includes('begin') || lowerQuestion.includes('new')) {
+    return `Welcome to Pixels Online! Here's how to get started:\n\n• Complete the **tutorial quests** with Barney, Margaret, and Jack\n• Set up your **house** (access task board there)\n• Start doing **simple task board orders** to earn coins and $PIXEL\n• Explore **TerraVilla** and meet NPCs\n\nCheck out the "Start Here" category for beginner guides! 🌱`;
+  }
+  
+  if (lowerQuestion.includes('vip') || lowerQuestion.includes('membership')) {
+    return `VIP membership gives you awesome perks:\n\n• **Infinifunnel** - Access task board from anywhere (HUGE time saver!)\n• **Sauna access** - 1000 energy 2-3 times daily\n• **Priority support** from Pixels team\n• **Exclusive areas** and benefits\n\nVIP costs $PIXEL but pays for itself in time savings! Check the Mastery category for more details. ⭐`;
+  }
+  
+  // Generic helpful response
+  return `I couldn't find a specific guide for that question yet, but here's how to find what you need:\n\n• Browse the **category pages** (Start Here, Earn $PIXEL, Mastery)\n• Check the **NPC Directory** for character locations\n• Look at **recent guides** on the homepage\n\nOr try asking your question a different way! I'm still learning. 🤖\n\nWant to contribute a guide on this topic? We'd love your help! 💜`;
 }
 
 module.exports = router;
