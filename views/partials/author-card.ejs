@@ -1,1 +1,45 @@
+<div class="author-card">
+  <img 
+    src="<%= author.profile_image || '/images/default-avatar.png' %>" 
+    alt="<%= author.display_name || author.username %>" 
+    class="author-avatar"
+  >
+  <div class="author-info">
+    <h4>
+      <a href="/profile/<%= author.username %>">
+        <%= author.display_name || author.username %>
+      </a>
+    </h4>
+
+    <% if (author.bio) { %>
+      <p class="author-bio">
+        <%= author.bio.substring(0, 120) %><%= author.bio.length > 120 ? '...' : '' %>
+      </p>
+    <% } %>
+
+    <% if (author.social_links && author.social_links.trim()) { %>
+      <div class="social-links">
+        <% 
+          const links = author.social_links.split('\n').map(l => l.trim()).filter(l => l);
+          links.forEach(linkLine => {
+            const [name, url] = linkLine.split('|').map(s => s.trim());
+            if (name && url) {
+        %>
+          <a href="<%= url %>" target="_blank" rel="noopener noreferrer" class="social-link">
+            <%= name %>
+          </a>
+        <% }}); %>
+      </div>
+    <% } %>
+
+    <% if (author.tip_address && author.tip_address.trim()) { %>
+      <div class="tip-section">
+        <a href="https://paypal.me/<%= author.tip_address %>" target="_blank" rel="noopener" class="btn-tip">
+          Tip <%= author.display_name || author.username %> →
+        </a>
+        <!-- Optional: add more tip options later, e.g. crypto QR or link -->
+      </div>
+    <% } %>
+  </div>
+</div>
 
