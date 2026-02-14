@@ -160,35 +160,116 @@ app.get('/', (req, res) => {
   });
 });
 
-// NPCs list
-app.get('/npcs', (req, res) => {
-  const sort = req.query.sort || 'display_order';  // default
-  let orderBy = 'display_order ASC';
+// ─── NPCs ───────────────────────────────────────────────────────────────
 
-  // Valid sort options – prevent SQL injection
-  if (sort === 'name') {
-    orderBy = 'name ASC';
+// Public list of NPCs – default alphabetical by name
+app.get('/npcs', (req, res) => {
+  const sort = req.query.sort || 'name';  // default to alphabetical
+
+  let orderBy = 'name ASC';
+
+  // Valid sort options (safe against injection)
+  if (sort === 'name-desc') {
+    orderBy = 'name DESC';
   } else if (sort === 'location') {
     orderBy = 'location ASC';
-  } else if (sort === 'name-desc') {
-    orderBy = 'name DESC';
   } else if (sort === 'location-desc') {
     orderBy = 'location DESC';
+  } else if (sort === 'order') {  // allow manual order if needed
+    orderBy = 'display_order ASC, name ASC';
   }
-  // you can add more later (e.g. 'difficulty', 'type')
 
   const query = `SELECT * FROM npcs ORDER BY ${orderBy}`;
 
   db.all(query, [], (err, rows) => {
     if (err) {
-      console.error('NPC query error:', err);
+      console.error('NPC list error:', err);
       return res.status(500).send('Database error');
     }
+
     res.render('npcs', {
       npcs: rows,
       user: req.session.user || null,
-      currentSort: sort   // pass to view so we can highlight active sort
+      currentSort: sort
     });
+  });
+});
+
+// Admin: Create new NPC
+app.post('/admin/npcs', requireAdmin, upload.single('image'), (req, res) => {
+  const { name, location, description, display_order } = req.body;
+
+  if (!name || name.trim() === '') {
+    return res.status(400).json({ error: 'NPC name is required' });
+  }
+
+  let imagePath = null;
+  if (req.file) {
+    imagePath = `/images/npcs/${req.file.filename}`;
+  }
+
+  const order = parseInt(display_order) || 999;
+
+  db.run(
+    `INSERT INTO npcs (name, location, description, image, display_order, created_at)
+     VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+    [name.trim(), location?.trim() || null, description?.trim() || null, imagePath, order],
+    function (err) {
+      if (err) {
+        console.error('NPC create error:', err.message);
+        return res.status(500).json({ error: 'Failed to create NPC' });
+      }
+      res.json({ success: true, id: this.lastID });
+      // Alternative: res.redirect('/admin');
+    }
+  );
+});
+
+// Admin: Update existing NPC
+app.post('/admin/npcs/:id/update', requireAdmin, upload.single('image'), (req, res) => {
+  const id = req.params.id;
+  const { name, location, description, display_order } = req.body;
+
+  if (!name || name.trim() === '') {
+    return res.status(400).json({ error: 'NPC name is required' });
+  }
+
+  let query = `UPDATE npcs SET name = ?, location = ?, description = ?, display_order = ?`;
+  let params = [name.trim(), location?.trim() || null, description?.trim() || null, parseInt(display_order) || 999];
+
+  if (req.file) {
+    const imagePath = `/images/npcs/${req.file.filename}`;
+    query += `, image = ?`;
+    params.push(imagePath);
+  }
+
+  query += ` WHERE id = ?`;
+  params.push(id);
+
+  db.run(query, params, function (err) {
+    if (err) {
+      console.error('NPC update error:', err.message);
+      return res.status(500).json({ error: 'Failed to update NPC' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'NPC not found' });
+    }
+    res.json({ success: true });
+    // Alternative: res.redirect('/admin');
+  });
+});
+
+// Admin: Delete NPC (optional – add if you want delete functionality)
+app.delete('/admin/npcs/:id', requireAdmin, (req, res) => {
+  db.run('DELETE FROM npcs WHERE id = ?', [req.params.id], function (err) {
+    if (err) {
+      console.error('NPC delete error:', err.message);
+      return res.status(500).json({ error: 'Delete failed' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'NPC not found' });
+    }
+    res.json({ success: true });
   });
 });
 
