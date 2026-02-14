@@ -8,12 +8,16 @@
       </div>
     </div>
 
-  <!-- Right side – price + user nav inline -->
-<div class="right-section" style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.8rem;">
-  <!-- Price widget on top -->
-  <div class="price-widget" style="font-size: 0.85rem; padding: 0.5rem 1rem; text-align: right; min-width: 180px; max-width: 220px">
+  <div class="right-section" style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.8rem;">
+  <!-- Price widget on top – make it compact -->
+  <div class="price-widget-compact">
     <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
-    <coingecko-coin-price-marquee-widget coin-ids="pixels" currency="usd" background-color="transparent" font-color="#edff84"></coingecko-coin-price-marquee-widget>
+    <coingecko-coin-price-marquee-widget 
+      coin-ids="pixels" 
+      currency="usd" 
+      background-color="transparent" 
+      font-color="#edff84">
+    </coingecko-coin-price-marquee-widget>
   </div>
 
   <!-- User buttons below -->
