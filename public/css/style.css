@@ -976,6 +976,23 @@ footer {
 /* Main mobile/tablet breakpoint – up to 992px */
 @media (max-width: 992px) {
 
+/* Make ALL images responsive on mobile – shrink to fit screen/container */
+img {
+  max-width: 100% !important;     /* never wider than parent/screen */
+  height: auto !important;        /* keep aspect ratio */
+  display: block;                 /* remove bottom gap if any */
+  margin: 0 auto;                 /* center if needed */
+}
+
+/* Extra: if images are in cards/sections, ensure containers allow shrinking */
+.content-section img,
+.card-grid img,
+main img,
+.page-content img {
+  width: 100%;                    /* force fill container width */
+  object-fit: contain;            /* or 'cover' if you want cropping instead of letterboxing */
+}
+    
   /* Reset sidebar – no overlap, full width, no fixed positioning */
   .sidebar,
   aside,
@@ -1125,6 +1142,50 @@ footer {
     width: 100%;
     box-sizing: border-box;
   }
+
+   /* Login/Register form – make bigger, full-width, touch-friendly */
+.login-form,                    /* common classes – adjust to yours, e.g. .login-page, .auth-form */
+.register-form,
+.auth-container,
+#login-form,
+.session-form {
+  width: 90% !important;        /* almost full width, some breathing room */
+  max-width: 420px !important;  /* bigger than before */
+  margin: 2rem auto !important; /* center with more top/bottom space */
+  padding: 2rem 1.5rem !important;
+  box-sizing: border-box;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"],
+.login-form input[type="email"],
+.register-form input,
+.auth-container input {
+  width: 100% !important;
+  padding: 1.2rem 1rem !important; /* taller inputs */
+  font-size: 1.1rem !important;
+  margin-bottom: 1.2rem !important;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.login-form button,
+.register-form button,
+.auth-button,
+#login-btn {
+  width: 100% !important;
+  padding: 1.2rem !important;
+  font-size: 1.15rem !important;
+  min-height: 54px !important;    /* good touch target size */
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+/* If login is in a modal/popup */
+.modal-content .login-form {
+  padding: 1.5rem;
+  width: 95%;
+} 
 
   /* Footer */
   .footer-row {
