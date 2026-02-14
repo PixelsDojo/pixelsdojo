@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dashboard - Pixels Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <div class="container" style="max-width: 1200px; margin: 3rem auto; padding: 0 1rem;">
+    <h1 style="color: var(--yellow); text-align: center;">My Dashboard</h1>
+    <p style="text-align: center; color: #b8b8b8;">Add new guides or manage the ones you've created.</p>
+
+    <div style="margin: 2rem 0; text-align: center;">
+      <a href="/admin/pages/new" class="btn" style="background: var(--cyan); color: black; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: bold;">
+        + Create New Guide
+      </a>
+    </div>
+
+    <% if (pages.length > 0) { %>
+      <h2 style="color: var(--cyan);">Your Guides (<%= pages.length %>)</h2>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+        <thead style="background: rgba(0,255,255,0.1);">
+          <tr>
+            <th style="padding: 12px; text-align: left;">Title</th>
+            <th style="padding: 12px; text-align: left;">Category</th>
+            <th style="padding: 12px; text-align: left;">Last Updated</th>
+            <th style="padding: 12px; text-align: center;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% pages.forEach(page => { %>
+            <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
+              <td style="padding: 12px;"><%= page.title %></td>
+              <td style="padding: 12px;"><%= page.category || 'None' %></td>
+              <td style="padding: 12px;"><%= new Date(page.updated_at).toLocaleDateString() %></td>
+              <td style="padding: 12px; text-align: center;">
+                <a href="/pages/<%= page.slug %>" style="color: var(--cyan); margin-right: 1rem;">View</a>
+                <a href="/admin/pages/<%= page.id %>/edit" style="color: var(--yellow); margin-right: 1rem;">Edit</a>
+                <form action="/admin/pages/<%= page.id %>" method="POST" style="display: inline;">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button type="submit" onclick="return confirm('Delete this guide?');" style="background: #ff4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">
+                    Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p style="text-align: center; color: #b8b8b8; margin-top: 3rem;">You haven't created any guides yet. Click above to start!</p>
+    <% } %>
+  </div>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
