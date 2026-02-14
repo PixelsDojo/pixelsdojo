@@ -247,8 +247,8 @@ app.post('/admin/npcs', requireAdmin, upload.single('image'), (req, res) => {
   const order = parseInt(display_order) || 999;
 
   db.run(
-    `INSERT INTO npcs (name, location, description, image, display_order, created_at)
-     VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+    `INSERT INTO npcs (name, location, description, image_path, display_order, created_at)
+VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
     [name.trim(), location?.trim() || null, description?.trim() || null, imagePath, order],
     function (err) {
       if (err) {
@@ -271,11 +271,16 @@ app.post('/admin/npcs/:id/update', requireAdmin, upload.single('image'), (req, r
   }
 
   let query = `UPDATE npcs SET name = ?, location = ?, description = ?, display_order = ?`;
-  let params = [name.trim(), location?.trim() || null, description?.trim() || null, parseInt(display_order) || 999];
+  let params = [
+    name.trim(),
+    location?.trim() || null,
+    description?.trim() || null,
+    parseInt(display_order) || 999
+  ];
 
   if (req.file) {
     const imagePath = `/images/npcs/${req.file.filename}`;
-    query += `, image = ?`;
+    query += `, image_path = ?`;
     params.push(imagePath);
   }
 
