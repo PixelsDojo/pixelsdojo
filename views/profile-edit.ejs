@@ -7,7 +7,85 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/chat-widget.css">
   <style>
-    /* ... your existing styles ... */
+    .profile-edit-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: rgba(20, 20, 40, 0.8);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(6px);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--cyan, #00ffff);
+      font-weight: 500;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 6px;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .form-group input:disabled,
+    .form-group textarea:disabled {
+      background: rgba(50, 50, 70, 0.6);
+      color: #aaa;
+      cursor: not-allowed;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+
+    .form-group small {
+      color: #aaa;
+      font-size: 0.85rem;
+      display: block;
+      margin-top: 0.3rem;
+    }
+
+    .current-avatar {
+      margin-top: 0.5rem;
+      border-radius: 50%;
+      border: 2px solid var(--cyan);
+      max-width: 120px;
+    }
+
+    .btn-save {
+      background: var(--cyan);
+      color: black;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-save:hover {
+      background: var(--yellow);
+      transform: translateY(-2px);
+    }
+
+    .error { color: #ff4444; margin-bottom: 1rem; }
+    .success { color: #65eb05; margin-bottom: 1rem; }
   </style>
 </head>
 <body>
@@ -25,12 +103,10 @@
   </nav>
 
   <div class="main-wrapper">
-    <!-- Sidebar -->
     <aside class="sidebar">
-      <!-- ... your sidebar content ... -->
+      <!-- your sidebar content -->
     </aside>
 
-    <!-- Main content -->
     <div class="main-content-area">
       <div class="profile-edit-container">
         <h1>Edit Profile</h1>
@@ -39,15 +115,21 @@
           <p class="error"><%= error %></p>
         <% } %>
 
+        <% if (locals.success) { %>
+          <p class="success">Profile updated successfully!</p>
+        <% } %>
+
         <form action="/profile/edit" method="POST" enctype="multipart/form-data">
-          <!-- Avatar - always editable -->
+          <!-- Profile Picture – always editable -->
           <div class="form-group">
             <label for="profile_image">Profile Picture</label>
             <input type="file" id="profile_image" name="profile_image" accept="image/*">
-            <img src="<%= user.profile_image %>" alt="Current avatar" class="current-avatar">
+            <% if (user.profile_image) { %>
+              <img src="<%= user.profile_image %>" alt="Current avatar" class="current-avatar">
+            <% } %>
           </div>
 
-          <!-- Display Name - admin OR contributor -->
+          <!-- Display Name – admin OR contributor -->
           <div class="form-group">
             <label for="display_name">Display Name</label>
             <input type="text" id="display_name" name="display_name" 
@@ -58,17 +140,19 @@
             <% } %>
           </div>
 
-          <!-- Bio - admin OR contributor -->
+          <!-- Bio – admin OR contributor -->
           <div class="form-group">
             <label for="bio">Bio / About You</label>
             <textarea id="bio" name="bio" rows="5" 
-                      <%= (user.is_admin || user.is_contributor) ? '' : 'disabled' %>><%= user.bio || '' %></textarea>
+                      <%= (user.is_admin || user.is_contributor) ? '' : 'disabled' %>>
+<%= user.bio || '' %>
+            </textarea>
             <% if (!(user.is_admin || user.is_contributor)) { %>
               <small>(Contributors and admins only)</small>
             <% } %>
           </div>
 
-          <!-- Social Links - admin OR contributor -->
+          <!-- Social Links – admin OR contributor -->
           <div class="form-group">
             <label for="social_links">Social Links (one per line: Platform | URL)</label>
             <textarea id="social_links" name="social_links" rows="4" 
@@ -80,7 +164,7 @@
             <% } %>
           </div>
 
-          <!-- Tip Address - admin OR contributor -->
+          <!-- Tip Address – admin OR contributor -->
           <div class="form-group">
             <label for="tip_address">Tip / Donation Address (PayPal, wallet, etc.)</label>
             <input type="text" id="tip_address" name="tip_address" 
