@@ -8,9 +8,9 @@
       </div>
     </div>
 
+   <!-- Price widget on top – make it compact -->
   <div class="right-section" style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.8rem;">
-  <!-- Price widget on top – make it compact -->
-  <div class="price-widget-compact">
+  <div class="price-widget">
     <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
     <coingecko-coin-price-marquee-widget 
       coin-ids="pixels" 
@@ -20,8 +20,8 @@
     </coingecko-coin-price-marquee-widget>
   </div>
 
-  <!-- User buttons below -->
-  <div class="user-nav" style="display: flex; gap: 0.8rem; flex-wrap: nowrap;">
+  </div>
+   <div class="user-nav" style="display: flex; gap: 0.8rem; flex-wrap: nowrap;">
         <% if (user) { %>
           <span>Welcome, <%= user.display_name || user.username %>!</span>
           <a href="/profile" class="btn btn-small">Profile</a>
