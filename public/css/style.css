@@ -198,94 +198,88 @@ nav a:hover {
 
 /* Hero section overall */
 
-.hero-split {
-  display: flex;
-  align-items: center;          /* vertically center content/image */
-  justify-content: space-between;
+.hero-full {
+  position: relative;
   width: 100%;
-  max-width: 1400px;            /* or whatever your content max is */
-  margin: 0 auto;               /* center if needed */
-  padding: 2rem 1rem;           /* breathing room */
-  gap: 2rem;                    /* space between left/right */
+  min-height: 500px;          /* adjust to control overall height */
+  max-height: 700px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
-.hero-content {
-  flex: 1 1 50%;                /* takes ~half, flexible */
-  max-width: 600px;             /* prevents stretching too wide */
+.hero-bg {
+  position: absolute;
+  inset: 0;                   /* fill entire section */
+  z-index: 1;
 }
 
-.hero-right {
-  flex: 1 1 50%;
-  max-width: 600px;             /* cap width so it's not massive */
-  height: 300px;                /* fixed height – adjust to your liking (keeps it "not too tall") */
-  overflow: hidden;             /* crops if needed */
-  border-radius: 12px;          /* optional nice look */
-}
-
-.hero-image {
+.hero-bg-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;            /* fills area, crops edges, keeps aspect ratio */
-  object-position: center;      /* focus on center – change to 'top' if text/logo is top-heavy */
+  object-fit: cover;
+  object-position: center;
   display: block;
 }
 
+.hero-overlay {               /* optional – makes text pop more */
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%);
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;                 /* above background & overlay */
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  color: white;
+}
+
 .hero-title {
-    color: var(--yellow);
-    font-size: 3.2rem;
-    text-shadow: 0 0 16px rgba(237,255,132,0.7);
-    margin-bottom: 0.8rem;
-    text-align: center;
+  font-size: 3.8rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.7);
 }
 
 .hero-tagline {
-    color: var(--green-light);
-    font-size: 1.4rem;
-    text-align: center;
-    margin-bottom: 3rem;
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
 .main-buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    max-width: 1100px;
-    margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .main-button {
-    background: rgba(15,52,96,0.75);
-    backdrop-filter: blur(6px);           /* glass effect – remove if you don't like it */
-    padding: 2rem 1.5rem;                 /* smaller than before */
-    border-radius: 14px;
-    border: 3px solid var(--cyan);
-    text-align: center;
-    color: white;
-    transition: all 0.4s ease;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  flex: 1 1 260px;
+  max-width: 320px;
+  padding: 1.8rem 1.2rem;
+  background: rgba(20, 20, 60, 0.85);
+  border: 2px solid #00d4ff;
+  border-radius: 16px;
+  color: white;
+  text-align: center;
+  backdrop-filter: blur(4px);   /* glass effect – modern & nice */
+  transition: all 0.25s ease;
 }
 
 .main-button:hover {
-    transform: translateY(-10px) scale(1.04);
-    border-color: var(--purple);
-    box-shadow: 0 16px 48px rgba(133,0,255,0.5);
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 212, 255, 0.35);
+  background: rgba(30, 30, 80, 0.95);
 }
 
-.main-button .icon {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-}
 
-.main-button h3 {
-    color: var(--yellow);
-    font-size: 1.6rem;
-    margin-bottom: 0.6rem;
-}
-
-.main-button p {
-    font-size: 1.05rem;
-    color: #d0d0ff;
-}
 
 /* ─── Search ───────────────────────────────────────────────── */
 
@@ -742,162 +736,171 @@ footer {
 
 
 
-/* ─── Mobile Responsive (992px and below) ──────────────────────────────────────── */
+    /* ────────────────────────────────────────────────
+   MOBILE & TABLET RESPONSIVE STYLES
+───────────────────────────────────────────────── */
 
-@media (max-width: 992px) {
-
-    /* Main layout stacks vertically */
-    .main-wrapper {
-        flex-direction: column;
-        padding: 1rem;
-        gap: 1.5rem;
-    }
-
-    .sidebar {
-        position: static;
-        width: 100%;
-        border: none;
-        border-bottom: 1px solid rgba(101, 0, 255, 0.3); /* subtle separator */
-        padding-bottom: 1rem;
-    }
-
-    /* Header – full vertical stack on mobile */
-    /* Mobile stacking – content on top, image below */
+/* Main mobile breakpoint – phones & small tablets */
 @media (max-width: 768px) {
-  .hero-split {
+  /* Header / logo area */
+  .logo-section {
+    width: 100%;
+    margin-bottom: 0.6rem;
+  }
+
+  .logo-section img {
+    height: 65px;
+    margin: 0 auto;
+  }
+
+  .logo-section h1 {
+    font-size: 2.3rem;
+    margin: 0.5rem 0 0;
+  }
+
+  .tagline {
+    font-size: 1.1rem;
+    margin-top: 0.3rem;
+    line-height: 1.4;              /* better readability */
+    word-wrap: break-word;         /* force wrap on long words */
+    hyphens: auto;                 /* nicer hyphenation if browser supports */
+    white-space: normal;           /* allow normal wrapping */
+    max-width: 100%;               /* prevent overflow */
+  }
+
+  /* Login / user-nav box – make bigger and more touch-friendly */
+  .user-nav,
+  .right-section,
+  .login-box,                    /* add .login-box if you have a specific class */
+  .price-widget {
     flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 1.2rem;                   /* more breathing room */
   }
-  
-  .hero-right {
-    min-height: 50vh;         /* adjust as needed */
-    order: 2;                 /* image below text on mobile */
+
+  .user-nav a,
+  .btn,
+  .btn-small,
+  .login-button,                 /* add if you have specific login button class */
+  .price-widget {
+    min-width: 180px;              /* wider than before */
+    padding: 1rem 2rem;            /* bigger padding = larger tap area */
+    font-size: 1.15rem;            /* slightly larger text */
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 12px;           /* softer corners if you like */
+    min-height: 54px;              /* consistent height for touch targets */
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  
-  .hero-content {
-    order: 1;
-    padding: 3rem 1.5rem;
+
+  /* Navigation menu */
+  nav ul {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  nav li {
+    width: 100%;
+    text-align: center;
+  }
+
+  nav a {
+    padding: 0.9rem;
+    font-size: 1.1rem;
+  }
+
+  /* Hero section – stack content over image */
+  .hero-split,
+  .hero-full {
+    flex-direction: column;
+    padding: 1.8rem 1.2rem;
+    min-height: auto;
+    margin: 1.5rem 0;
+  }
+
+  .hero-content,
+  .hero-left {
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 2.6rem;
+  }
+
+  .hero-tagline {
+    font-size: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .main-buttons {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .main-button {
+    padding: 2rem 1.3rem;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .main-button .icon {
+    font-size: 3.2rem;
+  }
+
+  .main-button h3 {
+    font-size: 1.5rem;
+  }
+
+  /* Footer */
+  .footer-row {
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  /* General content readability */
+  body {
+    font-size: 1.05rem;
+  }
+
+  .content-section,
+  .card-grid {
+    padding: 1.5rem 1rem;
   }
 }
-    .logo-section {
-        width: 100%;
-        margin-bottom: 0.6rem;
-    }
 
-    .logo-section img {
-        height: 65px;               /* smaller but still prominent */
-        margin: 0 auto;
-    }
-
-    .logo-section h1 {
-        font-size: 2.3rem;          /* readable on small screens */
-        margin: 0.5rem 0 0;
-    }
-
-    .tagline {
-        font-size: 1.1rem;
-        margin-top: 0.3rem;
-    }
-
-    /* User nav / buttons / price widget – stack and center */
-    .user-nav,
-    .right-section,
-    .price-widget {
-        flex-direction: column;
-        width: 100%;
-        align-items: center;
-        gap: 0.9rem;
-    }
-
-    .user-nav a,
-    .btn,
-    .btn-small,
-    .price-widget {
-        min-width: 140px;
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-        text-align: center;
-        white-space: nowrap;
-    }
-
-    /* Navigation menu stacks */
-    nav ul {
-        flex-direction: column;
-        gap: 0.8rem;
-    }
-
-    nav li {
-        width: 100%;
-        text-align: center;
-    }
-
-    nav a {
-        padding: 0.9rem;
-        font-size: 1.1rem;          /* slightly larger for touch */
-    }
-
-    /* Hero area – stack content, adjust padding */
-    .hero-split {
-        flex-direction: column;
-        padding: 1.8rem 1.2rem;
-        min-height: auto;           /* let content determine height */
-        margin: 1.5rem 0;
-    }
-
-    .hero-content {
-        padding: 2rem 1rem;
-    }
-
-    .hero-title {
-        font-size: 2.6rem;
-    }
-
-    .hero-tagline {
-        font-size: 1.25rem;
-        margin-bottom: 2.5rem;
-    }
-
-    .main-buttons {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-
-    .main-button {
-        padding: 2rem 1.3rem;
-    }
-
-    .main-button .icon {
-        font-size: 3.2rem;
-    }
-
-    .main-button h3 {
-        font-size: 1.5rem;
-    }
-
-    /* Footer – already stacking, just refine spacing */
-    .footer-row {
-        flex-direction: column;
-        gap: 1.6rem;
-    }
-
-    /* General readability tweaks */
-    body {
-        font-size: 1.05rem;
-    }
-
-    .content-section,
-    .card-grid {
-        padding: 1.5rem 1rem;
-    }
-}
-
-/* Mobile adjustment – reduce padding if needed */
+/* Slightly larger tablets / narrow laptops */
 @media (max-width: 992px) {
   .npc-page-content {
     padding: 1.2rem;
   }
-  
-  .npc-grid, .npc-list {
+
+  .npc-grid,
+  .npc-list {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 1.2rem;
+  }
+
+  /* Optional: finer hero tweaks */
+  .hero-split,
+  .hero-full {
+    padding: 2rem 1.5rem;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+  }
+
+  /* Make login elements slightly larger on tablets too */
+  .user-nav a,
+  .btn,
+  .btn-small,
+  .login-button {
+    padding: 0.9rem 1.8rem;
+    font-size: 1.1rem;
   }
 }
