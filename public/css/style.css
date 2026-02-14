@@ -195,36 +195,50 @@ nav a:hover {
 
 /* ─── Hero Section ─────────────────────────────────────────── */
 
+/* Hero section overall */
 .hero-split {
-    position: relative;
-    min-height: 500px;         
-    background-image: url('/images/banner_with_pixels_dojo_in_white.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 16px;
-    overflow: hidden;
-    margin: 2.5rem 0;
-    border: 2px solid var(--neon-purple);
-    box-shadow: 0 12px 48px rgba(101,0,255,0.3);
+  display: flex;              /* or grid if you prefer */
+  flex-direction: row;        /* side-by-side on desktop */
+  flex-wrap: wrap;            /* stack on small screens */
+  min-height: 60vh;           /* or whatever height feels good */
+  width: 100%;
+  position: relative;
+  overflow: hidden;           /* prevents image overflow */
 }
 
-/* Dark overlay for readability */
-.hero-split::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(10,10,21,0.65), rgba(15,52,96,0.75));
-    z-index: 1;
-}
-
+/* Content side */
 .hero-content {
-    position: relative;
-    z-index: 2;
-    padding: 3rem 2.5rem;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  flex: 1;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;                 /* above image if needed */
+}
+
+/* Image side */
+.hero-right {
+  flex: 1;
+  position: relative;
+  min-height: 400px;          /* fallback height for mobile */
+  overflow: hidden;           /* crops nicely */
+}
+
+/* The hero image itself – this is the key part */
+.hero-image {
+  width: 100%;                /* fills container width */
+  height: 100%;               /* fills container height */
+  object-fit: cover;          /* crops to fill without distortion */
+  object-position: center;    /* centers the image */
+  display: block;             /* removes bottom gap */
+}
+
+/* Overlay (if you want text readable on image) */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4); /* semi-transparent dark overlay */
+  z-index: 1;
 }
 
 .hero-title {
@@ -759,14 +773,22 @@ footer {
     }
 
     /* Header – full vertical stack on mobile */
-    .header-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 1.2rem;
-        padding: 1rem 0.8rem;
-    }
-
+    /* Mobile stacking – content on top, image below */
+@media (max-width: 768px) {
+  .hero-split {
+    flex-direction: column;
+  }
+  
+  .hero-right {
+    min-height: 50vh;         /* adjust as needed */
+    order: 2;                 /* image below text on mobile */
+  }
+  
+  .hero-content {
+    order: 1;
+    padding: 3rem 1.5rem;
+  }
+}
     .logo-section {
         width: 100%;
         margin-bottom: 0.6rem;
