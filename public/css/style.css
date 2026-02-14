@@ -769,6 +769,204 @@ footer {
 .dislike-btn::before { content: '👎 '; }
 
 
+/* ────────────────────────────────────────────────
+   MOBILE & TABLET RESPONSIVE STYLES (Cleaned & Fixed)
+───────────────────────────────────────────────── */
 
+/* Main mobile breakpoint – phones & small tablets */
+@media (max-width: 768px) {
+  /* Hide hero completely – no image, no buttons from hero if separate */
+  .hero-split,
+  .hero-full,
+  .hero-content,
+  .hero-left,
+  .hero-right,
+  .main-buttons {  /* if main-buttons are inside hero, hide; otherwise adjust below */
+    display: none !important;
+  }
+
+  /* Header / logo + tagline – center and compact */
+  .logo-section {
+    width: 100%;
+    margin: 1rem 0 0.8rem;
+    text-align: center;
+  }
+
+  .logo-section img {
+    height: 60px;               /* slightly smaller for mobile */
+    margin: 0 auto;
+  }
+
+  .logo-section h1 {
+    font-size: 2.2rem;
+    margin: 0.4rem 0 0;
+  }
+
+  .tagline {
+    font-size: 1.05rem;
+    margin: 0.4rem 0 1.2rem;
+    line-height: 1.35;
+    word-wrap: break-word;
+    hyphens: auto;
+    white-space: normal;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Top bar items: price widget + login/register + user nav – stack or row */
+  .top-bar,                    /* assume wrapper class; adjust if different */
+  .user-nav,
+  .right-section,
+  .price-widget,
+  .login-box,
+  .auth-links {                /* add classes like .login, .register if needed */
+    flex-direction: column;    /* stack by default */
+    width: 100%;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.8rem 0;
+  }
+
+  /* Optional: if you want price widget + login/register side-by-side on slightly larger phones */
+  @media (min-width: 480px) and (max-width: 768px) {
+    .top-bar,
+    .user-nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem;
+    }
+  }
+
+  .user-nav a,
+  .btn,
+  .btn-small,
+  .login-button,
+  .register-button,
+  .price-widget {
+    min-width: 160px;
+    width: auto;
+    padding: 0.9rem 1.6rem;
+    font-size: 1.05rem;
+    min-height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+  }
+
+  /* Navigation menu – full-width stack */
+  nav ul {
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 0 1rem;
+  }
+
+  nav li {
+    width: 100%;
+  }
+
+  nav a {
+    padding: 0.8rem;
+    font-size: 1.05rem;
+    text-align: center;
+  }
+
+  /* 3 main buttons – horizontal row if space, else stack */
+  .main-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+    margin: 1rem 0;
+  }
+
+  .main-button {
+    flex: 1 1 45%;               /* 2 per row if possible */
+    max-width: 48%;
+    min-width: 140px;
+    padding: 1.4rem 1rem;
+    font-size: 1rem;
+  }
+
+  .main-button .icon {
+    font-size: 2.8rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .main-button h3 {
+    font-size: 1.3rem;
+    margin: 0.4rem 0;
+  }
+
+  .main-button p {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  /* Sidebar (left nav) – full-width below buttons */
+  aside.sidebar,               /* adjust selector to your sidebar/nav class */
+  .left-nav {
+    width: 100%;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    order: 4;                    /* push after buttons/content if using flex on parent */
+  }
+
+  /* Main content */
+  .content-section,
+  .card-grid,
+  main {
+    padding: 1.2rem 1rem;
+    margin: 0;
+  }
+
+  /* Footer */
+  .footer-row {
+    flex-direction: column;
+    gap: 1.4rem;
+    padding: 1.5rem 1rem;
+  }
+
+  /* General tweaks – prevent huge scrolling */
+  body {
+    font-size: 1rem;             /* base readable size */
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  html, body {
+    overflow-x: hidden;          /* no horizontal scroll madness */
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* Tablets / narrow laptops – lighter adjustments */
+@media (max-width: 992px) {
+  .npc-page-content {
+    padding: 1.2rem;
+  }
+
+  .npc-grid,
+  .npc-list {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .main-button {
+    flex: 1 1 30%;               /* allow 3 in a row on tablets if space */
+    max-width: 32%;
+  }
+
+  .user-nav,
+  .top-bar {
+    gap: 1rem;
+  }
+}
 
 
