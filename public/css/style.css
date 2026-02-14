@@ -32,7 +32,7 @@ body {
 /* ─── Global Elements ──────────────────────────────────────── */
 
 a {
-    color: var(--cyan);
+    color: var(--green);
     text-decoration: none;
 }
 
@@ -114,6 +114,7 @@ header {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
     min-width: 180px;
+    max-width: 220px;
 }
 
 /* ─── Navigation Bar ───────────────────────────────────────── */
@@ -241,7 +242,7 @@ nav a:hover {
 }
 
 .hero-tagline {
-    color: var(--cyan-light);
+    color: var(--green-light);
     font-size: 1.4rem;
     text-align: center;
     margin-bottom: 3rem;
