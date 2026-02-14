@@ -631,48 +631,50 @@ app.get('/profile', (req, res) => {
 });
 
 // Edit profile form (GET /profile/edit) – also fetch full user
+// GET /profile/edit - show edit form (allow admin + contributor)
 app.get('/profile/edit', (req, res) => {
   if (!req.session.user) {
     return res.redirect('/login?redirect=/profile/edit');
   }
 
+  // Allow admin OR contributor
+  if (!req.session.user.is_admin && !req.session.user.is_contributor) {
+    return res.status(403).send('Access denied - admin or contributor only');
+  }
+
   db.get(
-    `SELECT id, username, email, display_name, bio, profile_image 
+    `SELECT id, username, display_name, bio, profile_image, social_links, tip_address 
      FROM users WHERE id = ?`,
     [req.session.user.id],
     (err, fullUser) => {
       if (err || !fullUser) {
-        console.error('Edit profile fetch error:', err);
+        console.error('Profile fetch error:', err);
         return res.redirect('/profile?error=load_failed');
       }
 
-      // Update session (optional but keeps everything in sync)
-      req.session.user = {
-        ...req.session.user,
-        display_name: fullUser.display_name,
-        bio: fullUser.bio,
-        profile_image: fullUser.profile_image
-      };
-
       res.render('profile-edit', {
-        user: fullUser,   // pass fresh full user
+        user: fullUser,
         error: null
       });
     }
   );
 });
 
-// Update profile (POST /profile/edit) – already mostly good, minor safety improvements
-app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
+// POST /profile/edit - save changes (allow admin + contributor)
+app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
-  const userId = req.session.user.id;
-  const isContributor = !!req.session.user.is_contributor;
+  // Allow admin OR contributor
+  if (!req.session.user.is_admin && !req.session.user.is_contributor) {
+    return res.status(403).send('Access denied - admin or contributor only');
+  }
 
+  const userId = req.session.user.id;
   const { display_name, bio, social_links, tip_address } = req.body;
 
   let profileImagePath = req.session.user.profile_image || '/images/default-avatar.png';
 
+  // Handle image upload with sharp (your existing code – keep it)
   if (req.file) {
     try {
       const processedBuffer = await sharp(req.file.buffer)
@@ -690,18 +692,20 @@ app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
     }
   }
 
-  let updateQuery = `UPDATE users SET profile_image = ?`;
-  let params = [profileImagePath];
-
-  if (isContributor) {
-    updateQuery += `, display_name = ?, bio = ?, social_links = ?, tip_address = ?`;
-    params.push(
-      display_name?.trim() || req.session.user.username,
-      bio?.trim() || '',
-      social_links?.trim() || '',
-      tip_address?.trim() || ''
-    );
-  }
+  // Build update query – always update image + fields
+  let updateQuery = `UPDATE users SET 
+    profile_image = ?,
+    display_name = ?,
+    bio = ?,
+    social_links = ?,
+    tip_address = ?`;
+  let params = [
+    profileImagePath,
+    display_name?.trim() || req.session.user.display_name || req.session.user.username || '',
+    bio?.trim() || '',
+    social_links?.trim() || '',
+    tip_address?.trim() || ''
+  ];
 
   updateQuery += ` WHERE id = ?`;
   params.push(userId);
@@ -709,16 +713,18 @@ app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
   db.run(updateQuery, params, function (err) {
     if (err) {
       console.error('Profile update error:', err.message);
-      return res.render('profile-edit', { user: req.session.user, error: 'Save failed' });
+      return res.render('profile-edit', {
+        user: req.session.user,
+        error: 'Failed to save changes. Try again.'
+      });
     }
 
+    // Update session so changes show immediately
     req.session.user.profile_image = profileImagePath;
-    if (isContributor) {
-      req.session.user.display_name = display_name?.trim() || req.session.user.username;
-      req.session.user.bio = bio?.trim() || '';
-      req.session.user.social_links = social_links?.trim() || '';
-      req.session.user.tip_address = tip_address?.trim() || '';
-    }
+    req.session.user.display_name = display_name?.trim() || req.session.user.display_name;
+    req.session.user.bio = bio?.trim() || '';
+    req.session.user.social_links = social_links?.trim() || '';
+    req.session.user.tip_address = tip_address?.trim() || '';
 
     res.redirect('/profile?success=1');
   });
