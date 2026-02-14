@@ -663,45 +663,61 @@ app.get('/profile/edit', (req, res) => {
 });
 
 // Update profile (POST /profile/edit) – already mostly good, minor safety improvements
-app.post('/profile/edit', upload.single('profile_image'), (req, res) => {
+app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
-  const { display_name, bio } = req.body;
   const userId = req.session.user.id;
+  const isContributor = !!req.session.user.is_contributor;
 
-  // Build dynamic update
-  let updateQuery = `UPDATE users SET display_name = ?`;
-  let params = [display_name || req.session.user.display_name || req.session.user.username];
+  const { display_name, bio, social_links, tip_address } = req.body;
 
-  updateQuery += `, bio = ?`;
-  params.push(bio || '');
+  let profileImagePath = req.session.user.profile_image || '/images/default-avatar.png';
 
   if (req.file) {
-    const imagePath = `/images/profiles/${req.file.filename}`;
-    updateQuery += `, profile_image = ?`;
-    params.push(imagePath);
+    try {
+      const processedBuffer = await sharp(req.file.buffer)
+        .resize(400, 400, { fit: 'cover', position: 'center' })
+        .jpeg({ quality: 80 })
+        .toBuffer();
+
+      const filename = `profile-${userId}-${Date.now()}.jpg`;
+      const destPath = path.join('/app/data/images/profiles', filename);
+      await sharp(processedBuffer).toFile(destPath);
+
+      profileImagePath = `/images/profiles/${filename}`;
+    } catch (err) {
+      console.error('Avatar processing error:', err);
+    }
+  }
+
+  let updateQuery = `UPDATE users SET profile_image = ?`;
+  let params = [profileImagePath];
+
+  if (isContributor) {
+    updateQuery += `, display_name = ?, bio = ?, social_links = ?, tip_address = ?`;
+    params.push(
+      display_name?.trim() || req.session.user.username,
+      bio?.trim() || '',
+      social_links?.trim() || '',
+      tip_address?.trim() || ''
+    );
   }
 
   updateQuery += ` WHERE id = ?`;
   params.push(userId);
 
-  console.log('Profile update attempt:', { display_name, bio, hasFile: !!req.file, userId });
-
   db.run(updateQuery, params, function (err) {
     if (err) {
-      console.error('Profile update DB error:', err.message);
-      return res.render('profile-edit', {
-        user: req.session.user,
-        error: 'Failed to save changes. Please try again.'
-      });
+      console.error('Profile update error:', err.message);
+      return res.render('profile-edit', { user: req.session.user, error: 'Save failed' });
     }
 
-    // Update session immediately so changes show without re-login
-    req.session.user.display_name = display_name || req.session.user.display_name;
-    req.session.user.bio = bio || req.session.user.bio || '';
-
-    if (req.file) {
-      req.session.user.profile_image = `/images/profiles/${req.file.filename}`;
+    req.session.user.profile_image = profileImagePath;
+    if (isContributor) {
+      req.session.user.display_name = display_name?.trim() || req.session.user.username;
+      req.session.user.bio = bio?.trim() || '';
+      req.session.user.social_links = social_links?.trim() || '';
+      req.session.user.tip_address = tip_address?.trim() || '';
     }
 
     res.redirect('/profile?success=1');
