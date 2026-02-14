@@ -864,25 +864,41 @@ app.delete('/admin/pages/:id', requireAdmin, (req, res) => {
   });
 });
 
-// Catch-all for 404 (not found) - optional but good to have
-app.use((req, res, next) => {
-  res.status(404).render('404', { url: req.originalUrl });  // if you want a 404 page too
-});
-
-// Custom error handler (this catches thrown errors or next(err))
+// Improved error handler – JSON for API calls, HTML for browser pages
 app.use((err, req, res, next) => {
-  console.error('Error:', err);  // log for debugging
+  console.error('Server Error:', err.stack || err);  // better logging with stack
 
-  // If it's a 403 (Forbidden/Access Denied)
-  if (err.status === 403 || err.message?.includes('denied') || err.message?.includes('forbidden')) {
-    return res.status(403).render('403');  // renders views/403.ejs
+  const status = err.status || 500;
+  const message = err.message || 'Internal Server Error';
+
+  // Detect API-like requests (fetch/AJAX often set Accept: application/json)
+  // Also catch your admin/dashboard paths as "API-ish"
+  const isApiRequest = 
+    req.xhr ||                          // classic XHR flag
+    req.accepts('json') === 'json' ||   // Accept header prefers JSON
+    req.path.startsWith('/admin/') || 
+    req.path.startsWith('/dashboard/') ||
+    req.headers['content-type']?.includes('application/json') ||
+    req.originalUrl.includes('/update') || req.originalUrl.includes('/delete');  // extra safety for your routes
+
+  if (isApiRequest) {
+    // Return clean JSON for frontend to handle (no more < token crash)
+    res.status(status).json({
+      error: message,
+      // In dev, you could add: details: err.stack (but hide in prod!)
+    });
+  } else {
+    // Regular browser requests: render nice pages
+    if (status === 403 || 
+        message.toLowerCase().includes('denied') || 
+        message.toLowerCase().includes('forbidden')) {
+      return res.status(403).render('403', { message });
+    }
+    res.status(status).render('error', {
+      message,
+      error: process.env.NODE_ENV === 'development' ? err : {}  // safer in prod
+    });
   }
-
-  // For other errors (500, etc.)
-  res.status(err.status || 500).render('error', {
-    message: err.message || 'Something went wrong!',
-    error: {}  // don't show stack in production
-  });
 });
 
 // Start server
