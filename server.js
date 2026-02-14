@@ -20,7 +20,7 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 const fs = require('fs');
 const db = require('./database.js');
-
+const chatRoutes = require('./routes/chat');
 const app = express();
 
 // Auto-create persistent folders
