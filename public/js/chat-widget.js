@@ -17,7 +17,7 @@ class ChatWidget {
     const widgetHTML = `
       <div class="chat-widget-container">
         <button class="chat-toggle-button" id="chatToggle" aria-label="Toggle chat">
-  <img src="images/ninja head transparent background.jpg" alt="Dojo" style="width:35px; height:35px;">
+  <img src="/images/ninja head no background.png" alt="Dojo" style="width:35px; height:35px;">
 </button>
         
         <div class="chat-window" id="chatWindow">
@@ -184,7 +184,7 @@ class ChatWidget {
   // NEW:
 const avatar = type === 'user' 
   ? '👤' 
-  : '<img src="/images/ninja head transparent background.jpg" style="width:28px; height:28px; border-radius:50%;">';
+  : '<img src="/images/ninja head no background.png" style="width:28px; height:28px; border-radius:50%;">';
     const messageClass = type === 'user' ? 'user-message' : 'bot-message';
     
     let citationsHTML = '';
