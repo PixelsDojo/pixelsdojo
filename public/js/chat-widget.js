@@ -184,7 +184,7 @@ class ChatWidget {
   // NEW:
 const avatar = type === 'user' 
   ? '👤' 
-  : '<img src="/images/ninja head no background.png" style="width:65px; height:65px; border-radius:50%;">';
+  : '<img src="/images/ninja head no background.png" style="width:100px; height:100px; border-radius:50%;">';
     const messageClass = type === 'user' ? 'user-message' : 'bot-message';
     
     let citationsHTML = '';
