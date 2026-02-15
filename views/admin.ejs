@@ -82,6 +82,9 @@
         <!-- Admin Tools Navigation -->
         <% if (user && user.is_admin) { %>
           <div class="admin-tools-nav" style="margin: 1rem 0; padding: 0.8rem; background: rgba(0,255,255,0.08); border-radius: 8px; border: 1px solid rgba(0,255,255,0.2);">
+            <a href="/admin/analytics" class="btn btn-secondary" style="margin-right: 1rem; padding: 0.6rem 1.2rem;">
+              📊 View Site Analytics
+            </a>
             <a href="/admin/users" class="btn btn-secondary" style="margin-right: 1rem; padding: 0.6rem 1.2rem;">
               👥 Manage Users & Invite Contributors
             </a>
