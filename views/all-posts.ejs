@@ -123,13 +123,13 @@
     <div class="main-content-area">
       <h1>All Articles</h1>
 
-      <!-- New: Search + Filter Bar -->
+      <!-- Search + Filter Bar -->
       <div class="filters-container">
         <input 
           type="text" 
           id="searchInput" 
           class="search-input" 
-          placeholder="Search articles by title or author..."
+          placeholder="Search by title, author, or content..."
         >
         <select id="categoryFilter" class="category-filter">
           <option value="">All Categories</option>
@@ -137,6 +137,12 @@
           <option value="earn">Earn $PIXEL</option>
           <option value="mastery">Mastery</option>
           <option value="community">Community</option>
+        </select>
+        <select id="difficultyFilter" class="category-filter">
+          <option value="">All Difficulties</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
         </select>
       </div>
 
@@ -150,16 +156,21 @@
             <div class="post-item" 
                  data-title="<%= page.title.toLowerCase() %>"
                  data-author="<%= (page.author_display_name || 'community').toLowerCase() %>"
-                 data-category="<%= page.category || '' %>">
+                 data-category="<%= page.category || '' %>"
+                 data-difficulty="<%= page.difficulty || 'Beginner' %>"
+                 data-content="<%= page.content.replace(/<[^>]*>/g, '').substring(0, 500).toLowerCase() %>">
               <h3>
                 <a href="/pages/<%= page.slug %>"><%= page.title %></a>
               </h3>
               <div class="post-meta">
                 By <%= page.author_display_name || 'Community' %> 
                 · <%= new Date(page.created_at).toLocaleDateString() %>
+                <% if (page.difficulty) { %>
+                  · <span style="color: var(--cyan);"><%= page.difficulty %></span>
+                <% } %>
               </div>
               <p class="post-snippet">
-                <%= (page.summary || page.content.substring(0, 150) + '...') %>
+                <%= (page.summary || page.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...') %>
               </p>
             </div>
           <% }) %>
@@ -175,35 +186,46 @@
   <script>
     const searchInput = document.getElementById('searchInput');
     const categoryFilter = document.getElementById('categoryFilter');
+    const difficultyFilter = document.getElementById('difficultyFilter');
     const postsList = document.getElementById('postsList');
 
     function filterPosts() {
       const searchTerm = searchInput.value.toLowerCase().trim();
       const selectedCategory = categoryFilter.value;
+      const selectedDifficulty = difficultyFilter.value;
 
       const postItems = postsList.querySelectorAll('.post-item');
 
       postItems.forEach(item => {
         const title = item.dataset.title;
         const author = item.dataset.author;
+        const content = item.dataset.content;
         const category = item.dataset.category;
+        const difficulty = item.dataset.difficulty;
 
+        // Search matches title, author, OR content text
         const matchesSearch = 
           title.includes(searchTerm) || 
-          author.includes(searchTerm);
+          author.includes(searchTerm) ||
+          content.includes(searchTerm);
 
         const matchesCategory = 
           !selectedCategory || 
           category === selectedCategory;
 
+        const matchesDifficulty = 
+          !selectedDifficulty || 
+          difficulty === selectedDifficulty;
+
         item.style.display = 
-          matchesSearch && matchesCategory ? '' : 'none';
+          matchesSearch && matchesCategory && matchesDifficulty ? '' : 'none';
       });
     }
 
     // Live filtering on input/change
     searchInput.addEventListener('input', filterPosts);
     categoryFilter.addEventListener('change', filterPosts);
+    difficultyFilter.addEventListener('change', filterPosts);
   </script>
 </body>
 </html>
