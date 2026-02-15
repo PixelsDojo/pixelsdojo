@@ -65,7 +65,12 @@
           </div>
         </header>
 
-        <!-- Author Profile Card (showing the person who wrote THIS article) -->
+        <!-- Main content -->
+        <div class="content-body">
+          <%- page.content %>
+        </div>
+
+<!-- Author Profile Card (showing the person who wrote THIS article) -->
         <% if (page.author_id && (page.author_display_name || page.author_username)) { %>
           <div class="author-profile-card" style="margin: 2rem 0; padding: 2rem; background: linear-gradient(135deg, rgba(0,255,255,0.08) 0%, rgba(237,255,132,0.08) 100%); border-radius: 12px; border: 2px solid rgba(0,255,255,0.3); box-shadow: 0 4px 20px rgba(0,255,255,0.1);">
             
@@ -143,11 +148,6 @@
             </div>
           </div>
         <% } %>
-
-        <!-- Main content -->
-        <div class="content-body">
-          <%- page.content %>
-        </div>
 
        <!-- Like / Dislike -->
 <div class="interaction-bar">
