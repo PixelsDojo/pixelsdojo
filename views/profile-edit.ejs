@@ -130,7 +130,7 @@
         <% } %>
 
         <form action="/profile/edit" method="POST" enctype="multipart/form-data">
-          <!-- Profile Picture – always editable -->
+          <!-- Profile Picture – EVERYONE can edit -->
           <div class="form-group">
             <label for="profile_image">Profile Picture</label>
             <input type="file" id="profile_image" name="profile_image" accept="image/*">
@@ -139,18 +139,38 @@
             <% } %>
           </div>
 
-          <!-- Display Name – admin OR contributor -->
+          <!-- Display Name – EVERYONE can edit -->
           <div class="form-group">
-            <label for="display_name">Display Name</label>
+            <label for="display_name">Display Name *</label>
             <input type="text" id="display_name" name="display_name" 
-                   value="<%= user.display_name || user.username %>" 
-                   <%= (user.is_admin || user.is_contributor) ? '' : 'disabled' %>>
-            <% if (!(user.is_admin || user.is_contributor)) { %>
-              <small>(Only available to contributors and admins)</small>
-            <% } %>
+                   value="<%= user.display_name || user.username %>" required>
           </div>
 
-          <!-- Bio – admin OR contributor -->
+          <!-- Username – EVERYONE can edit -->
+          <div class="form-group">
+            <label for="username">Username *</label>
+            <input type="text" id="username" name="username" 
+                   value="<%= user.username %>" required>
+            <small style="color: #aaa;">This is your login name</small>
+          </div>
+
+          <!-- Email – EVERYONE can edit -->
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" 
+                   value="<%= user.email %>" required>
+          </div>
+
+          <!-- Password Change (optional) – EVERYONE -->
+          <div class="form-group">
+            <label for="new_password">New Password (leave blank to keep current)</label>
+            <input type="password" id="new_password" name="new_password" minlength="8" 
+                   placeholder="Enter new password or leave blank">
+          </div>
+
+          <hr style="border-color: rgba(0,255,255,0.2); margin: 2rem 0;">
+
+          <!-- Bio – CONTRIBUTORS AND ADMINS ONLY -->
           <div class="form-group">
             <label for="bio">Bio / About You</label>
             <textarea id="bio" name="bio" rows="5" 
@@ -158,11 +178,11 @@
 <%= user.bio || '' %>
             </textarea>
             <% if (!(user.is_admin || user.is_contributor)) { %>
-              <small>(Contributors and admins only)</small>
+              <small>(Contributors and admins only - Want to become a contributor? Contact admin!)</small>
             <% } %>
           </div>
 
-          <!-- Social Links – admin OR contributor -->
+          <!-- Social Links – CONTRIBUTORS AND ADMINS ONLY -->
           <div class="form-group">
             <label for="social_links">Social Links (one per line: Platform | URL)</label>
             <textarea id="social_links" name="social_links" rows="4" 
@@ -174,7 +194,7 @@
             <% } %>
           </div>
 
-          <!-- Tip Address – admin OR contributor -->
+          <!-- Tip Address – CONTRIBUTORS AND ADMINS ONLY -->
           <div class="form-group">
             <label for="tip_address">Tip / Donation Address (PayPal, wallet, etc.)</label>
             <input type="text" id="tip_address" name="tip_address" 
@@ -186,7 +206,46 @@
           </div>
 
           <button type="submit" class="btn-save">Save Changes</button>
+          
+          <hr style="border-color: rgba(0,255,255,0.2); margin: 2rem 0;">
+          
+          <!-- Delete Account – EVERYONE -->
+          <div style="text-align: center; margin-top: 2rem;">
+            <button type="button" onclick="deleteAccount()" 
+                    style="background: #ff4444; color: white; padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+              Delete My Account
+            </button>
+            <p style="color: #999; font-size: 0.9rem; margin-top: 0.5rem;">
+              Warning: This action cannot be undone!
+            </p>
+          </div>
         </form>
+
+        <script>
+          function deleteAccount() {
+            if (confirm('Are you ABSOLUTELY SURE you want to delete your account?\n\nThis will:\n- Delete all your data\n- Remove all your posts\n- Cannot be undone\n\nType DELETE in the next prompt to confirm.')) {
+              const confirmation = prompt('Type DELETE to confirm account deletion:');
+              if (confirmation === 'DELETE') {
+                fetch('/profile/delete', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                  if (data.success) {
+                    alert('Your account has been deleted.');
+                    window.location.href = '/';
+                  } else {
+                    alert('Error: ' + data.error);
+                  }
+                })
+                .catch(err => {
+                  alert('Failed to delete account. Please try again.');
+                });
+              }
+            }
+          }
+        </script>
       </div>
     </div>
   </div>
