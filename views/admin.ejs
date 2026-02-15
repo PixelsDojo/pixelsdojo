@@ -140,29 +140,50 @@
                 <button onclick="showAddModal('addNpcModal')" class="btn-primary">Add New NPC</button>
             </div>
 
-            <div class="npc-grid">
+            <!-- Search Bar -->
+            <div style="margin: 1.5rem 0;">
+                <input 
+                    type="text" 
+                    id="npcSearch" 
+                    placeholder="🔍 Search NPCs by name or location..." 
+                    style="width: 100%; max-width: 500px; padding: 0.8rem 1rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,255,0.3); border-radius: 8px; color: white; font-size: 1rem;"
+                    onkeyup="filterNPCs()"
+                >
+            </div>
+
+            <div class="npc-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
                 <% npcs.forEach(npc => { %>
-                    <div class="npc-card">
-                        <div class="npc-left">
+                    <div class="npc-card" data-name="<%= npc.name.toLowerCase() %>" data-location="<%= (npc.location || '').toLowerCase() %>" style="background: rgba(20,20,40,0.8); border: 1px solid rgba(0,255,255,0.2); border-radius: 12px; padding: 1.5rem; transition: all 0.3s; display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; align-items: start; gap: 1rem;">
                             <img src="<%= npc.image_path %>" alt="<%= npc.name %>" 
-                                 class="npc-thumb" style="max-width:160px; height:auto; object-fit:contain;"
+                                 style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid var(--cyan);"
                                  onerror="this.src='/images/npcs/default-npc.png'">
-                            <div>
-                                <strong><%= npc.name %></strong><br>
-                                <small><%= npc.location || '—' %></small>
+                            <div style="flex: 1;">
+                                <strong style="color: var(--cyan); font-size: 1.1rem;"><%= npc.name %></strong><br>
+                                <small style="color: #999;">📍 <%= npc.location || 'Unknown' %></small><br>
+                                <small style="color: #666;">Order: <%= npc.display_order %></small>
                             </div>
                         </div>
-                        <div class="npc-right">
-                            <p><%= npc.description ? npc.description.substring(0, 100) + '...' : 'No description' %></p>
-                            <small>Order: <%= npc.display_order %></small>
-                            <div class="actions">
-                                <button onclick="editNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>', '<%= npc.location ? npc.location.replace(/'/g, "\\'") : '' %>', '<%= (npc.description || '').replace(/'/g, "\\'") %>', <%= npc.display_order %>, '<%= npc.image_path.replace(/'/g, "\\'") %>')" class="btn-edit">✏️ Edit</button>
-                                <button onclick="deleteNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>')" class="btn-delete">🗑️ Delete</button>
-                            </div>
+                        <p style="color: #ddd; font-size: 0.9rem; margin: 0; line-height: 1.4;">
+                            <%= npc.description ? npc.description.substring(0, 120) + '...' : 'No description' %>
+                        </p>
+                        <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                            <button onclick="editNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>', '<%= npc.location ? npc.location.replace(/'/g, "\\'") : '' %>', '<%= (npc.description || '').replace(/'/g, "\\'") %>', <%= npc.display_order %>, '<%= npc.image_path.replace(/'/g, "\\'") %>')" 
+                                    style="flex: 1; padding: 0.6rem; background: var(--cyan); color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                                ✏️ Edit
+                            </button>
+                            <button onclick="deleteNPC(<%= npc.id %>, '<%= npc.name.replace(/'/g, "\\'") %>')" 
+                                    style="flex: 1; padding: 0.6rem; background: #ff4444; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                                🗑️ Delete
+                            </button>
                         </div>
                     </div>
                 <% }); %>
             </div>
+
+            <% if (npcs.length === 0) { %>
+                <p style="text-align: center; color: #999; margin-top: 2rem;">No NPCs yet. Click "Add New NPC" to get started!</p>
+            <% } %>
         </section>
     </div>
 
@@ -562,6 +583,19 @@
             }
         })
         .catch(err => alert('Error: ' + err));
+    }
+
+    // ─── NPC Search Filter ───────────────────────────────────────────
+    function filterNPCs() {
+        const searchTerm = document.getElementById('npcSearch').value.toLowerCase();
+        const npcCards = document.querySelectorAll('.npc-card');
+        
+        npcCards.forEach(card => {
+            const name = card.dataset.name;
+            const location = card.dataset.location;
+            const matches = name.includes(searchTerm) || location.includes(searchTerm);
+            card.style.display = matches ? '' : 'none';
+        });
     }
 
     // ─── Delete Page ─────────────────────────────────────────────────
