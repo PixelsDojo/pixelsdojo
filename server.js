@@ -69,11 +69,11 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://widgets.coingecko.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
       imgSrc: ["'self'", "data:", "https:", "http:"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-      connectSrc: ["'self'"],
+      connectSrc: ["'self'", "https://widgets.coingecko.com", "https://api.coingecko.com"],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"]
     }
@@ -94,22 +94,29 @@ app.use(cookieParser());
 // Security: Rate Limiting
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // 100 requests per window
+  max: 500, // 500 requests per window (increased for normal browsing)
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
+  // Skip static files
+  skip: (req) => {
+    return req.path.startsWith('/images/') || 
+           req.path.startsWith('/css/') || 
+           req.path.startsWith('/js/') ||
+           req.path.match(/\.(png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|css|js)$/);
+  }
 });
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 attempts
+  max: 10, // 10 attempts (increased from 5)
   message: 'Too many login/registration attempts, please try again later.',
   skipSuccessfulRequests: true
 });
 
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 30, // 30 requests per minute
+  max: 60, // 60 requests per minute (increased from 30)
   message: 'Too many API requests, please slow down.'
 });
 
