@@ -63,21 +63,7 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <div class="logo-section">
-                <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo">
-                <h1>PIXELS DOJO - ADMIN DASHBOARD</h1>
-            </div>
-            <div class="user-nav">
-                <span>Welcome, <%= user.username %>!</span>
-                <a href="/">Home</a>
-                <a href="/npcs">View NPCs</a>
-                <a href="/profile">My Profile</a>
-                <a href="/logout">Logout</a>
-            </div>
-        </div>
-    </header>
+    <%- include('partials/header') %>
 
     <nav>
       <ul>
