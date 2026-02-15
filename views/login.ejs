@@ -16,13 +16,18 @@
 
     <div class="container">
         <div class="content-section" style="max-width:600px;margin:3rem auto">
+            <div style="margin-bottom: 1rem;">
+                <a href="/" style="color: var(--cyan); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    ← Back to Home
+                </a>
+            </div>
             <h2>Login</h2>
             <% if (error) { %>
                 <div class="alert alert-error"><%= error %></div>
             <% } %>
             <form method="POST">
-    <input type="text" name="username" placeholder="Username" required style="width:100%;padding:1rem;margin-bottom:1rem;background:var(--dark-bg);border:2px solid var(--cyan);border-radius:5px;color:white">
-    <input type="password" name="password" placeholder="Password" required style="width:100%;padding:1rem;margin-bottom:1rem;background:var(--dark-bg);border:2px solid var(--cyan);border-radius:5px;color:white">
+    <input type="text" name="username" placeholder="Username" required style="width:100%;padding:1rem;margin-bottom:1rem;background:var(--dark-bg);border:2px solid var(--cyan);border-radius:5px;color:white;box-sizing:border-box;">
+    <input type="password" name="password" placeholder="Password" required style="width:100%;padding:1rem;margin-bottom:1rem;background:var(--dark-bg);border:2px solid var(--cyan);border-radius:5px;color:white;box-sizing:border-box;">
     <button type="submit" class="btn btn-purple" style="width:100%">Login</button>
 </form>
         </div>
