@@ -193,7 +193,7 @@ const avatar = type === 'user'
         <div class="message-citations">
           <p>📚 Related guides:</p>
           ${citations.map(c => `
-            <a href="/page/${c.slug}" class="citation-link" target="_blank">
+            <a href="/pages/${c.slug}" class="citation-link" target="_blank">
               ${c.title}
             </a>
           `).join('')}
