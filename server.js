@@ -353,34 +353,17 @@ app.post('/dashboard/pages', (req, res, next) => {
     return res.status(403).json({ error: 'Only contributors can create pages' });
   }
   next();
-}, upload.array('screenshots', 15), async (req, res) => {
+}, upload.array('screenshots', 15), (req, res) => {
   const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
   if (!title || !slug || !content) return res.status(400).json({ error: 'Missing required fields' });
 
   const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
+  // Use files from disk storage (no sharp processing needed)
   let screenshots = [];
   if (req.files && req.files.length > 0) {
-    try {
-      screenshots = await Promise.all(
-        req.files.map(async (file) => {
-          const processed = await sharp(file.buffer)
-            .resize({ width: 1200, height: 1200, fit: 'inside', withoutEnlargement: true })
-            .jpeg({ quality: 75 })
-            .toBuffer();
-
-          const filename = Date.now() + '-' + Math.round(Math.random() * 1E9) + '.jpg';
-          const dest = path.join('/app/data/images/pages', filename);
-          await sharp(processed).toFile(dest);
-
-          return `/images/pages/${filename}`;
-        })
-      );
-    } catch (err) {
-      console.error('Screenshot processing error on create:', err);
-    }
+    screenshots = req.files.map(f => '/images/pages/' + f.filename);
   }
-
   const screenshotsJson = JSON.stringify(screenshots);
 
   db.run(
@@ -389,13 +372,27 @@ app.post('/dashboard/pages', (req, res, next) => {
     [cleanSlug, title, content, category || null, difficulty || 'Beginner', screenshotsJson, summary || null, pro_tips || null, req.session.user.id],
     function (err) {
       if (err) {
-        console.error('Page create error:', err.message);
-        return res.status(500).json({ error: 'Failed to create page' });
+        console.error('Page creation error:', err.message);
+        return res.status(500).json({ error: 'Error saving page: ' + err.message });
       }
-      res.json({ success: true, id: this.lastID });
-      // Or: res.redirect('/dashboard');
+      res.json({ success: true, message: 'Page created successfully!', pageId: this.lastID });
     }
   );
+});
+
+// Contributor: Get own page data for editing (JSON)
+app.get('/dashboard/pages/:id/edit', requireAdminOrOwner, (req, res) => {
+  db.get('SELECT * FROM pages WHERE id = ?', [req.params.id], (err, page) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (!page) return res.status(404).json({ error: 'Page not found' });
+    
+    try {
+      page.screenshots = JSON.parse(page.screenshots || '[]');
+    } catch (e) {
+      page.screenshots = [];
+    }
+    res.json(page);
+  });
 });
 
 // Contributor: Update own page
@@ -651,7 +648,7 @@ app.get('/profile/edit', (req, res) => {
   }
 
   db.get(
-    `SELECT id, username, display_name, bio, profile_image, social_links, tip_address 
+    `SELECT id, username, display_name, bio, profile_image, social_links, tip_address, is_admin, is_contributor 
      FROM users WHERE id = ?`,
     [req.session.user.id],
     (err, fullUser) => {
