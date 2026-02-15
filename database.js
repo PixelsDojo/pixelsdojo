@@ -129,6 +129,28 @@ db.serialize(() => {
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
+  // Analytics: Site-wide traffic tracking
+  db.run(`CREATE TABLE IF NOT EXISTS analytics (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    visitor_id TEXT,
+    page_path TEXT,
+    referrer TEXT,
+    user_agent TEXT,
+    ip_address TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`);
+
+  // Analytics: Daily stats summary
+  db.run(`CREATE TABLE IF NOT EXISTS analytics_daily (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT UNIQUE,
+    unique_visitors INTEGER DEFAULT 0,
+    page_views INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`);
+
+  console.log('Analytics tables created');
+
   // Create admin user (Lizzy)
   const adminPassword = bcrypt.hashSync('changeme123', 10);
   db.run(`INSERT OR IGNORE INTO users (username, email, password, display_name, bio, profile_image, is_admin)
