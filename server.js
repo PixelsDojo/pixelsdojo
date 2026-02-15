@@ -636,19 +636,15 @@ app.get('/profile', (req, res) => {
 });
 
 // Edit profile form (GET /profile/edit) – also fetch full user
-// GET /profile/edit - show edit form (allow admin + contributor)
+// GET /profile/edit - show edit form (ALL users can edit basic info)
 app.get('/profile/edit', (req, res) => {
   if (!req.session.user) {
     return res.redirect('/login?redirect=/profile/edit');
   }
 
-  // Allow admin OR contributor
-  if (!req.session.user.is_admin && !req.session.user.is_contributor) {
-    return res.status(403).send('Access denied - admin or contributor only');
-  }
-
+  // Everyone can access profile edit
   db.get(
-    `SELECT id, username, display_name, bio, profile_image, social_links, tip_address, is_admin, is_contributor 
+    `SELECT id, username, email, display_name, bio, profile_image, social_links, tip_address, is_admin, is_contributor 
      FROM users WHERE id = ?`,
     [req.session.user.id],
     (err, fullUser) => {
@@ -665,14 +661,14 @@ app.get('/profile/edit', (req, res) => {
   );
 });
 
-// POST /profile/edit - save changes (allow admin + contributor)
+// POST /profile/edit - save changes (everyone can edit basic info)
 app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
   const userId = req.session.user.id;
   const isEligible = !!req.session.user.is_admin || !!req.session.user.is_contributor;
 
-  const { display_name, bio, social_links, tip_address } = req.body;
+  const { username, email, display_name, new_password, bio, social_links, tip_address } = req.body;
 
   let profileImagePath = req.session.user.profile_image || '/images/default-avatar.png';
 
@@ -681,13 +677,26 @@ app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
     profileImagePath = `/images/profiles/${req.file.filename}`;
   }
 
-  let updateQuery = `UPDATE users SET profile_image = ?`;
-  let params = [profileImagePath];
+  // Everyone can update: username, email, display_name, password, profile_image
+  let updateQuery = `UPDATE users SET username = ?, email = ?, display_name = ?, profile_image = ?`;
+  let params = [
+    username?.trim() || req.session.user.username,
+    email?.trim() || req.session.user.email,
+    display_name?.trim() || req.session.user.username,
+    profileImagePath
+  ];
 
+  // Add password if provided
+  if (new_password && new_password.trim()) {
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+    updateQuery += `, password = ?`;
+    params.push(hashedPassword);
+  }
+
+  // Contributors and admins can also update: bio, social_links, tip_address
   if (isEligible) {
-    updateQuery += `, display_name = ?, bio = ?, social_links = ?, tip_address = ?`;
+    updateQuery += `, bio = ?, social_links = ?, tip_address = ?`;
     params.push(
-      display_name?.trim() || req.session.user.username,
       bio?.trim() || '',
       social_links?.trim() || '',
       tip_address?.trim() || ''
@@ -702,21 +711,65 @@ app.post('/profile/edit', upload.single('profile_image'), async (req, res) => {
       console.error('Profile update DB error:', err.message);
       return res.render('profile-edit', { 
         user: req.session.user, 
-        error: 'Failed to save changes. Please try again.' 
+        error: 'Failed to save changes. ' + (err.message.includes('UNIQUE') ? 'Username or email already taken.' : 'Please try again.') 
       });
     }
 
-    // Update session so changes show immediately
+    // Update session with new values
+    req.session.user.username = username?.trim() || req.session.user.username;
+    req.session.user.email = email?.trim() || req.session.user.email;
+    req.session.user.display_name = display_name?.trim() || req.session.user.username;
     req.session.user.profile_image = profileImagePath;
 
     if (isEligible) {
-      req.session.user.display_name = display_name?.trim() || req.session.user.username;
       req.session.user.bio = bio?.trim() || '';
       req.session.user.social_links = social_links?.trim() || '';
       req.session.user.tip_address = tip_address?.trim() || '';
     }
 
     res.redirect('/profile?success=1');
+  });
+});
+
+// POST /profile/delete - Delete user account
+app.post('/profile/delete', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Not logged in' });
+  }
+
+  const userId = req.session.user.id;
+
+  // Delete user's pages first (foreign key constraint)
+  db.run('DELETE FROM pages WHERE author_id = ?', [userId], (err) => {
+    if (err) {
+      console.error('Error deleting user pages:', err);
+      return res.status(500).json({ error: 'Failed to delete account' });
+    }
+
+    // Delete user's likes
+    db.run('DELETE FROM likes WHERE user_id = ?', [userId], (err) => {
+      if (err) {
+        console.error('Error deleting user likes:', err);
+      }
+
+      // Finally delete the user
+      db.run('DELETE FROM users WHERE id = ?', [userId], function (err) {
+        if (err) {
+          console.error('Error deleting user:', err);
+          return res.status(500).json({ error: 'Failed to delete account' });
+        }
+
+        if (this.changes === 0) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Destroy session
+        req.session.destroy((err) => {
+          if (err) console.error('Session destroy error:', err);
+          res.json({ success: true, message: 'Account deleted successfully' });
+        });
+      });
+    });
   });
 });
 
