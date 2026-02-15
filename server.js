@@ -29,6 +29,9 @@ const xss = require('xss-clean');
 const cookieParser = require('cookie-parser');
 const validator = require('validator');
 
+// Discord bot
+const discordBot = require('./discord-bot');
+
 const app = express();
 
 // Auto-create persistent folders
@@ -488,6 +491,22 @@ app.post('/dashboard/pages', (req, res, next) => {
         console.error('Page creation error:', err.message);
         return res.status(500).json({ error: 'Error saving page: ' + err.message });
       }
+      
+      // Announce new article to Discord
+      try {
+        discordBot.announceNewArticle({
+          title: title,
+          slug: cleanSlug,
+          category: category || 'General',
+          difficulty: difficulty || 'Beginner',
+          summary: summary || null,
+          author: req.session.user.display_name || req.session.user.username
+        });
+      } catch (discordErr) {
+        console.error('Discord announcement error:', discordErr);
+        // Don't fail the request if Discord fails
+      }
+      
       res.json({ success: true, message: 'Page created successfully!', pageId: this.lastID });
     }
   );
