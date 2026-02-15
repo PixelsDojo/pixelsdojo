@@ -997,37 +997,6 @@ app.get('/pages/:slug', (req, res) => {
     }
   );
 });
-        page.screenshots = [];
-      }
-
-      // Get author's post count
-      if (page.author_id) {
-        db.get(
-          `SELECT COUNT(*) as post_count FROM pages WHERE author_id = ?`,
-          [page.author_id],
-          (err, countResult) => {
-            page.author_post_count = (countResult && countResult.post_count) || 0;
-            
-            res.render('page', { 
-              page,
-              user: req.session.user || null,
-              likes: 0,
-              dislikes: 0
-            });
-          }
-        );
-      } else {
-        page.author_post_count = 0;
-        res.render('page', { 
-          page,
-          user: req.session.user || null,
-          likes: 0,
-          dislikes: 0
-        });
-      }
-    }
-  );
-});
 
 app.get('/category/:cat', (req, res) => {
   const cat = req.params.cat;
