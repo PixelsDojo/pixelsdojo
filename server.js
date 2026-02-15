@@ -21,6 +21,14 @@ const multer = require('multer');
 const fs = require('fs');
 const db = require('./database.js');
 const chatRoutes = require('./routes/chat');
+
+// Security imports
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const xss = require('xss-clean');
+const cookieParser = require('cookie-parser');
+const validator = require('validator');
+
 const app = express();
 
 // Auto-create persistent folders
@@ -56,6 +64,58 @@ const upload = multer({
 });
 
 // Middleware
+// Security: Helmet for HTTP headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
+      imgSrc: ["'self'", "data:", "https:", "http:"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+      connectSrc: ["'self'"],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"]
+    }
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}));
+
+// Security: XSS Protection
+app.use(xss());
+
+// Security: Cookie Parser (needed for CSRF)
+app.use(cookieParser());
+
+// Security: Rate Limiting
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // 100 requests per window
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 attempts
+  message: 'Too many login/registration attempts, please try again later.',
+  skipSuccessfulRequests: true
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 30, // 30 requests per minute
+  message: 'Too many API requests, please slow down.'
+});
+
+app.use('/api/', apiLimiter);
+app.use(generalLimiter);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -65,14 +125,60 @@ app.use('/images/profiles', express.static('/app/data/images/profiles'));
 app.use('/images/pages',    express.static('/app/data/images/pages'));
 
 app.use(session({
-  secret: 'pixels-dojo-secret-key-change-this-in-production',
+  secret: process.env.SESSION_SECRET || 'pixels-dojo-secret-key-change-this-in-production',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+    httpOnly: true, // Prevent XSS attacks
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'lax' // CSRF protection
+  }
 }));
 
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
+  next();
+});
+
+// Analytics: Track page views
+app.use((req, res, next) => {
+  // Only track actual page views (not API calls, static files, etc.)
+  if (req.method === 'GET' && !req.path.startsWith('/api/') && !req.path.startsWith('/images/') && !req.path.match(/\.(css|js|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf)$/)) {
+    
+    // Generate or get visitor ID from cookie
+    let visitorId = req.cookies.visitor_id;
+    if (!visitorId) {
+      visitorId = 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      res.cookie('visitor_id', visitorId, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true }); // 1 year
+    }
+
+    // Track the visit
+    const ipAddress = req.ip || req.connection.remoteAddress;
+    const userAgent = req.get('user-agent') || '';
+    const referrer = req.get('referrer') || '';
+    const pagePath = req.path;
+
+    db.run(
+      `INSERT INTO analytics (visitor_id, page_path, referrer, user_agent, ip_address) VALUES (?, ?, ?, ?, ?)`,
+      [visitorId, pagePath, referrer, userAgent, ipAddress],
+      (err) => {
+        if (err) console.error('Analytics tracking error:', err.message);
+      }
+    );
+
+    // Update daily stats
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    db.run(
+      `INSERT INTO analytics_daily (date, unique_visitors, page_views) VALUES (?, 1, 1)
+       ON CONFLICT(date) DO UPDATE SET page_views = page_views + 1`,
+      [today],
+      (err) => {
+        if (err) console.error('Daily stats error:', err.message);
+      }
+    );
+  }
+  
   next();
 });
 
@@ -493,7 +599,7 @@ app.get('/register', (req, res) => {
 });
 
 // POST /register - Handle new user creation
-app.post('/register', (req, res) => {
+app.post('/register', authLimiter, (req, res) => {
   const { username, email, password, display_name } = req.body;
 
   // Basic validation
@@ -545,7 +651,7 @@ app.get('/login', (req, res) => {
   res.render('login', { error: null, user: null });
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', authLimiter, (req, res) => {
   const { username, password } = req.body;
   db.get('SELECT * FROM users WHERE username = ?', [username], (err, user) => {
     if (err || !user) return res.render('login', { error: 'Invalid username or password', user: null });
@@ -773,6 +879,44 @@ app.post('/profile/delete', (req, res) => {
   });
 });
 
+// API: Get user stats (views, likes)
+app.get('/api/stats', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Not logged in' });
+  }
+
+  const userId = req.session.user.id;
+
+  // Get total views for user's pages
+  db.get(
+    `SELECT SUM(views) as totalViews FROM pages WHERE author_id = ?`,
+    [userId],
+    (err, viewsResult) => {
+      if (err) {
+        console.error('Stats views error:', err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      // Get total likes for user's pages
+      db.get(
+        `SELECT SUM(upvotes) as totalLikes FROM pages WHERE author_id = ?`,
+        [userId],
+        (err, likesResult) => {
+          if (err) {
+            console.error('Stats likes error:', err);
+            return res.status(500).json({ error: 'Database error' });
+          }
+
+          res.json({
+            totalViews: viewsResult?.totalViews || 0,
+            totalLikes: likesResult?.totalLikes || 0
+          });
+        }
+      );
+    }
+  );
+});
+
 // Contributor Dashboard – only own pages
 app.get('/dashboard', (req, res) => {
   if (!req.session.user) {
@@ -798,6 +942,95 @@ app.get('/dashboard', (req, res) => {
         pages: userPages,
         isAdmin: !!req.session.user.is_admin  // so you can show extra stuff if admin
       });
+    }
+  );
+});
+
+// ─── Admin Analytics Dashboard ───
+app.get('/admin/analytics', requireAdmin, (req, res) => {
+  // Get overall stats
+  db.get(
+    `SELECT 
+      COUNT(DISTINCT visitor_id) as totalUniqueVisitors,
+      COUNT(*) as totalPageViews
+     FROM analytics`,
+    [],
+    (err, overallStats) => {
+      if (err) {
+        console.error('Analytics error:', err);
+        return res.status(500).send('Error loading analytics');
+      }
+
+      // Get this month's stats
+      db.get(
+        `SELECT 
+          COUNT(DISTINCT visitor_id) as monthlyVisitors,
+          COUNT(*) as monthlyPageViews
+         FROM analytics 
+         WHERE date(created_at) >= date('now', 'start of month')`,
+        [],
+        (err, monthlyStats) => {
+          if (err) {
+            console.error('Monthly stats error:', err);
+            monthlyStats = { monthlyVisitors: 0, monthlyPageViews: 0 };
+          }
+
+          // Get popular pages
+          db.all(
+            `SELECT page_path, COUNT(*) as views 
+             FROM analytics 
+             GROUP BY page_path 
+             ORDER BY views DESC 
+             LIMIT 10`,
+            [],
+            (err, popularPages) => {
+              if (err) {
+                console.error('Popular pages error:', err);
+                popularPages = [];
+              }
+
+              // Get recent activity (last 20 visits)
+              db.all(
+                `SELECT page_path, created_at 
+                 FROM analytics 
+                 ORDER BY created_at DESC 
+                 LIMIT 20`,
+                [],
+                (err, recentActivity) => {
+                  if (err) {
+                    console.error('Recent activity error:', err);
+                    recentActivity = [];
+                  }
+
+                  // Get daily stats for chart (last 30 days)
+                  db.all(
+                    `SELECT date, page_views 
+                     FROM analytics_daily 
+                     ORDER BY date DESC 
+                     LIMIT 30`,
+                    [],
+                    (err, dailyStats) => {
+                      if (err) {
+                        console.error('Daily stats error:', err);
+                        dailyStats = [];
+                      }
+
+                      res.render('admin-analytics', {
+                        user: req.session.user,
+                        overallStats,
+                        monthlyStats,
+                        popularPages,
+                        recentActivity,
+                        dailyStats: dailyStats.reverse() // Chronological order for chart
+                      });
+                    }
+                  );
+                }
+              );
+            }
+          );
+        }
+      );
     }
   );
 });
