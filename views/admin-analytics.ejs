@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Analytics - Pixels Dojo Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .analytics-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, rgba(0,255,255,0.1) 0%, rgba(237,255,132,0.1) 100%);
+      border: 2px solid rgba(0,255,255,0.3);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--cyan);
+      margin: 0;
+    }
+    .stat-label {
+      color: #b8b8b8;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .chart-container {
+      background: rgba(20,20,40,0.6);
+      border: 2px solid rgba(0,255,255,0.3);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    .table-container {
+      background: rgba(20,20,40,0.6);
+      border: 2px solid rgba(0,255,255,0.3);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0,255,255,0.2);
+    }
+    th {
+      color: var(--cyan);
+      font-weight: bold;
+    }
+    td {
+      color: #ddd;
+    }
+    .activity-item {
+      padding: 0.8rem;
+      background: rgba(0,0,0,0.3);
+      border-left: 3px solid var(--cyan);
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+    }
+    .activity-time {
+      color: #999;
+      font-size: 0.85rem;
+    }
+    .back-btn {
+      display: inline-block;
+      background: var(--cyan);
+      color: black;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .back-btn:hover {
+      background: var(--yellow);
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <div class="analytics-container">
+    <a href="/admin" class="back-btn">← Back to Admin Dashboard</a>
+    
+    <h1 style="color: var(--yellow); margin-bottom: 0.5rem;">📊 Site Analytics</h1>
+    <p style="color: #b8b8b8; margin-bottom: 2rem;">Real-time traffic stats for Pixels Dojo</p>
+
+    <!-- Overview Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value"><%= overallStats.totalUniqueVisitors.toLocaleString() %></div>
+        <div class="stat-label">Total Unique Visitors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= overallStats.totalPageViews.toLocaleString() %></div>
+        <div class="stat-label">Total Page Views</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= monthlyStats.monthlyVisitors.toLocaleString() %></div>
+        <div class="stat-label">This Month's Visitors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= monthlyStats.monthlyPageViews.toLocaleString() %></div>
+        <div class="stat-label">This Month's Page Views</div>
+      </div>
+    </div>
+
+    <!-- Traffic Chart (Last 30 Days) -->
+    <div class="chart-container">
+      <h2 style="color: var(--cyan); margin-top: 0;">Daily Traffic (Last 30 Days)</h2>
+      <canvas id="trafficChart"></canvas>
+    </div>
+
+    <!-- Popular Pages -->
+    <div class="table-container">
+      <h2 style="color: var(--cyan); margin-top: 0;">Top 10 Most Viewed Pages</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Page</th>
+            <th>Views</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% popularPages.forEach((page, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= page.page_path %></td>
+              <td><strong><%= page.views.toLocaleString() %></strong></td>
+            </tr>
+          <% }) %>
+          <% if (popularPages.length === 0) { %>
+            <tr>
+              <td colspan="3" style="text-align: center; color: #999;">No data yet</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="table-container">
+      <h2 style="color: var(--cyan); margin-top: 0;">Recent Activity (Last 20 Visits)</h2>
+      <% if (recentActivity.length > 0) { %>
+        <% recentActivity.forEach(activity => { %>
+          <div class="activity-item">
+            <strong><%= activity.page_path %></strong>
+            <div class="activity-time">
+              <%= new Date(activity.created_at).toLocaleString() %>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p style="color: #999; text-align: center;">No activity yet</p>
+      <% } %>
+    </div>
+
+    <!-- Advertiser Info Box -->
+    <div style="background: linear-gradient(135deg, rgba(0,204,0,0.15) 0%, rgba(0,255,255,0.15) 100%); border: 3px solid rgba(0,255,255,0.5); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center;">
+      <h3 style="color: var(--cyan); margin-top: 0;">📈 Advertiser Stats Summary</h3>
+      <p style="color: #ddd; margin: 1rem 0;">
+        <strong>Total Unique Visitors:</strong> <%= overallStats.totalUniqueVisitors.toLocaleString() %><br>
+        <strong>Total Page Views:</strong> <%= overallStats.totalPageViews.toLocaleString() %><br>
+        <strong>Monthly Average:</strong> <%= Math.round(monthlyStats.monthlyPageViews / 30).toLocaleString() %> views/day<br>
+        <strong>Top Page:</strong> <%= popularPages[0] ? popularPages[0].page_path : 'N/A' %> (<%= popularPages[0] ? popularPages[0].views : 0 %> views)
+      </p>
+      <p style="color: #999; font-size: 0.85rem; margin-top: 1.5rem;">
+        💡 Use these stats when pitching to advertisers. You can also take screenshots of this dashboard!
+      </p>
+    </div>
+
+  </div>
+
+  <%- include('partials/footer') %>
+
+  <script>
+    // Traffic Chart
+    const ctx = document.getElementById('trafficChart').getContext('2d');
+    const dailyData = <%- JSON.stringify(dailyStats) %>;
+    
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: dailyData.map(d => d.date),
+        datasets: [{
+          label: 'Page Views',
+          data: dailyData.map(d => d.page_views),
+          borderColor: '#00ffff',
+          backgroundColor: 'rgba(0,255,255,0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#00ffff'
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#b8b8b8'
+            },
+            grid: {
+              color: 'rgba(0,255,255,0.1)'
+            }
+          },
+          x: {
+            ticks: {
+              color: '#b8b8b8'
+            },
+            grid: {
+              color: 'rgba(0,255,255,0.1)'
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
