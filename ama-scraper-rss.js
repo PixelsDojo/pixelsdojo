@@ -138,18 +138,54 @@ async function processAMA(ama) {
 }
 
 // Format content with proper attribution (NO IMAGES OR EMBEDS!)
+// Format content with proper attribution (ULTRA CLEAN - NO EMBEDS!)
 function formatContent(content, url) {
-  // Clean up HTML and REMOVE ALL IMAGES AND IFRAMES
+  // STEP 1: Remove ALL embedded content aggressively
   let cleaned = content
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove scripts
-    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '') // Remove styles
-    .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '') // REMOVE ALL IFRAMES (YouTube, etc)
-    .replace(/<img[^>]*>/gi, '') // REMOVE ALL IMAGES!
-    .replace(/<figure[^>]*>.*?<\/figure>/gi, '') // Remove figures
-    .replace(/<picture[^>]*>.*?<\/picture>/gi, '') // Remove pictures
-    .replace(/<video[^>]*>.*?<\/video>/gi, ''); // Remove videos too
+    // Remove scripts
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gis, '')
+    // Remove styles
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gis, '')
+    // Remove ALL iframes (multiple patterns for safety)
+    .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
+    .replace(/<iframe[^>]*\/>/gi, '')
+    .replace(/<iframe[^>]*>/gi, '')
+    // Remove ALL images (multiple patterns)
+    .replace(/<img[\s\S]*?>/gi, '')
+    .replace(/<img[^>]*\/>/gi, '')
+    // Remove figures and pictures
+    .replace(/<figure[\s\S]*?<\/figure>/gi, '')
+    .replace(/<picture[\s\S]*?<\/picture>/gi, '')
+    // Remove videos
+    .replace(/<video[\s\S]*?<\/video>/gi, '')
+    .replace(/<video[^>]*\/>/gi, '')
+    // Remove audio
+    .replace(/<audio[\s\S]*?<\/audio>/gi, '')
+    // Remove embed tags
+    .replace(/<embed[\s\S]*?>/gi, '')
+    // Remove object tags
+    .replace(/<object[\s\S]*?<\/object>/gi, '')
+    // Remove any divs with "sub-frame" in id or class
+    .replace(/<div[^>]*(?:id|class)="[^"]*sub-frame[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
+    // Remove any elements with "blocked" or "error" in class
+    .replace(/<[^>]*(?:class|id)="[^"]*(?:blocked|error|frame-error)[^"]*"[^>]*>[\s\S]*?<\/[^>]+>/gi, '')
+    // Remove empty divs
+    .replace(/<div[^>]*>\s*<\/div>/gi, '')
+    // Remove data attributes that might contain blocked content
+    .replace(/data-[a-z-]+="[^"]*"/gi, '')
+    // Clean up excessive whitespace
+    .replace(/\s{3,}/g, ' ')
+    .replace(/\n{3,}/g, '\n\n');
   
-  // Wrap with attribution
+  // STEP 2: If content is too short or empty, show a message
+  if (cleaned.trim().length < 100) {
+    cleaned = `
+      <p><strong>📰 This AMA contains primarily embedded content (videos, images) that cannot be displayed here.</strong></p>
+      <p>Please visit the original article on Substack to view the full content including all media.</p>
+    `;
+  }
+  
+  // STEP 3: Wrap with attribution
   const formatted = `
 <div class="ama-content" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto;">
   
@@ -166,7 +202,7 @@ function formatContent(content, url) {
     </p>
   </div>
   
-  <!-- Main Content (no images!) -->
+  <!-- Main Content (text only!) -->
   <div class="ama-body" style="margin: 2rem 0;">
     ${cleaned}
   </div>
