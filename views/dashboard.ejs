@@ -97,6 +97,20 @@
       background: rgba(0,255,255,0.1);
       color: var(--cyan);
     }
+
+    /* Event-specific fields styling */
+    #eventFields {
+      background: rgba(0, 255, 255, 0.05);
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      margin-top: 1rem;
+    }
+
+    #eventFields label {
+      color: var(--cyan);
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
@@ -179,13 +193,27 @@
 
         <div class="form-group">
           <label for="category">Category</label>
-          <select id="category" name="category">
+          <select id="category" name="category" onchange="toggleEventFields()">
             <option value="">None</option>
             <option value="startup">Start Here</option>
             <option value="earn">Earn $PIXEL</option>
             <option value="mastery">Mastery</option>
+            <option value="events">Events</option>
             <option value="community">Community</option>
           </select>
+        </div>
+
+        <!-- Event-specific fields -->
+        <div id="eventFields" style="display: none;">
+          <div class="form-group">
+            <label for="eventExpiry">Event Expiry Date & Time *</label>
+            <input type="datetime-local" id="eventExpiry" name="event_expiry">
+            <small style="color: #999;">Set when this event should expire and be removed from the Events page</small>
+          </div>
+          <div class="form-group">
+            <label for="eventLocation">Event Location (optional)</label>
+            <input type="text" id="eventLocation" name="event_location" placeholder="e.g., Discord, Community Hall, etc.">
+          </div>
         </div>
 
         <div class="form-group">
@@ -234,6 +262,21 @@
     let isEditMode = false;
     let currentPageId = null;
 
+    // Toggle event fields based on category selection
+    function toggleEventFields() {
+      const categorySelect = document.getElementById('category');
+      const eventFields = document.getElementById('eventFields');
+      const expiryInput = document.getElementById('eventExpiry');
+      
+      if (categorySelect.value === 'events') {
+        eventFields.style.display = 'block';
+        expiryInput.required = true;
+      } else {
+        eventFields.style.display = 'none';
+        expiryInput.required = false;
+      }
+    }
+
     // Initialize Quill editor
     document.addEventListener('DOMContentLoaded', function() {
       quill = new Quill('#quill-editor', {
@@ -261,6 +304,7 @@
       quill.setContents([]);
       document.getElementById('slug').disabled = false;
       document.getElementById('pageModal').style.display = 'block';
+      toggleEventFields(); // Reset event fields visibility
     }
 
     function closePageModal() {
@@ -290,10 +334,21 @@
         document.getElementById('summary').value = page.summary || '';
         document.getElementById('pro_tips').value = page.pro_tips || '';
         
+        // Handle event-specific fields
+        if (page.event_expiry) {
+          document.getElementById('eventExpiry').value = page.event_expiry;
+        }
+        if (page.event_location) {
+          document.getElementById('eventLocation').value = page.event_location;
+        }
+        
         // Set Quill content
         if (page.content) {
           quill.root.innerHTML = page.content;
         }
+
+        // Show/hide event fields based on category
+        toggleEventFields();
 
         document.getElementById('pageModal').style.display = 'block';
       } catch (error) {
