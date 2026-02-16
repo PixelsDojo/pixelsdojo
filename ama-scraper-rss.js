@@ -1,7 +1,7 @@
 // ama-scraper-rss.js
 // Scrapes Pixels Post Substack AMAs using RSS feed (bypasses paywall!)
 // Fetches AMAs from December 1, 2025 onwards
-// UPDATED: Clean formatting - no images, no summaries
+// FINAL VERSION - Clean formatting, no images, no summaries
 
 const axios = require('axios');
 const cheerio = require('cheerio');
@@ -145,7 +145,8 @@ function formatContent(content, url) {
     .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '') // Remove styles
     .replace(/<img[^>]*>/gi, '') // REMOVE ALL IMAGES!
     .replace(/<figure[^>]*>.*?<\/figure>/gi, '') // Remove figures
-    .replace(/<picture[^>]*>.*?<\/picture>/gi, ''); // Remove pictures
+    .replace(/<picture[^>]*>.*?<\/picture>/gi, '') // Remove pictures
+    .replace(/gesture="media"/gi, 'allow="autoplay"'); // Fix iframe warning
   
   // Wrap with attribution
   const formatted = `
@@ -256,15 +257,6 @@ if (require.main === module) {
       process.exit(1);
     });
 }
-
-// Clean up HTML and REMOVE ALL IMAGES
-let cleaned = content
-  .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-  .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-  .replace(/<img[^>]*>/gi, '')
-  .replace(/<figure[^>]*>.*?<\/figure>/gi, '')
-  .replace(/<picture[^>]*>.*?<\/picture>/gi, '')
-  .replace(/gesture="media"/gi, 'allow="autoplay"'); // FIX IFRAME WARNING
 
 // Export for use in other scripts
 module.exports = { scrapeAMAs };
