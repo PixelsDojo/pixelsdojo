@@ -1350,3 +1350,114 @@ main img,
     padding: 1.8rem 1rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   AMA PAGE FIXES - Add this to the BOTTOM of your style.css file
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Fix: Make main content area wider and images reasonable size */
+.main-content,
+.content-area,
+.page-content {
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Fix: Constrain ALL images on wiki/AMA pages */
+.page-content img,
+.article-content img,
+.wiki-content img,
+.ama-content img,
+.ama-body img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 1.5rem auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Fix: Iframes (YouTube embeds) should also be constrained */
+.page-content iframe,
+.article-content iframe,
+.ama-content iframe,
+.ama-body iframe {
+    max-width: 100% !important;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    margin: 1.5rem auto;
+    display: block;
+    border-radius: 8px;
+}
+
+/* Fix: The AMA content wrapper from the scraper */
+.ama-content {
+    max-width: 800px !important;
+    margin: 0 auto !important;
+    padding: 2rem 1rem;
+}
+
+/* Fix: AMA body text should be readable width */
+.ama-body {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    line-height: 1.8;
+}
+
+/* Fix: AMA source and footer boxes */
+.ama-source,
+.ama-footer {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Fix: Lists inside AMA content */
+.ama-body ul,
+.ama-body ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+}
+
+.ama-body li {
+    margin-bottom: 0.5rem;
+}
+
+/* Fix: Headings inside AMA content */
+.ama-body h1,
+.ama-body h2,
+.ama-body h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--cyan);
+}
+
+/* Fix: Paragraphs inside AMA content */
+.ama-body p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+}
+
+/* Fix: Blockquotes inside AMA content */
+.ama-body blockquote {
+    border-left: 4px solid var(--cyan);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #ddd;
+}
+
+/* Fix: Code blocks inside AMA content */
+.ama-body pre,
+.ama-body code {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   END OF AMA PAGE FIXES
+   ═══════════════════════════════════════════════════════════════════ */
