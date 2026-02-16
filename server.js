@@ -347,6 +347,106 @@ app.get('/npcs', (req, res) => {
   });
 });
 
+// ========== NPCs & MAP COMBINED PAGE (NEW) ==========
+app.get('/npcs-map', (req, res) => {
+  const sort = req.query.sort || 'display_order';
+  
+  let orderBy = 'display_order ASC, id ASC';
+  switch(sort) {
+    case 'name':
+      orderBy = 'name ASC';
+      break;
+    case 'name-desc':
+      orderBy = 'name DESC';
+      break;
+    case 'location':
+      orderBy = 'location ASC, name ASC';
+      break;
+    case 'location-desc':
+      orderBy = 'location DESC, name ASC';
+      break;
+  }
+  
+  // Get NPCs
+  db.all(`SELECT * FROM npcs ORDER BY ${orderBy}`, [], (err, npcs) => {
+    if (err) {
+      console.error('Error fetching NPCs:', err);
+      return res.status(500).send('Database error');
+    }
+    
+    // Get map guide post (static post with slug 'terravilla-map-guide')
+    db.get(`
+      SELECT pages.*, users.display_name as author_display_name
+      FROM pages 
+      LEFT JOIN users ON pages.author_id = users.id
+      WHERE pages.slug = 'terravilla-map-guide'
+      LIMIT 1
+    `, [], (err2, mapGuide) => {
+      if (err2) {
+        console.error('Error fetching map guide:', err2);
+      }
+      
+      res.render('npcs-map', { 
+        npcs: npcs || [],
+        mapGuide: mapGuide || null,
+        currentSort: sort,
+        user: req.session.user || null
+      });
+    });
+  });
+});
+
+// ========== EVENTS PAGE (NEW) ==========
+app.get('/events', (req, res) => {
+  const query = `
+    SELECT 
+      pages.*,
+      users.display_name as author_display_name
+    FROM pages 
+    LEFT JOIN users ON pages.author_id = users.id
+    WHERE pages.category = 'events'
+    ORDER BY pages.expires_on DESC, pages.created_at DESC
+  `;
+  
+  db.all(query, [], (err, events) => {
+    if (err) {
+      console.error('Error fetching events:', err);
+      return res.status(500).send('Database error');
+    }
+    
+    res.render('events', { 
+      events: events || [],
+      user: req.session.user || null
+    });
+  });
+});
+
+// ========== AMAs PAGE (NEW) ==========
+app.get('/amas', (req, res) => {
+  const query = `
+    SELECT 
+      pages.*,
+      users.display_name as author_display_name
+    FROM pages 
+    LEFT JOIN users ON pages.author_id = users.id
+    WHERE pages.category = 'amas'
+    ORDER BY pages.created_at DESC
+  `;
+  
+  db.all(query, [], (err, amas) => {
+    if (err) {
+      console.error('Error fetching AMAs:', err);
+      return res.status(500).send('Database error');
+    }
+    
+    res.render('amas', { 
+      amas: amas || [],
+      category: 'amas',
+      user: req.session.user || null
+    });
+  });
+});
+
 // Admin: Create new NPC
 app.post('/admin/npcs', requireAdmin, upload.single('image'), (req, res) => {
   const { name, location, description, display_order } = req.body;
