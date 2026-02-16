@@ -77,6 +77,15 @@ db.serialize(() => {
     }
   });
 
+  // Add expires_on column for time-limited events
+  db.run(`ALTER TABLE pages ADD COLUMN expires_on TEXT;`, (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Error adding expires_on column:', err.message);
+    } else {
+      console.log('expires_on column ready (already exists or added)');
+    }
+  });
+
   // Wiki Pages
   db.run(`CREATE TABLE IF NOT EXISTS pages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
