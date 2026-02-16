@@ -1471,3 +1471,53 @@ iframe[src="about:blank"] {
 /* ═══════════════════════════════════════════════════════════════════
    END OF AMA PAGE FIXES
    ═══════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════
+   NUCLEAR OPTION - OBLITERATE ALL BLOCKED CONTENT ERRORS
+   Add this to the BOTTOM of your style.css (after the other AMA fixes)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Hide ALL variations of blocked content errors */
+#sub-frame-error,
+#sub-frame-error-details,
+[id*="sub-frame"],
+[id*="error-details"],
+[id*="frame-error"],
+.icon-generic,
+.sub-frame-error,
+iframe[src="about:blank"],
+iframe[src=""],
+iframe:not([src]),
+div:has(> .icon-generic),
+div:has(> #sub-frame-error-details) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+/* Hide any divs that only contain the blocked message */
+.ama-body > div:empty,
+.ama-content > div:empty,
+.content-body > div:empty {
+    display: none !important;
+}
+
+/* If somehow an iframe still exists in AMA content, obliterate it */
+.ama-body iframe,
+.ama-content iframe,
+.content-body iframe {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   END OF NUCLEAR OPTION
+   ═══════════════════════════════════════════════════════════════════ */
