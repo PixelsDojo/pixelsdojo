@@ -6,39 +6,6 @@
     <title>Pixels Dojo Wiki - Master Pixels Online</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/chat-widget.css">
-    <style>
-      /* Back to Top Button */
-      .back-to-top {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background: linear-gradient(135deg, var(--cyan) 0%, #00d4ff 100%);
-        color: #000;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        text-decoration: none;
-        box-shadow: 0 4px 12px rgba(0, 255, 255, 0.4);
-        transition: all 0.3s ease;
-        opacity: 0;
-        visibility: hidden;
-        z-index: 1000;
-      }
-      
-      .back-to-top.visible {
-        opacity: 1;
-        visibility: visible;
-      }
-      
-      .back-to-top:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 20px rgba(0, 255, 255, 0.6);
-      }
-    </style>
 </head>
 <body>
     <%- include('partials/header') %>
@@ -72,240 +39,249 @@
         <a href="/category/mastery">Mastery</a>
         <a href="/category/community">Community</a>
         <div class="sidebar-logo">
-        <img src="/images/pixeldojo_logo_portrait.png" 
-         alt="Pixels Dojo Logo" 
-         class="sidebar-logo-img">
-</div>
+          <img src="/images/pixeldojo_logo_portrait.png" alt="Pixels Dojo Logo" class="sidebar-logo-img">
+        </div>
       </aside>
 
-        <div class="main-content-area">
-    <section class="hero-full" id="top">
-  <div class="hero-bg">
-    <img 
-      src="/images/banner with pixels dojo in white.png" 
-      alt="Pixels Dojo Banner" 
-      class="hero-bg-image"
-      onerror="this.src='/images/defaults/default1.jpg';" 
-      loading="lazy"
-    >
-    <div class="hero-overlay"></div>
-  </div>
+      <div class="main-content-area">
+        
+        <!-- Hero Section - SMALLER -->
+        <section class="hero-full" id="top">
+          <div class="hero-bg">
+            <img 
+              src="/images/banner with pixels dojo in white.png" 
+              alt="Pixels Dojo Banner" 
+              class="hero-bg-image"
+              onerror="this.src='/images/defaults/default1.jpg';" 
+              loading="lazy"
+            >
+            <div class="hero-overlay"></div>
+          </div>
 
-  <div class="hero-content">
-    <h1 class="hero-title">PIXELS DOJO</h1>
-    <p class="hero-tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
+          <div class="hero-content">
+            <h1 class="hero-title">PIXELS DOJO</h1>
+            <p class="hero-tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
 
-   <div class="main-buttons">
-  <a href="/category/startup" class="main-button">
-    <div class="icon">🌱</div>
-    <h3>Start Here</h3>
-    <p>Beginner guides & first steps</p>
-  </a>
+            <div class="main-buttons">
+              <a href="/category/startup" class="main-button">
+                <div class="icon">🌱</div>
+                <h3>Start Here</h3>
+                <p>Beginner guides & first steps</p>
+              </a>
 
-  <a href="/category/earn" class="main-button">
-    <div class="icon">💰</div>
-    <h3>Earn $PIXEL</h3>
-    <p>Strategies & mechanisms</p>
-  </a>
+              <a href="/category/earn" class="main-button">
+                <div class="icon">💰</div>
+                <h3>Earn $PIXEL</h3>
+                <p>Strategies & mechanisms</p>
+              </a>
 
-  <a href="/category/mastery" class="main-button">
-    <div class="icon">👑</div>
-    <h3>Mastery</h3>
-    <p>VIP • NFTs • Advanced</p>
-  </a>
+              <a href="/category/mastery" class="main-button">
+                <div class="icon">👑</div>
+                <h3>Mastery</h3>
+                <p>VIP • NFTs • Advanced</p>
+              </a>
+            </div>
+          </div>
+        </section>
 
-</div>
-  </div>
-</section>
-<div>
-      <!-- Search Bar -->
-      <div class="search-bar-container">
+        <!-- Search Bar -->
+        <div class="search-bar-container">
           <form action="/search" method="GET" class="search-form">
-              <input type="text" name="q" placeholder="Search the wiki..." required>
-              <button type="submit" class="btn btn-cyan">Search</button>
+            <input type="text" name="q" placeholder="Search the wiki..." required>
+            <button type="submit" class="btn btn-cyan">Search</button>
           </form>
-      </div>
+        </div>
 
-      <!-- Category Grid with IMPROVED content -->
-      <section class="category-grid">
+        <!-- Category Grid -->
+        <section class="category-grid">
+          
           <!-- Start Here -->
           <div class="category-block">
-              <h2>🌱 Start Here</h2>
-              <p><strong>New to Pixels?</strong> Learn the basics of TerraVilla, meet the NPCs, and get your first $PIXEL!</p>
-              <ul style="text-align: left; color: #d0d0ff; margin: 1rem 0; line-height: 1.8;">
-                <li>🗺️ Navigate TerraVilla</li>
-                <li>👥 Meet the NPCs</li>
-                <li>🌾 Start farming</li>
-                <li>⚡ Your first quest</li>
-              </ul>
-              <a href="/category/startup" class="btn btn-outline">View Guides →</a>
+            <h2>🌱 Start Here</h2>
+            <p><strong>New to Pixels?</strong> Learn the basics of TerraVilla, meet the NPCs, and get your first $PIXEL!</p>
+            <ul>
+              <li>🗺️ Navigate TerraVilla</li>
+              <li>👥 Meet the NPCs</li>
+              <li>🌾 Start farming</li>
+              <li>⚡ Your first quest</li>
+            </ul>
+            <a href="/category/startup" class="btn btn-outline">View Guides →</a>
           </div>
 
           <!-- Earn $PIXEL -->
           <div class="category-block">
-              <h2>💰 Earn $PIXEL</h2>
-              <p><strong>Make money playing!</strong> Discover all the ways to earn $PIXEL tokens in the game.</p>
-              <ul style="text-align: left; color: #d0d0ff; margin: 1rem 0; line-height: 1.8;">
-                <li>🌾 Farming strategies</li>
-                <li>🎮 Arcade competitions</li>
-                <li>📦 Shipping contracts</li>
-                <li>🏆 Hearth Hall rewards</li>
-              </ul>
-              <a href="/category/earn" class="btn btn-outline">View Strategies →</a>
+            <h2>💰 Earn $PIXEL</h2>
+            <p><strong>Make money playing!</strong> Discover all the ways to earn $PIXEL tokens in the game.</p>
+            <ul>
+              <li>🌾 Farming strategies</li>
+              <li>🎮 Arcade competitions</li>
+              <li>📦 Shipping contracts</li>
+              <li>🏆 Hearth Hall rewards</li>
+            </ul>
+            <a href="/category/earn" class="btn btn-outline">View Strategies →</a>
           </div>
 
           <!-- Mastery -->
           <div class="category-block">
-              <h2>👑 Mastery</h2>
-              <p><strong>Level up your game!</strong> Advanced tactics, VIP perks, NFT lands, and pro strategies.</p>
-              <ul style="text-align: left; color: #d0d0ff; margin: 1rem 0; line-height: 1.8;">
-                <li>💎 VIP membership</li>
-                <li>🏝️ NFT lands</li>
-                <li>🎨 UGC creation</li>
-                <li>📈 Advanced farming</li>
-              </ul>
-              <a href="/category/mastery" class="btn btn-outline">View Advanced →</a>
+            <h2>👑 Mastery</h2>
+            <p><strong>Level up your game!</strong> Advanced tactics, VIP perks, NFT lands, and pro strategies.</p>
+            <ul>
+              <li>💎 VIP membership</li>
+              <li>🏝️ NFT lands</li>
+              <li>🎨 UGC creation</li>
+              <li>📈 Advanced farming</li>
+            </ul>
+            <a href="/category/mastery" class="btn btn-outline">View Advanced →</a>
           </div>
 
-        <!-- Recent Guides -->
-<div class="category-block recent wide-block">
-  <h2>📚 Recent Guides</h2>
-  <div class="recent-grid">
-    <% if (recentPages && recentPages.length > 0) { %>
-      <% recentPages.slice(0, 16).forEach(page => { %>
-        <a href="/pages/<%= page.slug %>" class="recent-card">
-          <% 
-            let thumbnail = '/images/placeholder.jpg';
-            try {
-              const shots = JSON.parse(page.screenshots || '[]');
-              if (shots.length > 0) thumbnail = shots[0];
-            } catch (e) {}
-          %>
-          <div class="card-image">
-            <img 
-              src="<%= thumbnail %>" 
-              alt="<%= page.title %>" 
-              loading="lazy"
-              onerror="this.src='/images/placeholder.jpg'"
-            >
+          <!-- Recent Guides -->
+          <div class="category-block recent wide-block">
+            <h2>📚 Recent Guides</h2>
+            <div class="recent-grid">
+              <% if (recentPages && recentPages.length > 0) { %>
+                <% recentPages.slice(0, 16).forEach(page => { %>
+                  <a href="/pages/<%= page.slug %>" class="recent-card">
+                    <% 
+                      let thumbnail = '/images/placeholder.jpg';
+                      try {
+                        const shots = JSON.parse(page.screenshots || '[]');
+                        if (shots.length > 0) thumbnail = shots[0];
+                      } catch (e) {}
+                    %>
+                    <div class="card-image">
+                      <img 
+                        src="<%= thumbnail %>" 
+                        alt="<%= page.title %>" 
+                        loading="lazy"
+                        onerror="this.src='/images/placeholder.jpg'"
+                      >
+                    </div>
+                    <div class="card-content">
+                      <h3><%= page.title %></h3>
+                      <p class="snippet">
+                        <%= (page.summary || page.content.substring(0, 150) + '...') %>
+                      </p>
+                      <small>By <%= page.author_display_name || 'Community' %></small>
+                    </div>
+                  </a>
+                <% }) %>
+              <% } else { %>
+                <p class="no-content">No guides yet - be the first to contribute!</p>
+              <% } %>
+            </div>
+            <a href="/all-posts" class="btn btn-outline">View All Guides →</a>
           </div>
-          <div class="card-content">
-            <h3><%= page.title %></h3>
-            <p class="snippet">
-              <%= (page.summary || page.content.substring(0, 150) + '...') %>
-            </p>
-            <small>By <%= page.author_display_name || 'Community' %></small>
-          </div>
-        </a>
-      <% }) %>
-    <% } else { %>
-      <p style="color: #999; text-align: center; padding: 2rem;">
-        No guides yet - be the first to contribute!
-      </p>
-    <% } %>
-  </div>
-  <a href="/all-posts" class="btn btn-outline">View All Guides →</a>
-</div>
-      </section>
+        </section>
 
-      <!-- Most Upvoted (Keep) -->
-      <section class="featured-post">
+        <!-- Most Upvoted - COMPACT VERSION -->
+        <section class="featured-compact">
           <h2>⭐ Most Upvoted Guide</h2>
-          <div class="featured-card">
-              <% if (mostUpvoted) { %>
-                  <% 
-                    let upvotedThumb = '/images/placeholder.jpg';
-                    try {
-                      if (mostUpvoted.screenshots) {
-                        const shots = typeof mostUpvoted.screenshots === 'string' 
-                          ? JSON.parse(mostUpvoted.screenshots) 
-                          : mostUpvoted.screenshots;
-                        if (shots && shots.length > 0) upvotedThumb = shots[0];
-                      }
-                    } catch (e) {}
-                  %>
-                  <img src="<%= upvotedThumb %>" alt="<%= mostUpvoted.title %>" onerror="this.src='/images/placeholder.jpg'">
-                  <div>
-                      <h3><a href="/pages/<%= mostUpvoted.slug %>"><%= mostUpvoted.title %></a></h3>
-                      <p><%= mostUpvoted.summary || mostUpvoted.content.substring(0, 200) + '...' %></p>
-                      <small>⭐ <%= mostUpvoted.upvotes || 0 %> upvotes • By <%= mostUpvoted.author_display_name || 'Community' %></small>
-                  </div>
-              <% } else { %>
-                  <div class="placeholder-card">
-                    <p style="color: #999;">No guides yet - start creating content!</p>
-                  </div>
-              <% } %>
-          </div>
-      </section>
+          <% if (mostUpvoted) { %>
+            <% 
+              let upvotedThumb = '/images/placeholder.jpg';
+              try {
+                if (mostUpvoted.screenshots) {
+                  const shots = typeof mostUpvoted.screenshots === 'string' 
+                    ? JSON.parse(mostUpvoted.screenshots) 
+                    : mostUpvoted.screenshots;
+                  if (shots && shots.length > 0) upvotedThumb = shots[0];
+                }
+              } catch (e) {}
+            %>
+            <a href="/pages/<%= mostUpvoted.slug %>" class="compact-card">
+              <img src="<%= upvotedThumb %>" alt="<%= mostUpvoted.title %>" class="compact-thumb" onerror="this.src='/images/placeholder.jpg'">
+              <div class="compact-info">
+                <h3><%= mostUpvoted.title %></h3>
+                <p class="compact-meta">
+                  ⭐ <%= mostUpvoted.upvotes || 0 %> upvotes • 
+                  <%= new Date(mostUpvoted.created_at).toLocaleDateString() %>
+                </p>
+              </div>
+            </a>
+          <% } else { %>
+            <p class="no-content">No guides yet - start creating content!</p>
+          <% } %>
+        </section>
 
-      <!-- Most Viewed (Keep) -->
-      <section class="featured-post">
+        <!-- Most Viewed - COMPACT VERSION -->
+        <section class="featured-compact">
           <h2>🔥 Most Viewed Guide</h2>
-          <div class="featured-card">
-              <% if (mostViewed) { %>
-                  <% 
-                    let viewedThumb = '/images/placeholder.jpg';
-                    try {
-                      if (mostViewed.screenshots) {
-                        const shots = typeof mostViewed.screenshots === 'string' 
-                          ? JSON.parse(mostViewed.screenshots) 
-                          : mostViewed.screenshots;
-                        if (shots && shots.length > 0) viewedThumb = shots[0];
-                      }
-                    } catch (e) {}
-                  %>
-                  <img src="<%= viewedThumb %>" alt="<%= mostViewed.title %>" onerror="this.src='/images/placeholder.jpg'">
-                  <div>
-                      <h3><a href="/pages/<%= mostViewed.slug %>"><%= mostViewed.title %></a></h3>
-                      <p><%= mostViewed.summary || mostViewed.content.substring(0, 200) + '...' %></p>
-                      <small>👁️ <%= mostViewed.views || 0 %> views • By <%= mostViewed.author_display_name || 'Community' %></small>
-                  </div>
-              <% } else { %>
-                  <div class="placeholder-card">
-                    <p style="color: #999;">No guides yet - your article could be first!</p>
-                  </div>
-              <% } %>
+          <% if (mostViewed) { %>
+            <% 
+              let viewedThumb = '/images/placeholder.jpg';
+              try {
+                if (mostViewed.screenshots) {
+                  const shots = typeof mostViewed.screenshots === 'string' 
+                    ? JSON.parse(mostViewed.screenshots) 
+                    : mostViewed.screenshots;
+                  if (shots && shots.length > 0) viewedThumb = shots[0];
+                }
+              } catch (e) {}
+            %>
+            <a href="/pages/<%= mostViewed.slug %>" class="compact-card">
+              <img src="<%= viewedThumb %>" alt="<%= mostViewed.title %>" class="compact-thumb" onerror="this.src='/images/placeholder.jpg'">
+              <div class="compact-info">
+                <h3><%= mostViewed.title %></h3>
+                <p class="compact-meta">
+                  👁️ <%= mostViewed.views || 0 %> views • 
+                  <%= new Date(mostViewed.created_at).toLocaleDateString() %>
+                </p>
+              </div>
+            </a>
+          <% } else { %>
+            <p class="no-content">No guides yet - your article could be first!</p>
+          <% } %>
+        </section>
+
+        <!-- Quick Access - 6 BLOCKS (3x2 grid) -->
+        <section class="quick-access">
+          <h2>⚡ Quick Access</h2>
+          <div class="quick-grid">
+            
+            <a href="/events" class="quick-block">
+              <h3>⚡ Active Events</h3>
+              <p>Limited-time competitions & quests</p>
+            </a>
+            
+            <a href="/npcs-map" class="quick-block">
+              <h3>🗺️ TerraVilla Map</h3>
+              <p>Complete location guide & NPCs</p>
+            </a>
+            
+            <a href="/amas" class="quick-block">
+              <h3>💬 Weekly AMAs</h3>
+              <p>Developer Q&As & updates</p>
+            </a>
+            
+            <a href="/category/community" class="quick-block">
+              <h3>👥 Community</h3>
+              <p>Discord, socials & resources</p>
+            </a>
+
+            <a href="https://forms.gle/6dzJP8v5JYzvgmV99" target="_blank" rel="noopener noreferrer" class="quick-block contributor-block">
+              <h3>✍️ Become a Contributor</h3>
+              <p>Share your knowledge • Earn recognition</p>
+            </a>
+
+            <a href="#" class="quick-block merch-block">
+              <h3>🛍️ Pixels Dojo Merch</h3>
+              <p>Gear up in style • Coming soon!</p>
+            </a>
+
           </div>
-      </section>
+        </section>
 
-      <!-- Quick Links Section (NEW!) -->
-      <section class="content-section" style="background: rgba(237, 255, 132, 0.05); border: 2px solid rgba(237, 255, 132, 0.3); border-radius: 12px; padding: 2rem; margin: 2rem 0;">
-        <h2 style="color: var(--yellow); margin-bottom: 1.5rem;">⚡ Quick Access</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-          <a href="/events" style="background: rgba(0, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid rgba(0, 255, 255, 0.3); transition: all 0.3s;">
-            <h3 style="color: var(--cyan); margin-bottom: 0.5rem;">⚡ Active Events</h3>
-            <p style="color: #d0d0ff;">Limited-time competitions & quests</p>
-          </a>
-          <a href="/npcs-map" style="background: rgba(0, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid rgba(0, 255, 255, 0.3); transition: all 0.3s;">
-            <h3 style="color: var(--cyan); margin-bottom: 0.5rem;">🗺️ TerraVilla Map</h3>
-            <p style="color: #d0d0ff;">Complete location guide & NPCs</p>
-          </a>
-          <a href="/amas" style="background: rgba(0, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid rgba(0, 255, 255, 0.3); transition: all 0.3s;">
-            <h3 style="color: var(--cyan); margin-bottom: 0.5rem;">💬 Weekly AMAs</h3>
-            <p style="color: #d0d0ff;">Developer Q&As & updates</p>
-          </a>
-          <a href="/category/community" style="background: rgba(0, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid rgba(0, 255, 255, 0.3); transition: all 0.3s;">
-            <h3 style="color: var(--cyan); margin-bottom: 0.5rem;">👥 Community</h3>
-            <p style="color: #d0d0ff;">Discord, socials & resources</p>
-          </a>
-        </div>
-      </section>
-
-      <%- include('partials/footer') %>
-    </div>
+        <%- include('partials/footer') %>
+      </div>
     </div>
 
     <!-- Back to Top Button -->
-    <a href="#top" class="back-to-top" id="backToTop">
-      ↑
-    </a>
+    <a href="#top" class="back-to-top" id="backToTop">↑</a>
 
     <script src="/js/chat-widget.js"></script>
     <script src="/js/main.js"></script>
     
-    <!-- Back to Top Script -->
     <script>
-      // Show/hide back to top button
       const backToTop = document.getElementById('backToTop');
       
       window.addEventListener('scroll', () => {
@@ -316,13 +292,9 @@
         }
       });
       
-      // Smooth scroll to top
       backToTop.addEventListener('click', (e) => {
         e.preventDefault();
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     </script>
 </body>
