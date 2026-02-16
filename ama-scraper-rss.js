@@ -137,16 +137,17 @@ async function processAMA(ama) {
   }
 }
 
-// Format content with proper attribution (NO IMAGES!)
+// Format content with proper attribution (NO IMAGES OR EMBEDS!)
 function formatContent(content, url) {
-  // Clean up HTML and REMOVE ALL IMAGES
+  // Clean up HTML and REMOVE ALL IMAGES AND IFRAMES
   let cleaned = content
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove scripts
     .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '') // Remove styles
+    .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '') // REMOVE ALL IFRAMES (YouTube, etc)
     .replace(/<img[^>]*>/gi, '') // REMOVE ALL IMAGES!
     .replace(/<figure[^>]*>.*?<\/figure>/gi, '') // Remove figures
     .replace(/<picture[^>]*>.*?<\/picture>/gi, '') // Remove pictures
-    .replace(/gesture="media"/gi, 'allow="autoplay"'); // Fix iframe warning
+    .replace(/<video[^>]*>.*?<\/video>/gi, ''); // Remove videos too
   
   // Wrap with attribution
   const formatted = `
