@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder
 const db = require('./database');
 
 // Bot Configuration
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN || 'MTQ3MjYwOTk0NDMxMzUyODU2Mw.Gvq9qH.IWJF6rZADtzqCAejsobB6dWLSdtsW5dh7PYYaY';
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 const SERVER_ID = '1092464767760867491';
 const RULES_CHANNEL_ID = '1440049632658063461';
 const ANNOUNCEMENTS_CHANNEL_ID = '1472611371144450149';
