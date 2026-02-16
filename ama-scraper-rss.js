@@ -1,6 +1,7 @@
 // ama-scraper-rss.js
 // Scrapes Pixels Post Substack AMAs using RSS feed (bypasses paywall!)
 // Fetches AMAs from December 1, 2025 onwards
+// UPDATED: Clean formatting - no images, no summaries
 
 const axios = require('axios');
 const cheerio = require('cheerio');
@@ -42,8 +43,7 @@ async function scrapeAMAs() {
         const title = $item.find('title').text().trim();
         const url = $item.find('link').text().trim();
         const pubDate = $item.find('pubDate').text().trim();
-        const description = $item.find('description').text().trim();
-        const content = $item.find('content\\:encoded, encoded').text().trim() || description;
+        const content = $item.find('content\\:encoded, encoded').text().trim();
         
         // Only include if title contains "AMA"
         if (title.toLowerCase().includes('ama')) {
@@ -51,7 +51,6 @@ async function scrapeAMAs() {
             title,
             url,
             pubDate,
-            description,
             content
           });
         }
@@ -116,15 +115,15 @@ async function processAMA(ama) {
       return 'skipped';
     }
     
-    // Clean and format content
-    const formattedContent = formatContent(ama.content, ama.url, ama.description);
+    // Clean and format content (NO IMAGES!)
+    const formattedContent = formatContent(ama.content, ama.url);
     
-    // Create wiki article
+    // Create wiki article (NO SUMMARY - will be empty)
     await createWikiArticle({
       slug,
       title: ama.title,
       content: formattedContent,
-      summary: ama.description.substring(0, 300) || 'Weekly AMA summary from The Pixels Post',
+      summary: '', // EMPTY - no snippet on AMAs page!
       url: ama.url,
       date: amaDate
     });
@@ -138,21 +137,19 @@ async function processAMA(ama) {
   }
 }
 
-// Format content with proper attribution
-function formatContent(content, url, description) {
-  // Clean up HTML
+// Format content with proper attribution (NO IMAGES!)
+function formatContent(content, url) {
+  // Clean up HTML and REMOVE ALL IMAGES
   let cleaned = content
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove scripts
-    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, ''); // Remove styles
-  
-  // If content is empty, use description
-  if (!cleaned || cleaned.length < 50) {
-    cleaned = `<p>${description}</p>`;
-  }
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '') // Remove styles
+    .replace(/<img[^>]*>/gi, '') // REMOVE ALL IMAGES!
+    .replace(/<figure[^>]*>.*?<\/figure>/gi, '') // Remove figures
+    .replace(/<picture[^>]*>.*?<\/picture>/gi, ''); // Remove pictures
   
   // Wrap with attribution
   const formatted = `
-<div class="ama-content" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6;">
+<div class="ama-content" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto;">
   
   <!-- Source Attribution -->
   <div class="ama-source" style="background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 255, 255, 0.05)); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border-left: 4px solid var(--cyan, #00ffff); box-shadow: 0 2px 8px rgba(0, 255, 255, 0.1);">
@@ -167,7 +164,7 @@ function formatContent(content, url, description) {
     </p>
   </div>
   
-  <!-- Main Content -->
+  <!-- Main Content (no images!) -->
   <div class="ama-body" style="margin: 2rem 0;">
     ${cleaned}
   </div>
@@ -206,9 +203,9 @@ async function createWikiArticle(data) {
       data.slug,
       data.title,
       data.content,
-      data.summary,
+      data.summary, // Empty string - no snippet!
       CATEGORY,
-      'Beginner', // All AMAs are accessible to everyone
+      'Beginner',
       AUTHOR_ID,
       data.date.toISOString(),
       now
@@ -238,7 +235,7 @@ function createSlug(title) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
-    .substring(0, 100); // Limit length
+    .substring(0, 100);
 }
 
 // Handle errors gracefully
