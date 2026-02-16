@@ -1,6 +1,6 @@
 /* ============================================
    PASTE THIS INTO YOUR /public/css/npcs.css FILE
-   (Replace the existing content or add to the end)
+   (Replace the existing content)
    ============================================ */
 
 /* Container with sidebar layout */
@@ -9,7 +9,7 @@
     margin: 0 auto;
     padding: 2rem;
     display: grid;
-    grid-template-columns: 1fr 900px 1fr; /* Left sidebar, content, right sidebar */
+    grid-template-columns: 80px 1fr 80px; /* THINNER sidebars - was 1fr 900px 1fr */
     gap: 2rem;
 }
 
@@ -38,10 +38,10 @@
     min-height: 400px;
 }
 
-/* NPC Grid */
+/* NPC Grid - 4 cards per row */
 .npc-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(4, 1fr); /* FIXED: 4 columns instead of auto-fill */
     gap: 1.5rem;
     padding: 1rem 0;
 }
@@ -73,6 +73,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top; /* FIXED: Crop from bottom by keeping top visible */
 }
 
 .npc-name {
@@ -81,9 +82,9 @@
     margin-bottom: 0.5rem;
 }
 
-/* FIX: Yellow location text instead of purple */
+/* Yellow location text instead of purple */
 .npc-location {
-    color: var(--yellow, #edff84) !important; /* Changed from purple to yellow */
+    color: var(--yellow, #edff84) !important; 
     font-size: 1rem;
     margin-bottom: 0.8rem;
     font-weight: 600;
@@ -104,7 +105,7 @@
     margin: 0; /* Remove extra margin */
 }
 
-/* FIX: Smaller map images */
+/* Smaller map images */
 .map-guide-section img,
 .map-content img,
 .map-image {
@@ -193,11 +194,34 @@
 
 /* RESPONSIVE DESIGN */
 
-/* Tablets */
-@media (max-width: 1200px) {
+/* Large screens - 4 columns */
+@media (min-width: 1400px) {
+    .npc-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Medium-large screens - 3 columns */
+@media (max-width: 1399px) and (min-width: 1000px) {
+    .npc-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
     .container {
-        grid-template-columns: 50px 1fr 50px; /* Smaller sidebars */
+        grid-template-columns: 40px 1fr 40px; /* Even thinner sidebars */
+    }
+}
+
+/* Tablets - 2 columns */
+@media (max-width: 999px) {
+    .container {
+        grid-template-columns: 20px 1fr 20px; /* Very thin sidebars */
         padding: 1.5rem;
+    }
+    
+    .npc-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
     
     .tab-content {
@@ -205,7 +229,7 @@
     }
 }
 
-/* Mobile */
+/* Mobile - 1 column */
 @media (max-width: 768px) {
     .container {
         grid-template-columns: 1fr; /* Single column, no sidebars */
