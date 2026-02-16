@@ -72,11 +72,12 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://widgets.coingecko.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://widgets.coingecko.com"],
+      scriptSrcAttr: ["'unsafe-inline'"],  // ADDED: Allow inline event handlers (onclick, etc)
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
       imgSrc: ["'self'", "data:", "https:", "http:"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-      connectSrc: ["'self'", "https://widgets.coingecko.com", "https://api.coingecko.com"],
+      connectSrc: ["'self'", "https://widgets.coingecko.com", "https://api.coingecko.com", "https://cdn.jsdelivr.net"],  // ADDED: jsdelivr
       frameSrc: ["'none'"],
       objectSrc: ["'none'"]
     }
