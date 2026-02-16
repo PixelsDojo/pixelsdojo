@@ -3,11 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= category.charAt(0).toUpperCase() + category.slice(1) %> AMAs - Pixels Dojo</title>
+  <title>Weekly AMAs | Pixels Dojo Wiki</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/chat-widget.css">
+  <style>
+    .all-posts-page {
+      background: var(--dark-bg, #0f0f1a);
+      color: #e0e0ff;
+      min-height: 100vh;
+    }
+
+    .all-posts-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .post-item {
+      background: rgba(20, 20, 40, 0.8);
+      border: 1px solid rgba(237, 255, 132, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .post-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--yellow);
+      box-shadow: 0 10px 25px rgba(237, 255, 132, 0.15);
+    }
+
+    .post-meta {
+      color: #b0b0ff;
+      font-size: 0.9rem;
+      margin: 0.5rem 0;
+    }
+
+    .post-snippet {
+      color: #d0d0ff;
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
+
+    h3 a {
+      color: var(--yellow);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    h3 a:hover {
+      color: var(--cyan);
+    }
+
+    .ama-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-left: 0.5rem;
+      background: rgba(237, 255, 132, 0.2);
+      color: var(--yellow);
+      border: 1px solid var(--yellow);
+    }
+  </style>
 </head>
-<body>
+<body class="all-posts-page">
   <%- include('partials/header') %>
 
   <nav>
@@ -16,20 +80,79 @@
       <li><a href="/category/startup">Start Here</a></li>
       <li><a href="/category/earn">Earn $PIXEL</a></li>
       <li><a href="/category/mastery">Mastery</a></li>
-      <li><a href="/npcs">NPCs</a></li>
+      <li><a href="/npcs-map">NPCs & Map</a></li>
+      <li><a href="/events">Events</a></li>
+      <li><a href="/amas">AMAs</a></li>
       <li><a href="/category/community">Community</a></li>
     </ul>
   </nav>
 
-  <div class="container" style="max-width: 1300px; margin: 3rem auto;">
-    <h1 style="color: var(--yellow); text-shadow: 0 0 12px rgba(237, 255, 132, 0.5); text-align: center; margin-bottom: 3rem;">
-      <%= category.charAt(0).toUpperCase() + category.slice(1) %> AMAs
-    </h1>
+  <div class="main-wrapper">
+    <aside class="sidebar">
+      <h4>Library</h4>
+      <a href="/">🏠 All Articles</a>
+      <a href="/npcs-map">🗺️ NPCs & Map</a>
+      <a href="/events">⚡ Events</a>
+      <a href="/amas">💬 AMAs</a>
+      <hr>
+      <h5>Categories</h5>
+      <a href="/category/startup">Start Here</a>
+      <a href="/category/earn">Earn $PIXEL</a>
+      <a href="/category/mastery">Mastery</a>
+      <a href="/category/community">Community</a>
+    </aside>
 
+    <div class="main-content-area">
+      <h1>💬 Weekly AMAs</h1>
+      <p style="color: #b0b0ff; margin-bottom: 2rem;">
+        Summaries from The Pixels Post - official developer Q&A sessions
+      </p>
+
+      <% if (amas.length === 0) { %>
+        <div style="background: rgba(237, 255, 132, 0.1); border: 2px solid rgba(237, 255, 132, 0.3); border-radius: 12px; padding: 3rem; text-align: center; margin: 2rem 0;">
+          <h2 style="color: var(--yellow); margin-bottom: 1rem;">📝 AMAs Coming Soon!</h2>
+          <p style="color: #d0d0ff; font-size: 1.1rem; line-height: 1.8; max-width: 600px; margin: 0 auto;">
+            We're building an automated system to fetch and summarize weekly AMAs from 
+            <strong>The Pixels Post</strong> on Substack.
+          </p>
+          <p style="color: #b0b0ff; margin-top: 1.5rem;">
+            Check back soon for gameplay updates, developer Q&As, and community highlights!
+          </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+          <a href="https://pixels.beehiiv.com/" target="_blank" 
+             style="display: inline-block; padding: 1rem 2rem; background: var(--yellow); color: black; 
+                    border-radius: 8px; text-decoration: none; font-weight: bold; transition: all 0.3s;">
+            Read The Pixels Post on Substack →
+          </a>
+        </div>
+      <% } else { %>
+        <div class="all-posts-list">
+          <% amas.forEach(ama => { %>
+            <div class="post-item">
+              <h3>
+                <a href="/pages/<%= ama.slug %>"><%= ama.title %></a>
+                <span class="ama-badge">AMA</span>
+              </h3>
+              <div class="post-meta">
+                <%= new Date(ama.created_at).toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                }) %>
+              </div>
+              <p class="post-snippet">
+                <%= (ama.summary || ama.content.replace(/<[^>]*>/g, '').substring(0, 200) + '...') %>
+              </p>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
   </div>
 
   <%- include('partials/footer') %>
-<script src="/js/chat-widget.js"></script>
-
+  <script src="/js/chat-widget.js"></script>
 </body>
 </html>
