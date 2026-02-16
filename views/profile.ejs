@@ -3,83 +3,354 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<div style="margin-bottom:2rem;">
-  <a href="/" style="color:#00ffff; text-decoration:none; font-weight:bold;">← Back to Home</a>
-</div>
-  <title>My Profile - Pixels Dojo</title>
+  <title><%= user && user.display_name ? user.display_name + "'s Profile" : 'My Profile' %> - Pixels Dojo</title>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/chat-widget.css">
   <style>
     .profile-container {
-      max-width: 700px;
+      max-width: 900px;
       margin: 4rem auto;
       padding: 2.5rem;
-      background: #1a1a2e;
+      background: rgba(26, 26, 46, 0.95);
       border-radius: 16px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.6);
       color: white;
-      text-align: center;
     }
+    
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid rgba(0, 255, 255, 0.2);
+    }
+    
     .profile-avatar {
       width: 160px;
       height: 160px;
       border-radius: 50%;
       object-fit: cover;
-      border: 5px solid #00ffff;
-      margin-bottom: 1.5rem;
+      border: 5px solid var(--cyan, #00ffff);
+      box-shadow: 0 4px 12px rgba(0, 255, 255, 0.4);
     }
+    
+    .profile-details {
+      flex: 1;
+    }
+    
     .profile-name {
-      font-size: 2.8rem;
-      margin: 0.5rem 0;
-      color: #00ffff;
+      font-size: 2.5rem;
+      margin: 0 0 0.5rem 0;
+      color: var(--cyan, #00ffff);
     }
+    
     .profile-username {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       color: #aaa;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
-    .profile-info {
-      background: rgba(255,255,255,0.06);
-      padding: 2rem;
-      border-radius: 12px;
+    
+    .profile-badges {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    
+    .badge {
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
+    .badge-admin {
+      background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+      color: white;
+    }
+    
+    .badge-contributor {
+      background: linear-gradient(135deg, var(--yellow, #edff84), #ffd700);
+      color: black;
+    }
+    
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
       margin: 2rem 0;
-      text-align: left;
+    }
+    
+    .info-card {
+      background: rgba(255,255,255,0.06);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+    }
+    
+    .info-card h3 {
+      color: var(--cyan, #00ffff);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    
+    .info-label {
+      color: #aaa;
+      font-size: 0.95rem;
+    }
+    
+    .info-value {
+      color: white;
+      font-weight: 600;
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .social-link {
+      padding: 0.6rem 1.2rem;
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 8px;
+      color: var(--cyan, #00ffff);
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .social-link:hover {
+      background: rgba(0, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .tip-address-box {
+      background: rgba(237, 255, 132, 0.1);
+      border: 2px solid rgba(237, 255, 132, 0.3);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: var(--yellow, #edff84);
+    }
+    
+    @media (max-width: 768px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 <%- include('partials/header') %>
 
-     <nav>
+<nav>
   <ul>
     <li><a href="/">Home</a></li>
     <li><a href="/category/startup">Start Here</a></li>
     <li><a href="/category/earn">Earn $PIXEL</a></li>
     <li><a href="/category/mastery">Mastery</a></li>
     <li><a href="/npcs-map">NPCs & Map</a></li>
-        <li><a href="/events">Events</a></li>
-        <li><a href="/amas">AMAs</a></li>
+    <li><a href="/events">Events</a></li>
+    <li><a href="/amas">AMAs</a></li>
     <li><a href="/category/community">Community</a></li>
   </ul>
 </nav>
 
   <div class="profile-container">
-    <img 
-      src="<%= user && user.profile_image ? user.profile_image : '/images/default-avatar.png' %>" 
-      alt="Profile picture" 
-      class="profile-avatar"
-      onerror="this.src='/images/default-avatar.png'"
-    >
-
-    <h1 class="profile-name"><%= user && user.display_name ? user.display_name : (user && user.username ? user.username : 'Guest') %></h1>
-    <p class="profile-username">@<%= user && user.username ? user.username : 'not logged in' %></p>
-
-    <div class="profile-info">
-      <h3>About Me</h3>
-      <p><%= user && user.bio ? user.bio : 'No bio yet — edit your profile to add one!' %></p>
-      <p><strong>Joined:</strong> <%= user && user.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Unknown' %></p>
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <img 
+        src="<%= user && user.profile_image ? user.profile_image : '/images/default-avatar.png' %>" 
+        alt="Profile picture" 
+        class="profile-avatar"
+        onerror="this.src='/images/default-avatar.png'"
+      >
+      
+      <div class="profile-details">
+        <h1 class="profile-name"><%= user && user.display_name ? user.display_name : (user && user.username ? user.username : 'Guest') %></h1>
+        <p class="profile-username">@<%= user && user.username ? user.username : 'not-logged-in' %></p>
+        
+        <!-- Badges -->
+        <div class="profile-badges">
+          <% if (user && user.is_admin) { %>
+            <span class="badge badge-admin">🛡️ Admin</span>
+          <% } %>
+          <% if (user && user.is_contributor) { %>
+            <span class="badge badge-contributor">✍️ Contributor</span>
+          <% } %>
+        </div>
+        
+        <div style="margin-top: 1rem;">
+          <a href="/profile/edit" class="btn" style="display:inline-block;padding:0.9rem 2rem;background:linear-gradient(135deg, #6a0dad, #8a2be2);color:white;border-radius:8px;text-decoration:none;font-weight:bold;">
+            ✏️ Edit Profile
+          </a>
+        </div>
+      </div>
     </div>
 
-    <a href="/profile/edit" class="btn" style="display:inline-block;margin-top:2rem;padding:0.9rem 2rem;background:#6a0dad;color:white;border-radius:8px;text-decoration:none;">Edit Profile</a>
+    <!-- Profile Grid -->
+    <div class="profile-grid">
+      <!-- About Me -->
+      <div class="info-card" style="grid-column: span 2;">
+        <h3>📝 About Me</h3>
+        <p style="color: #ddd; line-height: 1.8;">
+          <%= user && user.bio ? user.bio : 'No bio yet — click "Edit Profile" to add one and tell the community about yourself!' %>
+        </p>
+      </div>
+      
+      <!-- Account Info -->
+      <div class="info-card">
+        <h3>👤 Account Info</h3>
+        <div class="info-row">
+          <span class="info-label">Username</span>
+          <span class="info-value">@<%= user && user.username ? user.username : 'N/A' %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email</span>
+          <span class="info-value"><%= user && user.email ? user.email : 'N/A' %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Member Since</span>
+          <span class="info-value">
+            <%= user && user.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Unknown' %>
+          </span>
+        </div>
+      </div>
+      
+      <!-- Contribution Stats -->
+      <div class="info-card">
+        <h3>📊 Your Stats</h3>
+        <div class="info-row">
+          <span class="info-label">Role</span>
+          <span class="info-value">
+            <% if (user && user.is_admin) { %>
+              Admin
+            <% } else if (user && user.is_contributor) { %>
+              Contributor
+            <% } else { %>
+              Community Member
+            <% } %>
+          </span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Articles</span>
+          <span class="info-value">
+            <% if (user && (user.is_admin || user.is_contributor)) { %>
+              View in <a href="/dashboard" style="color: var(--cyan);">Dashboard</a>
+            <% } else { %>
+              0
+            <% } %>
+          </span>
+        </div>
+        <% if (user && (user.is_admin || user.is_contributor)) { %>
+          <div class="info-row">
+            <span class="info-label">Dashboard</span>
+            <span class="info-value">
+              <a href="/dashboard" style="color: var(--yellow); text-decoration: none;">→ Go to Dashboard</a>
+            </span>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Social Links -->
+    <% if (user && user.social_links) { %>
+      <% try { %>
+        <% const socials = typeof user.social_links === 'string' ? JSON.parse(user.social_links) : user.social_links; %>
+        <% if (socials && Object.keys(socials).length > 0) { %>
+          <div class="info-card">
+            <h3>🔗 Social Links</h3>
+            <div class="social-links">
+              <% if (socials.twitter) { %>
+                <a href="<%= socials.twitter %>" target="_blank" class="social-link">
+                  🐦 Twitter/X
+                </a>
+              <% } %>
+              <% if (socials.discord) { %>
+                <a href="<%= socials.discord %>" target="_blank" class="social-link">
+                  💬 Discord
+                </a>
+              <% } %>
+              <% if (socials.website) { %>
+                <a href="<%= socials.website %>" target="_blank" class="social-link">
+                  🌐 Website
+                </a>
+              <% } %>
+            </div>
+          </div>
+        <% } %>
+      <% } catch(e) {} %>
+    <% } %>
+
+    <!-- Tip Address -->
+    <% if (user && user.tip_address) { %>
+      <div class="info-card">
+        <h3>💰 Tip Address</h3>
+        <p style="color: #aaa; margin-bottom: 0.5rem;">Support me with crypto!</p>
+        <div class="tip-address-box">
+          <%= user.tip_address %>
+        </div>
+        <button 
+          onclick="navigator.clipboard.writeText('<%= user.tip_address %>'); this.textContent='✅ Copied!'; setTimeout(() => this.textContent='📋 Copy Address', 2000)"
+          style="margin-top: 1rem; padding: 0.6rem 1.2rem; background: var(--cyan); color: black; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+          📋 Copy Address
+        </button>
+      </div>
+    <% } %>
+
+    <!-- Quick Actions -->
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+      <a href="/profile/edit" style="padding: 0.9rem 2rem; background: var(--cyan); color: black; border-radius: 8px; text-decoration: none; font-weight: bold;">
+        ✏️ Edit Profile
+      </a>
+      <% if (user && (user.is_admin || user.is_contributor)) { %>
+        <a href="/dashboard" style="padding: 0.9rem 2rem; background: var(--yellow); color: black; border-radius: 8px; text-decoration: none; font-weight: bold;">
+          📊 My Dashboard
+        </a>
+      <% } %>
+      <% if (user && user.is_admin) { %>
+        <a href="/admin" style="padding: 0.9rem 2rem; background: linear-gradient(135deg, #ff6b6b, #ff8e53); color: white; border-radius: 8px; text-decoration: none; font-weight: bold;">
+          🛡️ Admin Panel
+        </a>
+      <% } %>
+    </div>
   </div>
+
+  <%- include('partials/footer') %>
+  
+  <!-- Back to Top Button -->
+  <%- include('partials/back-to-top') %>
+  
+  <script src="/js/chat-widget.js"></script>
 </body>
 </html>
