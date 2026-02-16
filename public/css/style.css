@@ -1,18 +1,20 @@
 :root {
     --neon-purple: #6500ff;
-    --purple: #8500ff;
-    --cyan: #41e114;
-    --cyan-light: #a9fe75;
-    --yellow: #edff84;
-    --green: #b7eb05;
-    --bg-color: #0a0a15;
-    --dark-bg: #1a1a2e;
-    --card-bg: #0f3460;
+    --purple:     #8500ff;
+    --cyan: #41e114;  /* Pixels Green */
+    --cyan-light: #a9fe75;  /* Pixels Light Green */
+    --yellow:     #edff84;
+    --green:      #b7eb05;
+    --bg-color:   #0a0a15;
+    --dark-bg:    #1a1a2e;
+    --card-bg:    #0f3460;
+
     --pixels-green: #41e114;
     --pixels-green-light: #a9fe75;
-    --accent: var(--cyan);
-    --accent-glow: var(--purple);
-    --highlight: var(--yellow);
+    
+    --accent:     var(--cyan);
+    --accent-glow:var(--purple);
+    --highlight:  var(--yellow);
 }
 
 body {
@@ -22,6 +24,8 @@ body {
     line-height: 1.6;
     font-size: 1.05rem;
 }
+
+/* ─── Global Elements ──────────────────────────────────────── */
 
 a {
     color: var(--cyan);
@@ -40,9 +44,11 @@ h1 { font-size: 2.8rem; margin-bottom: 1.5rem; }
 h2 { font-size: 2.2rem; margin: 2.5rem 0 1.2rem; }
 h3 { font-size: 1.7rem; margin: 2rem 0 1rem; }
 
+/* ─── Header ───────────────────────────────────────────────── */
+
 header {
     background: linear-gradient(90deg, var(--purple) 0%, #6a00cc 100%);
-    padding: 1.5rem 1rem 1rem;
+    padding: 1.8rem 1rem;
     text-align: center;
     border-bottom: 3px solid var(--yellow);
     box-shadow: 0 4px 12px rgba(0,0,0,0.4);
@@ -54,13 +60,13 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: nowrap;
+    flex-wrap: nowrap !important;     /* force no wrap */
     gap: 1.5rem;
-    white-space: nowrap;
+    white-space: nowrap;              /* extra safety */
 }
 
 .logo-section {
-    flex-shrink: 0;
+    flex-shrink: 0;                   /* logo won't shrink */
 }
 
 .logo-section img {
@@ -72,6 +78,14 @@ header {
     font-size: 2.4rem;
     color: white;
     margin: 0;
+}
+
+.user-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .user-nav,
@@ -94,14 +108,28 @@ header {
 .price-widget {
     padding: 0.4rem 0.8rem;
     min-width: 140px;
-    max-width: 160px;
+    max-width: 160px;               /* tighter to avoid overflow */
     font-size: 0.85rem;
     text-align: right;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.45); /* key fix for clarity */
     border-radius: 8px;
     border: 1px solid rgba(237, 255, 132, 0.25);
     overflow: hidden;
 }
+
+.price-widget coingecko-coin-price-marquee-widget {
+    color: #edff84 !important;
+    font-weight: bold !important;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7) !important; /* makes it pop */
+}
+
+.price-widget-compact coingecko-coin-price-marquee-widget {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+/* ─── Navigation Bar ───────────────────────────────────────── */
 
 nav {
     background: var(--card-bg);
@@ -132,8 +160,10 @@ nav a {
 
 nav a:hover {
     color: white;
-    background: rgba(65, 225, 20, 0.18);
+    background: rgba(65, 225, 20,0.18);
 }
+
+/* ─── Main Layout + Sidebar ────────────────────────────────── */
 
 .main-wrapper {
     display: flex;
@@ -168,18 +198,7 @@ nav a:hover {
 
 .sidebar a:hover {
     color: var(--yellow);
-    padding-left: 0.5rem;
-}
-
-.sidebar-logo {
-    margin-top: 2rem;
-    text-align: center;
-}
-
-.sidebar-logo-img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
+    padding-left: 0.6rem;
 }
 
 .main-content-area {
@@ -187,101 +206,128 @@ nav a:hover {
     min-width: 0;
 }
 
+/* ─── Hero Section – Full-width background with floating buttons ──────── */
+
 .hero-full {
-    position: relative;
-    height: 350px;
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 2rem;
+  position: relative;
+  width: 100%;
+  min-height: 600px;               /* enough height for title + tagline + buttons */
+  overflow: visible !important;    /* critical – prevents clipping of text/buttons */
+  margin: 0;
+  padding: 0;
 }
 
 .hero-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 .hero-bg-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
+/* No overlay – as you requested */
 .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(26,26,46,0.8) 100%);
+  display: none;                   /* or just remove this block entirely */
 }
 
 .hero-content {
-    position: relative;
-    z-index: 2;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 2rem;
+  position: relative;
+  z-index: 3;                      /* above background */
+  padding: 5rem 2rem 4rem;         /* more top/bottom space for floating buttons */
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+  color: white;
+  overflow: visible !important;
 }
 
 .hero-title {
-    font-size: 3.5rem;
-    color: var(--yellow);
-    margin-bottom: 0.5rem;
-    text-shadow: 0 0 20px rgba(237, 255, 132, 0.8);
+  font-size: 3.8rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.7);
 }
 
 .hero-tagline {
-    font-size: 1.3rem;
-    color: var(--cyan-light);
-    margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  margin-bottom: 3.5rem;           /* extra space before buttons */
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
+/* Buttons – grid layout (your old working style) */
 .main-buttons {
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
+/* Individual button */
 .main-button {
-    background: rgba(65, 225, 20, 0.1);
-    border: 2px solid var(--cyan);
-    border-radius: 12px;
-    padding: 1.5rem;
-    width: 200px;
-    text-align: center;
-    transition: all 0.3s;
+  background: rgba(15, 52, 96, 0.75);
+  backdrop-filter: blur(6px);
+  padding: 2rem 1.5rem;
+  border-radius: 14px;
+  border: 2px solid var(--cyan);   /* lime green now */
+  text-align: center;
+  color: white;
+  transition: all 0.4s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  min-height: 200px;               /* more vertical room for text */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: visible !important;    /* no clipping */
 }
 
 .main-button:hover {
-    transform: translateY(-5px);
-    background: rgba(65, 225, 20, 0.2);
-    box-shadow: 0 8px 24px rgba(65, 225, 20, 0.4);
+  transform: translateY(-10px) scale(1.04);
+  border-color: var(--purple);
+  box-shadow: 0 16px 48px rgba(133,0,255,0.5);
 }
 
+/* Icon */
 .main-button .icon {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
+/* Title */
 .main-button h3 {
-    color: var(--yellow);
-    margin: 0.5rem 0;
-    font-size: 1.3rem;
+  color: var(--yellow);
+  font-size: 1.6rem;
+  margin-bottom: 0.6rem;
+  font-weight: bold;
 }
 
+/* Description */
 .main-button p {
-    color: #d0d0ff;
-    font-size: 0.9rem;
-    margin: 0;
+  font-size: 1.05rem;
+  color: #d0d0ff;
+  margin: 0;
+  line-height: 1.4;
 }
+
+/* Force text to be fully visible – no truncation */
+.main-buttons,
+.main-button,
+.main-button * {
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  hyphens: auto;
+}
+
+/* ─── Search ───────────────────────────────────────────────── */
 
 .search-bar-container {
     max-width: 800px;
@@ -324,6 +370,8 @@ nav a:hover {
     background: var(--cyan-light);
 }
 
+/* ─── Cards & Grids ────────────────────────────────────────── */
+
 .card-grid,
 .category-grid {
     display: grid;
@@ -332,262 +380,99 @@ nav a:hover {
     margin: 2rem 0;
 }
 
-.category-block {
+.card {
     background: var(--card-bg);
-    padding: 2rem;
+    padding: 1.6rem;
     border-radius: 12px;
     border: 2px solid var(--neon-purple);
-    transition: all 0.35s;
+    transition: all 0.35s ease;
 }
 
-.category-block:hover {
+.card:hover {
     transform: translateY(-6px);
     border-color: var(--cyan);
     box-shadow: 0 12px 32px rgba(101,0,255,0.3);
 }
 
-.category-block h2 {
+.card h3 {
     color: var(--cyan);
-    margin-bottom: 1rem;
 }
 
-.category-block p {
-    color: #d0d0ff;
-    margin-bottom: 1.5rem;
+.author-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(65, 225, 20, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(65, 225, 20, 0.2);
+  margin: 2rem 0 3rem;
 }
 
-.category-block ul {
-    text-align: left;
-    color: #d0d0ff;
-    margin: 1rem 0;
-    line-height: 1.8;
-    list-style: none;
-    padding-left: 0;
+.author-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--cyan, #41e114);
+  flex-shrink: 0;
 }
 
-.category-block li {
-    margin-bottom: 0.5rem;
+.author-info h4 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+  color: var(--yellow, #ffff00);
 }
 
-.btn-outline {
-    display: inline-block;
-    padding: 0.8rem 1.5rem;
-    border: 2px solid var(--cyan);
-    border-radius: 8px;
-    color: var(--cyan);
-    font-weight: bold;
-    transition: all 0.3s;
+.author-info h4 a {
+  color: inherit;
+  text-decoration: none;
 }
 
-.btn-outline:hover {
-    background: var(--cyan);
-    color: var(--dark-bg);
-    transform: translateY(-2px);
+.author-info h4 a:hover {
+  color: var(--cyan);
 }
 
-.category-block.recent.wide-block {
-    grid-column: 1 / -1;
-    background: transparent;
-    border: none;
-    padding: 0;
+.author-bio {
+  margin: 0 0 1rem;
+  color: #d0d0ff;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
-.recent-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    gap: 1.5rem;
-    margin: 1.5rem 0;
+.social-links {
+  margin: 0.5rem 0 1rem;
 }
 
-.recent-card {
-    display: flex;
-    background: var(--card-bg);
-    border: 2px solid var(--neon-purple);
-    border-radius: 12px;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.3s;
-    box-shadow: 0 6px 20px rgba(101,0,255,0.15);
+.social-link {
+  margin-right: 1rem;
+  color: var(--cyan);
+  text-decoration: none;
+  font-size: 0.95rem;
 }
 
-.recent-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 35px rgba(133,0,255,0.35);
-    border-color: var(--cyan);
+.social-link:hover {
+  color: var(--yellow);
+  text-decoration: underline;
 }
 
-.card-image {
-    width: 140px;
-    flex-shrink: 0;
-    overflow: hidden;
+.btn-tip {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  background: var(--cyan);
+  color: black;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.2s;
 }
 
-.card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-right: 2px solid var(--neon-purple);
+.btn-tip:hover {
+  background: var(--yellow);
+  transform: translateY(-2px);
 }
 
-.card-content {
-    padding: 1.2rem;
-    flex: 1;
-}
-
-.card-content h3 {
-    color: var(--cyan);
-    font-size: 1.35rem;
-    margin: 0 0 0.6rem;
-}
-
-.card-content .snippet {
-    font-size: 0.95rem;
-    color: #d0d0ff;
-    line-height: 1.4;
-    margin: 0 0 0.8rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.card-content small {
-    color: #aaa;
-    font-size: 0.9rem;
-}
-
-.featured-compact {
-    background: rgba(20, 20, 40, 0.6);
-    border: 2px solid rgba(0, 255, 255, 0.2);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin: 2rem 0;
-}
-
-.featured-compact h2 {
-    color: var(--cyan);
-    margin: 0 0 1rem 0;
-    font-size: 1.5rem;
-}
-
-.compact-card {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    border: 1px solid rgba(0, 255, 255, 0.2);
-    transition: all 0.3s;
-    text-decoration: none;
-}
-
-.compact-card:hover {
-    transform: translateX(5px);
-    border-color: var(--cyan);
-    background: rgba(0, 255, 255, 0.1);
-}
-
-.compact-thumb {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 2px solid var(--cyan);
-    flex-shrink: 0;
-}
-
-.compact-info {
-    flex: 1;
-}
-
-.compact-info h3 {
-    color: var(--yellow);
-    margin: 0 0 0.5rem 0;
-    font-size: 1.2rem;
-}
-
-.compact-meta {
-    color: #999;
-    font-size: 0.9rem;
-    margin: 0;
-}
-
-.quick-access {
-    background: rgba(237, 255, 132, 0.05);
-    border: 2px solid rgba(237, 255, 132, 0.3);
-    border-radius: 12px;
-    padding: 2rem;
-    margin: 2rem 0;
-}
-
-.quick-access h2 {
-    color: var(--yellow);
-    margin: 0 0 1.5rem 0;
-}
-
-.quick-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-}
-
-.quick-block {
-    background: rgba(0, 255, 255, 0.1);
-    padding: 1.5rem;
-    border-radius: 8px;
-    text-decoration: none;
-    border: 1px solid rgba(0, 255, 255, 0.3);
-    transition: all 0.3s;
-}
-
-.quick-block:hover {
-    transform: translateY(-3px);
-    border-color: var(--cyan);
-    background: rgba(0, 255, 255, 0.15);
-    box-shadow: 0 4px 12px rgba(0, 255, 255, 0.3);
-}
-
-.quick-block h3 {
-    color: var(--cyan);
-    margin: 0 0 0.5rem 0;
-    font-size: 1.1rem;
-}
-
-.quick-block p {
-    color: #d0d0ff;
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-.contributor-block {
-    background: linear-gradient(135deg, rgba(237, 255, 132, 0.15), rgba(237, 255, 132, 0.05));
-    border-color: var(--yellow);
-}
-
-.contributor-block:hover {
-    border-color: var(--yellow);
-    background: linear-gradient(135deg, rgba(237, 255, 132, 0.25), rgba(237, 255, 132, 0.15));
-}
-
-.contributor-block h3 {
-    color: var(--yellow);
-}
-
-.merch-block {
-    background: linear-gradient(135deg, rgba(169, 254, 117, 0.15), rgba(65, 225, 20, 0.05));
-    border-color: var(--cyan-light);
-}
-
-.merch-block:hover {
-    border-color: var(--cyan-light);
-    background: linear-gradient(135deg, rgba(169, 254, 117, 0.25), rgba(65, 225, 20, 0.15));
-}
-
-.merch-block h3 {
-    color: var(--cyan-light);
-}
+/* ─── Content Sections ─────────────────────────────────────── */
 
 .content-section {
     background: var(--card-bg);
@@ -599,154 +484,222 @@ nav a:hover {
 }
 
 .wiki-page {
-    background: var(--card-bg);
-    padding: 2rem;
-    border-radius: 12px;
-    border: 1px solid var(--cyan);
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--cyan);
 }
 
 .page-header {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
 }
 
 .page-meta {
-    display: flex;
-    gap: 1.2rem;
-    color: #aaa;
-    font-size: 0.95rem;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 1.2rem;
+  color: #aaa;
+  font-size: 0.95rem;
+  flex-wrap: wrap;
 }
 
-.interaction-bar {
-    display: flex;
-    gap: 1rem;
-    margin: 2rem 0;
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.5rem;
 }
 
-.like-btn,
-.dislike-btn {
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    border: 2px solid var(--cyan);
-    background: rgba(65, 225, 20, 0.1);
-    color: var(--cyan);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
+.gallery-img {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--neon-purple);
 }
 
-.like-btn:hover,
-.dislike-btn:hover {
+.no-media {
+  color: #888;
+  font-style: italic;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+/* Wider recent guides block */
+.category-block.recent.wide-block {
+  grid-column: 1 / -1;                    /* spans full width in grid */
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.recent-card {
+  display: flex;
+  background: var(--card-bg);
+  border: 2px solid var(--neon-purple);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(101,0,255,0.15);
+}
+
+.recent-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(133,0,255,0.35);
+  border-color: var(--cyan);
+}
+
+.card-image {
+  width: 140px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-right: 2px solid var(--neon-purple);
+}
+
+.card-content {
+  padding: 1.2rem;
+  flex: 1;
+}
+
+.card-content h3 {
+  color: var(--cyan);
+  font-size: 1.35rem;
+  margin: 0 0 0.6rem;
+}
+
+.card-content .snippet {
+  font-size: 0.95rem;
+  color: #d0d0ff;
+  line-height: 1.4;
+  margin: 0 0 0.8rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-content small {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* Make this block wider than others in grid */
+.category-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.category-grid .wide-block {
+  grid-column: 1 / -1;
+}
+
+.sort-controls a {
+  color: var(--cyan);
+  margin: 0 0.6rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.sort-controls a:hover,
+.sort-controls a.active {
+  color: var(--yellow);
+  text-decoration: underline;
+}
+
+.npc-page-content {
+  padding: 4rem;                /* all sides – adjust as needed */
+  padding-top: 2rem;            /* less top if you want tighter feel */
+  padding-bottom: 3rem;         /* more breathing room at bottom */
+  max-width: 1200px;            /* optional: cap width like homepage */
+  margin: 0 auto;               /* center it */
+}
+
+/* ─── Buttons ──────────────────────────────────────────────── */
+
+.btn {
+    display: inline-block;
     background: var(--cyan);
     color: var(--dark-bg);
+    padding: 0.8rem 1.6rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: var(--cyan-light);
     transform: translateY(-2px);
 }
 
-.comments-section {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 2px solid rgba(0, 255, 255, 0.2);
-}
-
-footer {
-    background: var(--dark-bg);
-    border-top: 3px solid var(--cyan);
-    padding: 2rem 0 1rem;
-    margin-top: 3rem;
-}
-
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
-.support-banner {
-    background: linear-gradient(135deg, rgba(65,225,20,0.15) 0%, rgba(169,254,117,0.15) 100%);
-    border-top: 3px solid rgba(65, 225, 20, 0.5);
-    border-bottom: 3px solid rgba(65, 225, 20, 0.5);
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    border-radius: 12px;
-    text-align: center;
-}
-
-.support-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.support-banner h3 {
-    color: #41e114;
-    margin: 0 0 0.5rem 0;
-    font-size: 1.3rem;
-}
-
-.support-banner p {
-    color: #ddd;
-    margin: 0 0 1rem 0;
-    font-size: 0.95rem;
-}
-
-.payment-buttons {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-}
-
-.payment-btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: transform 0.2s;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.paypal-btn {
-    background: #00457C;
+.btn-purple {
+    background: var(--purple);
     color: white;
 }
 
-.kofi-btn {
-    background: #41e114;
-    color: #000;
+.btn-purple:hover {
+    background: #6a00cc;
 }
 
-.crypto-btn {
-    background: linear-gradient(135deg, #41e114 0%, #a9fe75 100%);
-    color: #000;
+/* ─── Footer ───────────────────────────────────────────────── */
+
+footer {
+    background: var(--card-bg);
+    border-top: 4px solid var(--cyan);
+    padding: 3rem 1.5rem 2rem;
+    color: #d0d0d0;
+    margin-top: 5rem;
 }
 
-.support-note {
-    color: #999;
-    font-size: 0.85rem;
-    margin: 0;
+.footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;         /* ← makes all blocks same height */
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.footer-blocks {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 2rem;
-    margin-bottom: 2rem;
+.footer-block {
+    flex: 1;
+    min-width: 220px;
+    border: 1px solid var(--neon-purple);
+    border-radius: 12px;
+    padding: 1.6rem;
+    background: rgba(101,0,255,0.08);
+    box-shadow: 0 6px 20px rgba(101,0,255,0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* content spreads nicely */
+    transition: all 0.3s;
 }
 
-.footer-block h4 {
-    color: var(--yellow);
-    margin-bottom: 1rem;
+.footer-block:hover {
+    box-shadow: 0 10px 30px rgba(133,0,255,0.3);
+    transform: translateY(-4px);
+}
+
+.profile-block {
+    flex: 1.8; /* slightly wider for profile */
 }
 
 .profile-card {
     display: flex;
-    gap: 1rem;
-    align-items: start;
+    align-items: center;
+    gap: 1.2rem;
 }
 
 .profile-pic {
@@ -757,201 +710,652 @@ footer {
     object-fit: cover;
 }
 
-.profile-info {
-    flex: 1;
-}
-
 .profile-name {
     color: var(--yellow);
-    font-weight: bold;
-    font-size: 1.1rem;
-    margin: 0 0 0.5rem 0;
-}
-
-.profile-blurb {
-    color: #ddd;
-    font-size: 0.9rem;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.5;
-}
-
-.sponsor-credit {
-    color: #999;
-    font-size: 0.8rem;
-    font-style: italic;
+    font-size: 1.2rem;
     margin: 0;
 }
 
-.sponsor-credit a {
-    color: var(--cyan);
+.social-block {
+    text-align: center;
 }
 
 .social-icons {
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.6rem;
+    margin-top: 1rem;
 }
 
 .social-icon {
-    width: 40px;
-    height: 40px;
-    transition: transform 0.2s;
+    width: 38px;
+    height: 38px;
+    transition: transform 0.3s;
 }
 
 .social-icon:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
 }
 
-.contribute-button {
-    display: inline-block;
-    margin-top: 1.5rem;
-    padding: 0.9rem 1.8rem;
-    background: linear-gradient(135deg, var(--yellow) 0%, #ffd700 100%);
-    color: #000;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.3s;
-    box-shadow: 0 4px 12px rgba(237, 255, 132, 0.3);
-}
-
-.contribute-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(237, 255, 132, 0.5);
+.logo-block {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .footer-logo {
-    width: 120px;
+    max-width: 160px;
     height: auto;
-    display: block;
-    margin: 0 auto;
 }
 
 .footer-copyright {
     text-align: center;
+    margin-top: 2.5rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(0, 255, 255, 0.2);
-    color: #999;
-    font-size: 0.9rem;
+    border-top: 1px solid rgba(237,255,132,0.2);
+    font-size: 0.95rem;
+    color: #aaa;
 }
 
-.crypto-modal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #1a1a2e;
-    padding: 2rem;
-    border-radius: 12px;
-    border: 2px solid #41e114;
-    z-index: 10000;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-    max-width: 500px;
-    width: 90%;
+/* Mobile footer */
+@media (max-width: 992px) {
+    .footer-row {
+        flex-direction: column;
+        gap: 1.8rem;
+    }
+    
+    .profile-block,
+    .social-block,
+    .logo-block {
+        flex: none;
+        text-align: center;
+    }
+    
+    .profile-card {
+        flex-direction: column;
+        gap: 1rem;
+    }
 }
 
-.crypto-modal h3 {
-    color: #41e114;
-    margin: 0 0 1rem 0;
+.profile-edit-container {
+  background: rgba(20, 20, 40, 0.8);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid rgba(65, 225, 20, 0.2);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 32px rgba(65, 225, 20, 0.1);
 }
 
-.crypto-address-box {
-    background: rgba(65, 225, 20, 0.1);
-    padding: 1rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-    border: 1px solid rgba(65, 225, 20, 0.3);
-    word-break: break-all;
+.form-group {
+  margin-bottom: 1.8rem;
 }
 
-.crypto-address-box code {
-    color: #41e114;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
+.form-group label {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--cyan, #41e114);
+  font-weight: 500;
 }
 
-.modal-buttons {
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea,
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 0.9rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(65, 225, 20, 0.3);
+  border-radius: 6px;
+  color: white;
+  font-size: 1rem;
+}
+
+.form-group input:disabled,
+.form-group textarea:disabled {
+  background: rgba(50, 50, 70, 0.6);
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(65, 225, 20, 0.3);
+}
+
+.form-group small {
+  color: #aaa;
+  font-size: 0.85rem;
+  display: block;
+  margin-top: 0.3rem;
+}
+
+.btn-save {
+  background: var(--cyan, #41e114);
+  color: black;
+  padding: 0.9rem 1.8rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-save:hover {
+  background: var(--yellow, #ffff00);
+  transform: translateY(-2px);
+}
+
+/* Better like/dislike buttons */
+.interaction-bar {
     display: flex;
-    gap: 0.5rem;
+    gap: 1.5rem;
+    justify-content: center;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: rgba(26, 26, 46, 0.7);
+    border-radius: 12px;
+    border: 1px solid var(--cyan);
 }
 
-.modal-btn {
-    flex: 1;
-    padding: 0.75rem;
-    border-radius: 6px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.copy-btn {
-    background: #41e114;
-    color: #000;
-}
-
-.close-btn {
-    background: #666;
-    color: #fff;
-}
-
-.modal-note {
-    color: #999;
-    font-size: 0.8rem;
-    margin-top: 1rem;
-    text-align: center;
-}
-
-.crypto-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    z-index: 9999;
-}
-
-.back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: linear-gradient(135deg, var(--cyan) 0%, #00d4ff 100%);
-    color: #000;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+.like-btn, .dislike-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    text-decoration: none;
-    box-shadow: 0 4px 12px rgba(0, 255, 255, 0.4);
+    gap: 0.6rem;
+    padding: 0.8rem 1.6rem;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
     transition: all 0.3s;
-    opacity: 0;
-    visibility: hidden;
-    z-index: 1000;
+    cursor: pointer;
+    border: 2px solid var(--cyan);
+    background: transparent;
+    color: var(--cyan);
 }
 
-.back-to-top.visible {
-    opacity: 1;
-    visibility: visible;
+.like-btn:hover, .like-btn.liked {
+    background: var(--cyan);
+    color: var(--dark-bg);
+    border-color: var(--cyan);
+    transform: scale(1.05);
 }
 
-.back-to-top:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 255, 255, 0.6);
+.dislike-btn:hover, .dislike-btn.disliked {
+    background: #ff4444;
+    color: white;
+    border-color: #ff4444;
+    transform: scale(1.05);
 }
 
-.no-content {
+/* Icons (use Font Awesome or emoji if you have them) */
+.like-btn::before { content: '👍 '; }
+.dislike-btn::before { content: '👎 '; }
+
+
+/* ────────────────────────────────────────────────
+   MOBILE & TABLET RESPONSIVE STYLES (Cleaned & Fixed)
+───────────────────────────────────────────────── */
+
+/* Main mobile breakpoint – phones & small tablets */
+@media (max-width: 768px) {
+  /* Hide hero completely – no image, no buttons from hero if separate */
+  .hero-split,
+  .hero-full,
+  .hero-content,
+  .hero-left,
+  .hero-right,
+  .main-buttons {  /* if main-buttons are inside hero, hide; otherwise adjust below */
+    display: none !important;
+  }
+
+  /* Header / logo + tagline – center and compact */
+  .logo-section {
+    width: 100%;
+    margin: 1rem 0 0.8rem;
     text-align: center;
-    color: #999;
-    padding: 2rem;
-    font-style: italic;
+  }
+
+  .logo-section img {
+    height: 60px;               /* slightly smaller for mobile */
+    margin: 0 auto;
+  }
+
+  .logo-section h1 {
+    font-size: 2.2rem;
+    margin: 0.4rem 0 0;
+  }
+
+  .tagline {
+    font-size: 1.05rem;
+    margin: 0.4rem 0 1.2rem;
+    line-height: 1.35;
+    word-wrap: break-word;
+    hyphens: auto;
+    white-space: normal;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Top bar items: price widget + login/register + user nav – stack or row */
+  .top-bar,                    /* assume wrapper class; adjust if different */
+  .user-nav,
+  .right-section,
+  .price-widget,
+  .login-box,
+  .auth-links {                /* add classes like .login, .register if needed */
+    flex-direction: column;    /* stack by default */
+    width: 100%;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.8rem 0;
+  }
+
+  /* Optional: if you want price widget + login/register side-by-side on slightly larger phones */
+  @media (min-width: 480px) and (max-width: 768px) {
+    .top-bar,
+    .user-nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem;
+    }
+  }
+
+  .user-nav a,
+  .btn,
+  .btn-small,
+  .login-button,
+  .register-button,
+  .price-widget {
+    min-width: 160px;
+    width: auto;
+    padding: 0.9rem 1.6rem;
+    font-size: 1.05rem;
+    min-height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+  }
+
+  /* Navigation menu – full-width stack */
+  nav ul {
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 0 1rem;
+  }
+
+  nav li {
+    width: 100%;
+  }
+
+  nav a {
+    padding: 0.8rem;
+    font-size: 1.05rem;
+    text-align: center;
+  }
+
+  /* 3 main buttons – horizontal row if space, else stack */
+  .main-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+    margin: 1rem 0;
+  }
+
+  .main-button {
+    flex: 1 1 45%;               /* 2 per row if possible */
+    max-width: 48%;
+    min-width: 140px;
+    padding: 1.4rem 1rem;
+    font-size: 1rem;
+  }
+
+  .main-button .icon {
+    font-size: 2.8rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .main-button h3 {
+    font-size: 1.3rem;
+    margin: 0.4rem 0;
+  }
+
+  .main-button p {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  /* Sidebar (left nav) – full-width below buttons */
+  aside.sidebar,               /* adjust selector to your sidebar/nav class */
+  .left-nav {
+    width: 100%;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    order: 4;                    /* push after buttons/content if using flex on parent */
+  }
+
+  /* Main content */
+  .content-section,
+  .card-grid,
+  main {
+    padding: 1.2rem 1rem;
+    margin: 0;
+  }
+
+  /* Footer */
+  .footer-row {
+    flex-direction: column;
+    gap: 1.4rem;
+    padding: 1.5rem 1rem;
+  }
+
+  /* General tweaks – prevent huge scrolling */
+  body {
+    font-size: 1rem;             /* base readable size */
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  html, body {
+    overflow-x: hidden;          /* no horizontal scroll madness */
+  }
+
+  * {
+    box-sizing: border-box;
+  }
 }
 
+/* Tablets / narrow laptops – lighter adjustments */
+@media (max-width: 992px) {
+  .npc-page-content {
+    padding: 1.2rem;
+  }
+
+  .npc-grid,
+  .npc-list {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .main-button {
+    flex: 1 1 30%;               /* allow 3 in a row on tablets if space */
+    max-width: 32%;
+  }
+
+  .user-nav,
+  .top-bar {
+    gap: 1rem;
+  }
+}
+
+/* ────────────────────────────────────────────────
+   MOBILE & TABLET RESPONSIVE STYLES (Restored + Fixed)
+───────────────────────────────────────────────── */
+
+/* Main mobile/tablet breakpoint – up to 992px */
+@media (max-width: 992px) {
+
+/* Make ALL images responsive on mobile – shrink to fit screen/container */
+img {
+  max-width: 100% !important;     /* never wider than parent/screen */
+  height: auto !important;        /* keep aspect ratio */
+  display: block;                 /* remove bottom gap if any */
+  margin: 0 auto;                 /* center if needed */
+}
+
+/* Extra: if images are in cards/sections, ensure containers allow shrinking */
+.content-section img,
+.card-grid img,
+main img,
+.page-content img {
+  width: 100%;                    /* force fill container width */
+  object-fit: contain;            /* or 'cover' if you want cropping instead of letterboxing */
+}
+    
+  /* Reset sidebar – no overlap, full width, no fixed positioning */
+  .sidebar,
+  aside,
+  .left-nav {
+    position: static !important;     /* kill any fixed/sticky */
+    width: 100%;
+    margin: 1.5rem 0 0;
+    padding: 1rem 0;
+    border: none;
+    border-bottom: 1px solid rgba(101, 0, 255, 0.3); /* your old separator */
+    background: transparent;         /* no forced bg */
+  }
+
+  /* Main wrapper – simple vertical stack, no forced order */
+  .main-wrapper,
+  .container,
+  .page-wrapper,
+  main {
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  /* Header – logo, tagline, price widget, login/register, user nav */
+  .header-container,
+  header,
+  .top-bar {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.2rem;
+    padding: 1rem 0.8rem;
+  }
+
+  .logo-section {
+    width: 100%;
+    margin-bottom: 0.6rem;
+  }
+
+  .logo-section img {
+    height: 65px;
+    margin: 0 auto;
+  }
+
+  .logo-section h1 {
+    font-size: 2.3rem;
+    margin: 0.5rem 0 0;
+  }
+
+  /* FIXED: Tagline now wraps properly */
+  .tagline {
+    font-size: 1.1rem;
+    margin-top: 0.3rem;
+    line-height: 1.4;
+    word-break: break-word;         /* better than word-wrap */
+    hyphens: auto;
+    white-space: normal;
+    max-width: 100%;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+
+  /* Price widget + login/register + user nav – stack vertically */
+  .user-nav,
+  .right-section,
+  .price-widget,
+  .login-box,
+  .auth-links {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.8rem 0;
+  }
+
+  .user-nav a,
+  .btn,
+  .btn-small,
+  .login-button,
+  .register-button,
+  .price-widget {
+    min-width: 160px;
+    padding: 0.9rem 1.6rem;
+    font-size: 1.05rem;
+    min-height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    white-space: normal;           /* allow wrapping if long */
+  }
+
+  /* Navigation menu */
+  nav ul {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  nav li {
+    width: 100%;
+    text-align: center;
+  }
+
+  nav a {
+    padding: 0.9rem;
+    font-size: 1.1rem;
+  }
+
+  /* Hero – hide completely on mobile */
+  .hero-split,
+  .hero-full,
+  .hero-section {
+    display: none !important;
+  }
+
+  /* Main buttons (the 3 cards) – stack or 2-per-row */
+  .main-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1.5rem 1rem;
+  }
+
+  .main-button {
+    width: 100%;
+    max-width: 380px;
+    padding: 2rem 1.3rem;
+  }
+
+  .main-button .icon {
+    font-size: 3.2rem;
+  }
+
+  .main-button h3 {
+    font-size: 1.5rem;
+  }
+
+  /* Content – no squish */
+  .content-section,
+  .card-grid,
+  main,
+  .first-section {
+    padding: 1.5rem 1rem;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+   /* Login/Register form – make bigger, full-width, touch-friendly */
+.login-form,                    /* common classes – adjust to yours, e.g. .login-page, .auth-form */
+.register-form,
+.auth-container,
+#login-form,
+.session-form {
+  width: 90% !important;        /* almost full width, some breathing room */
+  max-width: 420px !important;  /* bigger than before */
+  margin: 2rem auto !important; /* center with more top/bottom space */
+  padding: 2rem 1.5rem !important;
+  box-sizing: border-box;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"],
+.login-form input[type="email"],
+.register-form input,
+.auth-container input {
+  width: 100% !important;
+  padding: 1.2rem 1rem !important; /* taller inputs */
+  font-size: 1.1rem !important;
+  margin-bottom: 1.2rem !important;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.login-form button,
+.register-form button,
+.auth-button,
+#login-btn {
+  width: 100% !important;
+  padding: 1.2rem !important;
+  font-size: 1.15rem !important;
+  min-height: 54px !important;    /* good touch target size */
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+/* If login is in a modal/popup */
+.modal-content .login-form {
+  padding: 1.5rem;
+  width: 95%;
+} 
+
+  /* Footer */
+  .footer-row {
+    flex-direction: column;
+    gap: 1.6rem;
+    padding: 1.5rem 1rem;
+  }
+
+  /* General fixes */
+  body {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  html, body {
+    overflow-x: hidden;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* Finer adjustments for very small phones if needed */
+@media (max-width: 480px) {
+  .logo-section h1 {
+    font-size: 2rem;
+  }
+
+  .tagline {
+    font-size: 1rem;
+  }
+
+  .main-button {
+    padding: 1.8rem 1rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   AMA PAGE FIXES - Add this to the BOTTOM of your style.css file
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Fix: Make main content area wider and images reasonable size */
 .main-content,
 .content-area,
 .page-content {
@@ -960,6 +1364,7 @@ footer {
     width: 100%;
 }
 
+/* Fix: Constrain ALL images on wiki/AMA pages */
 .page-content img,
 .article-content img,
 .wiki-content img,
@@ -973,6 +1378,7 @@ footer {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+/* Fix: Iframes (YouTube embeds) should also be constrained */
 .page-content iframe,
 .article-content iframe,
 .ama-content iframe,
@@ -985,12 +1391,14 @@ footer {
     border-radius: 8px;
 }
 
+/* Fix: The AMA content wrapper from the scraper */
 .ama-content {
     max-width: 800px !important;
     margin: 0 auto !important;
     padding: 2rem 1rem;
 }
 
+/* Fix: AMA body text should be readable width */
 .ama-body {
     max-width: 800px;
     margin: 0 auto;
@@ -998,6 +1406,7 @@ footer {
     line-height: 1.8;
 }
 
+/* Fix: AMA source and footer boxes */
 .ama-source,
 .ama-footer {
     max-width: 800px;
@@ -1005,6 +1414,7 @@ footer {
     margin-right: auto;
 }
 
+/* Fix: Lists inside AMA content */
 .ama-body ul,
 .ama-body ol {
     margin: 1rem 0;
@@ -1015,6 +1425,7 @@ footer {
     margin-bottom: 0.5rem;
 }
 
+/* Fix: Headings inside AMA content */
 .ama-body h1,
 .ama-body h2,
 .ama-body h3 {
@@ -1023,11 +1434,13 @@ footer {
     color: var(--cyan);
 }
 
+/* Fix: Paragraphs inside AMA content */
 .ama-body p {
     margin-bottom: 1rem;
     line-height: 1.8;
 }
 
+/* Fix: Blockquotes inside AMA content */
 .ama-body blockquote {
     border-left: 4px solid var(--cyan);
     padding-left: 1.5rem;
@@ -1036,6 +1449,7 @@ footer {
     color: #ddd;
 }
 
+/* Fix: Code blocks inside AMA content */
 .ama-body pre,
 .ama-body code {
     background: rgba(0, 0, 0, 0.5);
@@ -1044,6 +1458,26 @@ footer {
     overflow-x: auto;
 }
 
+/* Hide browser blocked content errors */
+#sub-frame-error,
+#sub-frame-error-details {
+    display: none !important;
+}
+
+iframe[src="about:blank"] {
+    display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   END OF AMA PAGE FIXES
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════
+   NUCLEAR OPTION - OBLITERATE ALL BLOCKED CONTENT ERRORS
+   Add this to the BOTTOM of your style.css (after the other AMA fixes)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Hide ALL variations of blocked content errors */
 #sub-frame-error,
 #sub-frame-error-details,
 [id*="sub-frame"],
@@ -1053,7 +1487,9 @@ footer {
 .sub-frame-error,
 iframe[src="about:blank"],
 iframe[src=""],
-iframe:not([src]) {
+iframe:not([src]),
+div:has(> .icon-generic),
+div:has(> #sub-frame-error-details) {
     display: none !important;
     visibility: hidden !important;
     height: 0 !important;
@@ -1063,48 +1499,25 @@ iframe:not([src]) {
     left: -9999px !important;
 }
 
-@media (max-width: 1024px) {
-    .quick-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .footer-blocks {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
+/* Hide any divs that only contain the blocked message */
+.ama-body > div:empty,
+.ama-content > div:empty,
+.content-body > div:empty {
+    display: none !important;
 }
 
-@media (max-width: 768px) {
-    .hero-full {
-        height: 250px;
-    }
-    
-    .hero-title {
-        font-size: 2.5rem;
-    }
-    
-    .quick-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .main-wrapper {
-        flex-direction: column;
-    }
-    
-    .sidebar {
-        position: static;
-    }
-    
-    .recent-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .compact-card {
-        flex-direction: column;
-    }
-    
-    .compact-thumb {
-        width: 100%;
-        height: 150px;
-    }
+/* If somehow an iframe still exists in AMA content, obliterate it */
+.ama-body iframe,
+.ama-content iframe,
+.content-body iframe {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   END OF NUCLEAR OPTION
+   ═══════════════════════════════════════════════════════════════════ */
