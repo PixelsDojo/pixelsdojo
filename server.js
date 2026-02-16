@@ -156,6 +156,11 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   // Only track actual page views (not API calls, static files, etc.)
   if (req.method === 'GET' && !req.path.startsWith('/api/') && !req.path.startsWith('/images/') && !req.path.match(/\.(css|js|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf)$/)) {
+// ✅ Skip tracking for admins
+const user = req.session.user;
+if (user && user.is_admin) {
+  return next(); // Don't track admins
+}
     
     // Generate or get visitor ID from cookie
     let visitorId = req.cookies.visitor_id;
