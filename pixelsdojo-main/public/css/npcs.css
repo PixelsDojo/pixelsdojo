@@ -1,0 +1,128 @@
+/* NPCs Page Styles */
+
+.npc-header {
+    text-align: center;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.npc-header h1 {
+    font-size: 2.5rem;
+    color: var(--cyan);
+    margin-bottom: 0.5rem;
+}
+
+.npc-header .subtitle {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.npc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.npc-card {
+    background: rgba(20, 20, 30, 0.6);
+    border: 2px solid var(--neon-purple);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.npc-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(237, 255, 132, 0.3);
+    border-color: var(--cyan);
+}
+
+.npc-image {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(101, 0, 255, 0.2), rgba(0, 255, 255, 0.2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.npc-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.npc-card:hover .npc-image img {
+    transform: scale(1.1);
+}
+
+.npc-info {
+    padding: 1.25rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.npc-name {
+    font-size: 1.4rem;
+    color: var(--cyan);
+    margin: 0 0 0.5rem 0;
+    font-weight: bold;
+}
+
+.npc-location {
+    color: var(--neon-purple);
+    font-size: 0.95rem;
+    margin: 0 0 0.75rem 0;
+    font-weight: 500;
+}
+
+.npc-description {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.no-npcs {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(20, 20, 30, 0.4);
+    border-radius: 12px;
+    border: 2px dashed var(--neon-purple);
+}
+
+.no-npcs p {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .npc-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .npc-header h1 {
+        font-size: 2rem;
+    }
+    
+    .npc-image {
+        height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .npc-grid {
+        grid-template-columns: 1fr;
+    }
+}

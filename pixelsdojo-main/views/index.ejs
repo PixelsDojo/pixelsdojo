@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixels Dojo Wiki - Master Pixels Online</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat-widget.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/category/startup">Start Here</a></li>
+        <li><a href="/category/earn">Earn $PIXEL</a></li>
+        <li><a href="/category/mastery">Mastery</a></li>
+        <li><a href="/npcs-map">NPCs & Map</a></li>
+        <li><a href="/events">Events</a></li>
+        <li><a href="/amas">AMAs</a></li>
+        <li><a href="/category/community">Community</a></li>
+      </ul>
+    </nav>
+
+    <div class="main-wrapper">  <!-- Push content right of sidebar -->
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h4>Library</h4>
+        <a href="/all-posts">📚 All Articles</a>
+        <a href="/npcs-map">🗺️ NPCs & Map</a>
+        <hr>
+        <h5>Categories</h5>
+        <a href="/category/startup">Start Here</a>
+        <a href="/category/earn">Earn $PIXEL</a>
+        <a href="/category/mastery">Mastery</a>
+        <a href="/category/community">Community</a>
+        <!-- Add more links as articles grow -->
+        <div class="sidebar-logo">
+        <img src="/images/pixeldojo_logo_portrait.png" 
+         alt="Pixels Dojo Logo" 
+         class="sidebar-logo-img">
+</div>
+      </aside>
+
+        <div class="main-content-area">
+    <section class="hero-full">
+  <div class="hero-bg">
+    <img 
+      src="/images/banner with pixels dojo in white.png" 
+      alt="Pixels Dojo Banner" 
+      class="hero-bg-image"
+      onerror="this.src='/images/defaults/default1.jpg';" 
+      loading="lazy"
+    >
+    <!-- Optional semi-transparent overlay for better text readability -->
+    <div class="hero-overlay"></div>
+  </div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">PIXELS DOJO</h1>
+    <p class="hero-tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
+
+   <div class="main-buttons">
+  <a href="/category/startup" class="main-button">
+    <div class="icon">🌱</div>
+    <h3>Start Here</h3>
+    <p>Beginner guides & first steps</p>
+  </a>
+
+  <a href="/category/earn" class="main-button">
+    <div class="icon">💰</div>
+    <h3>Earn $PIXEL</h3>
+    <p>Strategies & mechanisms</p>
+  </a>
+
+  <a href="/category/mastery" class="main-button">
+    <div class="icon">👑</div>
+    <h3>Mastery</h3>
+    <p>VIP • NFTs • Advanced</p>
+  </a>
+
+</div>
+  </div>
+</section>
+<div>
+      <!-- Search Bar – keep yours -->
+      <div class="search-bar-container">
+          <form action="/search" method="GET" class="search-form">
+              <input type="text" name="q" placeholder="Search the wiki..." required>
+              <button type="submit" class="btn btn-cyan">Search</button>
+          </form>
+      </div>
+
+      <!-- Your existing 4-block grid -->
+      <section class="category-grid">
+          <!-- Start Here -->
+          <div class="category-block">
+              <h2>Start Here</h2>
+              <p>Beginner guides, map orientation, NPC list, first steps</p>
+              <a href="/category/startup" class="btn btn-outline">View All →</a>
+          </div>
+
+          <!-- Earn $PIXEL -->
+          <div class="category-block">
+              <h2>Earn $PIXEL</h2>
+              <p>Mechanisms, strategies, farming, quests</p>
+              <a href="/category/earn" class="btn btn-outline">View All →</a>
+          </div>
+
+          <!-- Mastery -->
+          <div class="category-block">
+              <h2>Mastery</h2>
+              <p>VIP perks, NFTs, add-ons, advanced paths</p>
+              <a href="/category/mastery" class="btn btn-outline">View All →</a>
+          </div>
+
+        <!-- Recent Guides – wider, with snippet + image -->
+<div class="category-block recent wide-block">
+  <h2>Recent Guides</h2>
+  <div class="recent-grid">
+    <% recentPages.slice(0, 16).forEach(page => { %>
+      <a href="/pages/<%= page.slug %>" class="recent-card">
+        <% 
+          let thumbnail = '/images/placeholder.jpg'; // fallback
+          try {
+            const shots = JSON.parse(page.screenshots || '[]');
+            if (shots.length > 0) thumbnail = shots[0];
+          } catch (e) {}
+        %>
+        <div class="card-image">
+          <img 
+            src="<%= thumbnail %>" 
+            alt="<%= page.title %>" 
+            loading="lazy"
+            onerror="this.src='/images/placeholder.jpg'"
+          >
+        </div>
+        <div class="card-content">
+          <h3><%= page.title %></h3>
+          <p class="snippet">
+            <%= (page.summary || page.content.substring(0, 150) + '...') %>
+          </p>
+          <small>By <%= page.author_display_name || 'Community' %></small>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+  <a href="/all-posts" class="btn btn-outline">View All Guides →</a>
+</div>
+      </section>
+
+      <!-- Featured Posts – keep yours -->
+      <section class="featured-post">
+          <h2>Most Upvoted Guide</h2>
+          <div class="featured-card">
+              <% if (mostUpvoted) { %>
+                  <img src="<%= mostUpvoted.screenshots && mostUpvoted.screenshots[0] ? mostUpvoted.screenshots[0] : '/images/placeholder.jpg' %>" alt="Featured">
+                  <div>
+                      <h3><a href="/pages/<%= mostUpvoted.slug %>"><%= mostUpvoted.title %></a></h3>
+                      <p><%= mostUpvoted.summary || mostUpvoted.content.substring(0, 200) + '...' %></p>
+                      <small>Upvotes: <%= mostUpvoted.upvotes || 0 %> • By <%= mostUpvoted.author_display_name || 'Community' %></small>
+                  </div>
+              <% } else { %>
+                  <div class="placeholder-card">No featured post yet — coming soon!</div>
+              <% } %>
+          </div>
+      </section>
+
+      <section class="featured-post">
+          <h2>Most Viewed Guide</h2>
+          <div class="featured-card">
+              <% if (mostViewed) { %>
+                  <img src="<%= mostViewed.screenshots && mostViewed.screenshots[0] ? mostViewed.screenshots[0] : '/images/placeholder.jpg' %>" alt="Featured">
+                  <div>
+                      <h3><a href="/pages/<%= mostViewed.slug %>"><%= mostViewed.title %></a></h3>
+                      <p><%= mostViewed.summary || mostViewed.content.substring(0, 200) + '...' %></p>
+                      <small>Views: <%= mostViewed.views || 0 %> • By <%= mostViewed.author_display_name || 'Community' %></small>
+                  </div>
+              <% } else { %>
+                  <div class="placeholder-card">No featured post yet — coming soon!</div>
+              <% } %>
+          </div>
+      </section>
+
+      <!-- OG static content blocks – keep exactly as you have -->
+      <div class="container">
+          <section id="new" class="content-section">
+              <h2>🎯 Getting Started - Your First Steps</h2>
+              <!-- ... your full content here, unchanged ... -->
+          </section>
+
+          <section id="earn" class="content-section">
+              <h2>💰 How to Earn $PIXEL - Complete Guide</h2>
+              <!-- ... unchanged ... -->
+          </section>
+
+          <section id="master" class="content-section">
+              <h2>⚡ Become a Pixels Master</h2>
+              <!-- ... unchanged ... -->
+          </section>
+
+          <section id="community" class="content-section">
+              <h2>👥 Community & Resources</h2>
+              <!-- ... unchanged ... -->
+          </section>
+      </div>
+
+      <%- include('partials/footer') %>
+    </div>
+    </div> <!-- end main-wrapper -->
+
+    <script src="/js/chat-widget.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dashboard - Pixels Dojo</title>
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      overflow: auto;
+    }
+    .modal-content {
+      background: rgba(20,20,40,0.98);
+      margin: 2% auto;
+      padding: 2rem;
+      border: 2px solid var(--cyan);
+      border-radius: 12px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .close {
+      color: var(--yellow);
+      float: right;
+      font-size: 2.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .close:hover { color: white; }
+    
+    #quill-editor {
+      background: white;
+      color: black;
+      min-height: 300px;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--cyan);
+      font-weight: 500;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(0,255,255,0.3);
+      border-radius: 6px;
+      color: white;
+      font-size: 1rem;
+    }
+    .btn {
+      background: var(--cyan);
+      color: black;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover {
+      background: var(--yellow);
+      transform: translateY(-2px);
+    }
+    .btn-delete {
+      background: #ff4444;
+      color: white;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0,255,255,0.2);
+    }
+    th {
+      background: rgba(0,255,255,0.1);
+      color: var(--cyan);
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/header') %>
+ <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/category/startup">Start Here</a></li>
+        <li><a href="/category/earn">Earn $PIXEL</a></li>
+        <li><a href="/category/mastery">Mastery</a></li>
+        <li><a href="/npcs-map">NPCs & Map</a></li>
+        <li><a href="/events">Events</a></li>
+        <li><a href="/amas">AMAs</a></li>
+        <li><a href="/category/community">Community</a></li>
+      </ul>
+    </nav>
+
+  <div class="container" style="max-width: 1200px; margin: 3rem auto; padding: 0 1rem;">
+    <h1 style="color: var(--yellow); text-align: center;">My Dashboard</h1>
+    <p style="text-align: center; color: #b8b8b8;">Manage your guides and contributions.</p>
+
+    <div style="margin: 2rem 0; text-align: center;">
+      <button onclick="showCreateModal()" class="btn">
+        + Create New Guide
+      </button>
+    </div>
+
+    <% if (pages.length > 0) { %>
+      <h2 style="color: var(--cyan);">Your Guides (<%= pages.length %>)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Last Updated</th>
+            <th style="text-align: center;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% pages.forEach(page => { %>
+            <tr>
+              <td><%= page.title %></td>
+              <td><%= page.category || 'None' %></td>
+              <td><%= new Date(page.updated_at).toLocaleDateString() %></td>
+              <td style="text-align: center;">
+                <a href="/pages/<%= page.slug %>" style="color: var(--cyan); margin-right: 1rem;">View</a>
+                <a href="javascript:void(0)" onclick="editPage(<%= page.id %>)" style="color: var(--yellow); margin-right: 1rem;">Edit</a>
+                <a href="javascript:void(0)" onclick="deletePage(<%= page.id %>, '<%= page.title %>')" style="color: #ff4444;">Delete</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p style="text-align: center; color: #b8b8b8; margin-top: 3rem;">
+        You haven't created any guides yet. Click above to start!
+      </p>
+    <% } %>
+  </div>
+
+  <!-- Create/Edit Page Modal -->
+  <div id="pageModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closePageModal()">&times;</span>
+      <h2 id="modalTitle" style="color: var(--cyan); margin-bottom: 2rem;">Create New Guide</h2>
+      
+      <form id="pageForm" enctype="multipart/form-data">
+        <input type="hidden" id="pageId" name="pageId">
+        
+        <div class="form-group">
+          <label for="title">Title *</label>
+          <input type="text" id="title" name="title" required>
+        </div>
+
+        <div class="form-group">
+          <label for="slug">URL Slug * (lowercase, dashes only)</label>
+          <input type="text" id="slug" name="slug" required placeholder="my-guide-title">
+          <small style="color: #aaa;">This creates the URL: /pages/your-slug-here</small>
+        </div>
+
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" name="category">
+            <option value="">None</option>
+            <option value="startup">Start Here</option>
+            <option value="earn">Earn $PIXEL</option>
+            <option value="mastery">Mastery</option>
+            <option value="community">Community</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="difficulty">Difficulty</label>
+          <select id="difficulty" name="difficulty">
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Content *</label>
+          <div id="quill-editor"></div>
+          <input type="hidden" id="content" name="content">
+        </div>
+
+        <div class="form-group">
+          <label for="summary">Summary (optional)</label>
+          <textarea id="summary" name="summary" rows="3" placeholder="Brief overview..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="pro_tips">Pro Tips (optional)</label>
+          <textarea id="pro_tips" name="pro_tips" rows="3" placeholder="Expert advice..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="screenshots">Screenshots (optional)</label>
+          <input type="file" id="screenshots" name="screenshots" accept="image/*" multiple>
+        </div>
+
+        <div style="margin-top: 2rem; text-align: right;">
+          <button type="button" onclick="closePageModal()" style="background: #666; margin-right: 1rem;" class="btn">Cancel</button>
+          <button type="submit" class="btn">Save Guide</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <%- include('partials/footer') %>
+
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+  <script>
+    let quill;
+    let isEditMode = false;
+    let currentPageId = null;
+
+    // Initialize Quill editor
+    document.addEventListener('DOMContentLoaded', function() {
+      quill = new Quill('#quill-editor', {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'indent': '-1'}, { 'indent': '+1' }],
+            ['link', 'image'],
+            ['clean']
+          ]
+        }
+      });
+    });
+
+    function showCreateModal() {
+      isEditMode = false;
+      currentPageId = null;
+      document.getElementById('modalTitle').textContent = 'Create New Guide';
+      document.getElementById('pageForm').reset();
+      document.getElementById('pageId').value = '';
+      quill.setContents([]);
+      document.getElementById('slug').disabled = false;
+      document.getElementById('pageModal').style.display = 'block';
+    }
+
+    function closePageModal() {
+      document.getElementById('pageModal').style.display = 'none';
+    }
+
+    async function editPage(id) {
+      isEditMode = true;
+      currentPageId = id;
+      document.getElementById('modalTitle').textContent = 'Edit Guide';
+      
+      try {
+        const response = await fetch(`/dashboard/pages/${id}/edit`);
+        const page = await response.json();
+        
+        if (page.error) {
+          alert('Error loading page: ' + page.error);
+          return;
+        }
+
+        document.getElementById('pageId').value = page.id;
+        document.getElementById('title').value = page.title;
+        document.getElementById('slug').value = page.slug;
+        document.getElementById('slug').disabled = true; // Don't allow slug changes
+        document.getElementById('category').value = page.category || '';
+        document.getElementById('difficulty').value = page.difficulty || 'Beginner';
+        document.getElementById('summary').value = page.summary || '';
+        document.getElementById('pro_tips').value = page.pro_tips || '';
+        
+        // Set Quill content
+        if (page.content) {
+          quill.root.innerHTML = page.content;
+        }
+
+        document.getElementById('pageModal').style.display = 'block';
+      } catch (error) {
+        console.error('Error loading page:', error);
+        alert('Failed to load page data');
+      }
+    }
+
+    async function deletePage(id, title) {
+      if (!confirm(`Are you sure you want to delete "${title}"?`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/dashboard/pages/${id}`, {
+          method: 'DELETE'
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('Guide deleted successfully!');
+          window.location.reload();
+        } else {
+          alert('Error: ' + result.error);
+        }
+      } catch (error) {
+        console.error('Delete error:', error);
+        alert('Failed to delete guide');
+      }
+    }
+
+    // Handle form submission
+    document.getElementById('pageForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Get HTML content from Quill
+      const content = quill.root.innerHTML;
+      document.getElementById('content').value = content;
+
+      const formData = new FormData(e.target);
+      
+      let url, method;
+      if (isEditMode) {
+        url = `/dashboard/pages/${currentPageId}/update`;
+        method = 'POST';
+      } else {
+        url = '/dashboard/pages';
+        method = 'POST';
+      }
+
+      try {
+        const response = await fetch(url, {
+          method: method,
+          body: formData
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          alert(isEditMode ? 'Guide updated successfully!' : 'Guide created successfully!');
+          window.location.reload();
+        } else {
+          alert('Error: ' + (result.error || 'Unknown error'));
+        }
+      } catch (error) {
+        console.error('Form submission error:', error);
+        alert('Failed to save guide');
+      }
+    });
+
+    // Auto-generate slug from title
+    document.getElementById('title').addEventListener('input', function(e) {
+      if (!isEditMode) {
+        const slug = e.target.value
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-');
+        document.getElementById('slug').value = slug;
+      }
+    });
+
+    // Close modal on outside click
+    window.onclick = function(event) {
+      const modal = document.getElementById('pageModal');
+      if (event.target == modal) {
+        closePageModal();
+      }
+    }
+  </script>
+</body>
+</html>
