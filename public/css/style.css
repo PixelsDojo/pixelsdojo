@@ -1458,6 +1458,16 @@ main img,
     overflow-x: auto;
 }
 
+/* Hide browser blocked content errors */
+#sub-frame-error,
+#sub-frame-error-details {
+    display: none !important;
+}
+
+iframe[src="about:blank"] {
+    display: none !important;
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    END OF AMA PAGE FIXES
    ═══════════════════════════════════════════════════════════════════ */
