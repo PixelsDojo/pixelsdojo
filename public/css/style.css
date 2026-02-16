@@ -1,14 +1,17 @@
 :root {
     --neon-purple: #6500ff;
     --purple:     #8500ff;
-    --cyan:       #00d4ff;
-    --cyan-light: #4dd0e1;
+    --cyan: #41e114;  /* Pixels Green */
+    --cyan-light: #a9fe75;  /* Pixels Light Green */
     --yellow:     #edff84;
     --green:      #b7eb05;
     --bg-color:   #0a0a15;
     --dark-bg:    #1a1a2e;
     --card-bg:    #0f3460;
 
+    --pixels-green: #41e114;
+    --pixels-green-light: #a9fe75;
+    
     --accent:     var(--cyan);
     --accent-glow:var(--purple);
     --highlight:  var(--yellow);
@@ -157,7 +160,7 @@ nav a {
 
 nav a:hover {
     color: white;
-    background: rgba(0,212,255,0.18);
+    background: rgba(65, 225, 20,0.18);
 }
 
 /* ─── Main Layout + Sidebar ────────────────────────────────── */
@@ -337,7 +340,7 @@ nav a:hover {
     border: 2px solid var(--cyan);
     border-radius: 50px;
     overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0,212,255,0.2);
+    box-shadow: 0 6px 20px rgba(65, 225, 20,0.2);
 }
 
 .search-form input {
@@ -400,9 +403,9 @@ nav a:hover {
   align-items: flex-start;
   gap: 1.5rem;
   padding: 1.5rem;
-  background: rgba(0, 255, 255, 0.05);
+  background: rgba(65, 225, 20, 0.05);
   border-radius: 12px;
-  border: 1px solid rgba(0, 255, 255, 0.2);
+  border: 1px solid rgba(65, 225, 20, 0.2);
   margin: 2rem 0 3rem;
 }
 
@@ -411,7 +414,7 @@ nav a:hover {
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--cyan, #00ffff);
+  border: 3px solid var(--cyan, #41e114);
   flex-shrink: 0;
 }
 
@@ -779,9 +782,9 @@ footer {
   background: rgba(20, 20, 40, 0.8);
   border-radius: 12px;
   padding: 2rem;
-  border: 1px solid rgba(0, 255, 255, 0.2);
+  border: 1px solid rgba(65, 225, 20, 0.2);
   backdrop-filter: blur(6px);
-  box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(65, 225, 20, 0.1);
 }
 
 .form-group {
@@ -791,7 +794,7 @@ footer {
 .form-group label {
   display: block;
   margin-bottom: 0.6rem;
-  color: var(--cyan, #00ffff);
+  color: var(--cyan, #41e114);
   font-weight: 500;
 }
 
@@ -802,7 +805,7 @@ footer {
   width: 100%;
   padding: 0.9rem;
   background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(0, 255, 255, 0.3);
+  border: 1px solid rgba(65, 225, 20, 0.3);
   border-radius: 6px;
   color: white;
   font-size: 1rem;
@@ -819,7 +822,7 @@ footer {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--cyan);
-  box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 12px rgba(65, 225, 20, 0.3);
 }
 
 .form-group small {
@@ -830,7 +833,7 @@ footer {
 }
 
 .btn-save {
-  background: var(--cyan, #00ffff);
+  background: var(--cyan, #41e114);
   color: black;
   padding: 0.9rem 1.8rem;
   border: none;
