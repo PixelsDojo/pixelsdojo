@@ -1428,28 +1428,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-// ═══════════════════════════════════════════════════
-// 🤖 AMA SCRAPER BOT - Runs every Monday at 9 AM
-// ═══════════════════════════════════════════════════
-const cron = require('node-cron');
-const { scrapeAMAs } = require('./ama-scraper');
-
-console.log('⏰ AMA Scraper: Scheduled for every Monday at 9:00 AM (SAST)');
-
-// Run every Monday at 9:00 AM
-cron.schedule('0 9 * * 1', async () => {
-  console.log('\n⏰ WEEKLY AMA SCRAPE STARTING...');
-  console.log(`📅 ${new Date().toLocaleString()}`);
-  
-  try {
-    await scrapeAMAs();
-    console.log('✅ Weekly AMA scrape completed!\n');
-  } catch (error) {
-    console.error('❌ Weekly AMA scrape failed:', error);
-  }
-}, {
-  timezone: "Africa/Johannesburg"  // Your timezone
-});
-
-console.log('✅ AMA Scraper is armed and ready!\n');
