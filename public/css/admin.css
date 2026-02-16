@@ -63,7 +63,7 @@ td {
 }
 
 tbody tr:hover {
-    background: rgba(0, 255, 255, 0.05);
+    background: rgba(65, 225, 20, 0.05);
 }
 
 .npc-thumb {
