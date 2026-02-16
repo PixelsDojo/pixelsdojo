@@ -1429,16 +1429,124 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// TEMPORARY - Test AMA scraper manually
-app.get('/test-ama-scraper', requireAdmin, async (req, res) => {
-  const { scrapeAMAs } = require('./ama-scraper');
+// ═══════════════════════════════════════════════════════════════════
+// 🤖 AMA RSS SCRAPER - Runs every Monday at 9 AM
+// PASTE THIS AT THE BOTTOM OF YOUR server.js FILE
+// (REPLACE the old scraper code if you already added it)
+// ═══════════════════════════════════════════════════════════════════
+
+const cron = require('node-cron');
+const { scrapeAMAs } = require('./ama-scraper-rss'); // ← Using RSS version now!
+
+console.log('⏰ AMA RSS Scraper: Scheduled for every Monday at 9:00 AM (SAST)');
+
+// Run every Monday at 9:00 AM
+cron.schedule('0 9 * * 1', async () => {
+  console.log('\n⏰ WEEKLY AMA SCRAPE STARTING...');
+  console.log(`📅 ${new Date().toLocaleString()}`);
   
   try {
-    console.log('🧪 Manual AMA scrape test triggered...');
     await scrapeAMAs();
-    res.send('✅ AMA scrape completed! Check your /amas page.');
+    console.log('✅ Weekly AMA scrape completed!\n');
+  } catch (error) {
+    console.error('❌ Weekly AMA scrape failed:', error);
+  }
+}, {
+  timezone: "Africa/Johannesburg"  // Your timezone
+});
+
+console.log('✅ AMA RSS Scraper is armed and ready!\n');
+
+
+// ═══════════════════════════════════════════════════════════════════
+// TEMPORARY TEST ROUTE - Test the RSS scraper manually
+// Visit: https://your-site.com/test-ama-scraper (while logged in as admin)
+// Delete this after testing if you want!
+// ═══════════════════════════════════════════════════════════════════
+
+app.get('/test-ama-scraper', requireAdmin, async (req, res) => {
+  const { scrapeAMAs } = require('./ama-scraper-rss');
+  
+  try {
+    console.log('🧪 Manual AMA RSS scrape test triggered...');
+    await scrapeAMAs();
+    res.send(`
+      <html>
+        <head>
+          <style>
+            body { 
+              font-family: sans-serif; 
+              max-width: 600px; 
+              margin: 50px auto; 
+              padding: 20px;
+              background: #1a1a2e;
+              color: white;
+            }
+            .success { 
+              padding: 20px; 
+              background: rgba(0, 255, 255, 0.1); 
+              border-left: 4px solid #00ffff;
+              border-radius: 8px;
+            }
+            a { 
+              color: #00ffff; 
+              text-decoration: none; 
+              font-weight: bold;
+            }
+            a:hover { text-decoration: underline; }
+          </style>
+        </head>
+        <body>
+          <div class="success">
+            <h1>✅ AMA Scrape Completed!</h1>
+            <p>Check the logs above for details on what was imported.</p>
+            <p><a href="/amas">→ View AMAs Page</a></p>
+            <p><a href="/admin">→ Back to Admin</a></p>
+          </div>
+        </body>
+      </html>
+    `);
   } catch (error) {
     console.error('❌ Test failed:', error);
-    res.send('❌ Error: ' + error.message);
+    res.send(`
+      <html>
+        <head>
+          <style>
+            body { 
+              font-family: sans-serif; 
+              max-width: 600px; 
+              margin: 50px auto; 
+              padding: 20px;
+              background: #1a1a2e;
+              color: white;
+            }
+            .error { 
+              padding: 20px; 
+              background: rgba(255, 68, 68, 0.1); 
+              border-left: 4px solid #ff4444;
+              border-radius: 8px;
+            }
+            pre {
+              background: #000;
+              padding: 10px;
+              border-radius: 4px;
+              overflow-x: auto;
+            }
+            a { 
+              color: #00ffff; 
+              text-decoration: none; 
+              font-weight: bold;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="error">
+            <h1>❌ Error</h1>
+            <pre>${error.message}</pre>
+            <p><a href="/admin">→ Back to Admin</a></p>
+          </div>
+        </body>
+      </html>
+    `);
   }
 });
