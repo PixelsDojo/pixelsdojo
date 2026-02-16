@@ -257,5 +257,14 @@ if (require.main === module) {
     });
 }
 
+// Clean up HTML and REMOVE ALL IMAGES
+let cleaned = content
+  .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+  .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+  .replace(/<img[^>]*>/gi, '')
+  .replace(/<figure[^>]*>.*?<\/figure>/gi, '')
+  .replace(/<picture[^>]*>.*?<\/picture>/gi, '')
+  .replace(/gesture="media"/gi, 'allow="autoplay"'); // FIX IFRAME WARNING
+
 // Export for use in other scripts
 module.exports = { scrapeAMAs };
