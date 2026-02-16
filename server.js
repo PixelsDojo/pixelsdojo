@@ -1429,3 +1429,16 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+// TEMPORARY - Test AMA scraper manually
+app.get('/test-ama-scraper', requireAdmin, async (req, res) => {
+  const { scrapeAMAs } = require('./ama-scraper');
+  
+  try {
+    console.log('🧪 Manual AMA scrape test triggered...');
+    await scrapeAMAs();
+    res.send('✅ AMA scrape completed! Check your /amas page.');
+  } catch (error) {
+    console.error('❌ Test failed:', error);
+    res.send('❌ Error: ' + error.message);
+  }
+});
