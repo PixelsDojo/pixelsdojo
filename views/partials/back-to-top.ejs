@@ -39,25 +39,18 @@
 </style>
 
 <script>
-  // Use DOMContentLoaded to ensure element exists
   document.addEventListener('DOMContentLoaded', function() {
-    var backToTop = document.getElementById('backToTop');
-    if (!backToTop) return;
-
+    var btn = document.getElementById('backToTop');
+    if (!btn) return;
     function toggleBtn() {
-      if (window.pageYOffset > 300) {
-        backToTop.classList.add('visible');
-      } else {
-        backToTop.classList.remove('visible');
-      }
+      btn.classList.toggle('visible', window.pageYOffset > 300);
     }
-
     window.addEventListener('scroll', toggleBtn);
-    toggleBtn(); // run once on load in case already scrolled
-
-    backToTop.addEventListener('click', function(e) {
+    toggleBtn();
+    btn.addEventListener('click', function(e) {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
 </script>
+
