@@ -1,7 +1,5 @@
-<!-- Back to Top Button -->
-<a href="#top" class="back-to-top" id="backToTop" aria-label="Back to top">
-  ↑
-</a>
+<!-- ↑ Back to Top Button -->
+<a href="#top" class="back-to-top" id="backToTop" aria-label="Back to top">↑</a>
 
 <style>
   .back-to-top {
@@ -26,53 +24,40 @@
     z-index: 1000;
     cursor: pointer;
   }
-  
   .back-to-top.visible {
     opacity: 1;
     visibility: visible;
   }
-  
   .back-to-top:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 20px rgba(65, 225, 20, 0.6);
     background: linear-gradient(135deg, #a9fe75 0%, #41e114 100%);
   }
-  
   @media (max-width: 768px) {
-    .back-to-top {
-      bottom: 20px;
-      right: 20px;
-      width: 45px;
-      height: 45px;
-      font-size: 1.3rem;
-    }
+    .back-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; font-size: 1.3rem; }
   }
 </style>
 
 <script>
-(function() {
-  const backToTop = document.getElementById('backToTop');
-  if (!backToTop) return;
-  
-  // Show/hide on scroll
-  function toggleButton() {
-    if (window.pageYOffset > 300) {
-      backToTop.classList.add('visible');
-    } else {
-      backToTop.classList.remove('visible');
+  // Use DOMContentLoaded to ensure element exists
+  document.addEventListener('DOMContentLoaded', function() {
+    var backToTop = document.getElementById('backToTop');
+    if (!backToTop) return;
+
+    function toggleBtn() {
+      if (window.pageYOffset > 300) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
     }
-  }
-  
-  window.addEventListener('scroll', toggleButton);
-  window.addEventListener('load', toggleButton);
-  
-  // Smooth scroll
-  backToTop.addEventListener('click', function(e) {
-    e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+
+    window.addEventListener('scroll', toggleBtn);
+    toggleBtn(); // run once on load in case already scrolled
+
+    backToTop.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
-})();
 </script>
