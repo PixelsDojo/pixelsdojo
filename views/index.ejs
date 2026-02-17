@@ -41,13 +41,6 @@
         <div class="sidebar-logo">
           <img src="/images/pixeldojo_logo_portrait.png" alt="Pixels Dojo Logo" class="sidebar-logo-img">
         </div>
-        <hr>
-        <a href="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           style="display:block; margin-top:0.5rem; padding:0.7rem 1rem; background:linear-gradient(135deg,#8500ff,#6500ff); color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; text-align:center; font-size:0.9rem; box-shadow:0 3px 10px rgba(133,0,255,0.3); transition:all 0.2s;">
-          💡 Suggest a Topic
-        </a>
       </aside>
 
       <div class="main-content-area">
@@ -282,27 +275,8 @@
       </div>
     </div>
 
-    <!-- Back to Top Button -->
-    <a href="#top" class="back-to-top" id="backToTop">↑</a>
-
     <script src="/js/chat-widget.js"></script>
     <script src="/js/main.js"></script>
-    
-    <script>
-      const backToTop = document.getElementById('backToTop');
-      
-      window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 300) {
-          backToTop.classList.add('visible');
-        } else {
-          backToTop.classList.remove('visible');
-        }
-      });
-      
-      backToTop.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    </script>
+    <%- include('partials/back-to-top') %>
 </body>
 </html>
