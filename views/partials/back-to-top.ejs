@@ -1,43 +1,6 @@
 <!-- ↑ Back to Top Button -->
 <a href="#top" class="back-to-top" id="backToTop" aria-label="Back to top">↑</a>
 
-<style>
-  .back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: linear-gradient(135deg, #41e114 0%, #a9fe75 100%);
-    color: #000;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    box-shadow: 0 4px 12px rgba(65, 225, 20, 0.4);
-    transition: all 0.3s ease;
-    opacity: 0;
-    visibility: hidden;
-    z-index: 1000;
-    cursor: pointer;
-  }
-  .back-to-top.visible {
-    opacity: 1;
-    visibility: visible;
-  }
-  .back-to-top:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(65, 225, 20, 0.6);
-    background: linear-gradient(135deg, #a9fe75 0%, #41e114 100%);
-  }
-  @media (max-width: 768px) {
-    .back-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; font-size: 1.3rem; }
-  }
-</style>
-
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     var btn = document.getElementById('backToTop');
@@ -53,4 +16,3 @@
     });
   });
 </script>
-
