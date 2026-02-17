@@ -196,14 +196,17 @@
             <% } %>
           </div>
 
-          <!-- Tip Address – CONTRIBUTORS AND ADMINS ONLY -->
+          <!-- Tip / Support Info – CONTRIBUTORS AND ADMINS ONLY -->
           <div class="form-group">
-            <label for="tip_address">Tip / Donation Address (PayPal, wallet, etc.)</label>
-            <input type="text" id="tip_address" name="tip_address" 
-                   value="<%= user.tip_address || '' %>" 
-                   <%= (user.is_admin || user.is_contributor) ? '' : 'disabled' %>>
+            <label for="tip_address">💰 Support & Tip Info</label>
+            <textarea id="tip_address" name="tip_address" rows="5"
+                      placeholder="Add anything people can use to support or tip you — wallet addresses, Ko-fi links, creator codes, referral links, Patreon, anything! No particular format needed, just paste what you have."
+                      <%= (user.is_admin || user.is_contributor) ? '' : 'disabled' %>><%= user.tip_address || '' %></textarea>
+            <small style="color:#aaa;">
+              Examples: Ronin wallet address • Ko-fi link • Creator/referral code • Patreon URL • Any tip method you use
+            </small>
             <% if (!(user.is_admin || user.is_contributor)) { %>
-              <small>(Contributors and admins only)</small>
+              <small style="color:#888;">(Contributors and admins only — <a href="https://forms.gle/6dzJP8v5JYzvgmV99" target="_blank" style="color:#41e114;">apply to contribute!</a>)</small>
             <% } %>
           </div>
 
