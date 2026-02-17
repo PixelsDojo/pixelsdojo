@@ -2004,3 +2004,69 @@ div:has(> #sub-frame-error-details) {
 /* ═══════════════════════════════════════════════════════════════════
    END OF NUCLEAR OPTION
    ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── Back to Top Button ──────────────────────────────────────── */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #41e114 0%, #a9fe75 100%);
+  color: #000;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(65, 225, 20, 0.4);
+  transition: all 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 9998;
+  cursor: pointer;
+}
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+.back-to-top:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(65, 225, 20, 0.6);
+  background: linear-gradient(135deg, #a9fe75 0%, #41e114 100%);
+  color: #000;
+}
+@media (max-width: 768px) {
+  .back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
+  }
+}
+
+/* ─── Google Translate Widget ─────────────────────────────────── */
+#google_translate_element {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.goog-te-gadget-simple {
+  background: rgba(65, 225, 20, 0.1) !important;
+  border: 1px solid rgba(65, 225, 20, 0.4) !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 0.82rem !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+.goog-te-gadget-simple span,
+.goog-te-gadget-simple .goog-te-menu-value span {
+  color: #41e114 !important;
+}
+.goog-te-gadget-simple img { display: none !important; }
+.goog-te-banner-frame.skiptranslate { display: none !important; }
+body { top: 0 !important; }
