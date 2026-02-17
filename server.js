@@ -722,6 +722,48 @@ app.get('/all-posts', (req, res) => {
   });
 });
 
+// ─── Search ──────────────────────────────────────────────────
+app.get('/search', (req, res) => {
+  const query = (req.query.q || '').trim();
+
+  // No query - render empty results
+  if (!query) {
+    return res.render('search', {
+      query: '',
+      results: [],
+      user: req.session.user || null
+    });
+  }
+
+  // Search title, summary and content
+  const term = `%${query}%`;
+  db.all(`
+    SELECT p.*, u.display_name as author_display_name
+    FROM pages p
+    LEFT JOIN users u ON p.author_id = u.id
+    WHERE p.title LIKE ?
+       OR p.summary LIKE ?
+       OR p.content LIKE ?
+       OR p.category LIKE ?
+    ORDER BY
+      CASE WHEN p.title LIKE ? THEN 1
+           WHEN p.summary LIKE ? THEN 2
+           ELSE 3 END,
+      p.views DESC
+    LIMIT 50
+  `, [term, term, term, term, term, term], (err, results) => {
+    if (err) {
+      console.error('Search error:', err);
+      results = [];
+    }
+    res.render('search', {
+      query,
+      results: results || [],
+      user: req.session.user || null
+    });
+  });
+});
+
 // GET /register - Show registration form
 app.get('/register', (req, res) => {
   if (req.session.user) {
