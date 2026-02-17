@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search: "<%= query %>" | Pixels Dojo Wiki</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/chat-widget.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/category/startup">Start Here</a></li>
+      <li><a href="/category/earn">Earn $PIXEL</a></li>
+      <li><a href="/category/mastery">Mastery</a></li>
+      <li><a href="/npcs-map">NPCs & Map</a></li>
+      <li><a href="/events">Events</a></li>
+      <li><a href="/amas">AMAs</a></li>
+      <li><a href="/category/community">Community</a></li>
+    </ul>
+  </nav>
+
+  <div class="main-wrapper">
+
+    <aside class="sidebar">
+      <h4>Library</h4>
+      <a href="/all-posts">📚 All Articles</a>
+      <a href="/npcs-map">🗺️ NPCs & Map</a>
+      <a href="/events">⚡ Events</a>
+      <a href="/amas">💬 AMAs</a>
+      <hr>
+      <h5>Categories</h5>
+      <a href="/category/startup">Start Here</a>
+      <a href="/category/earn">Earn $PIXEL</a>
+      <a href="/category/mastery">Mastery</a>
+      <a href="/category/community">Community</a>
+    </aside>
+
+    <div class="main-content-area">
+
+      <!-- Search Header -->
+      <div style="margin: 2rem 0 1.5rem 0;">
+        <h1 style="color: #41e114; margin-bottom: 0.5rem;">🔍 Search Results</h1>
+        <p style="color: #aaa;">
+          <% if (query) { %>
+            <strong style="color: white;"><%= results.length %></strong> result<%= results.length !== 1 ? 's' : '' %> for <strong style="color: white;">"<%= query %>"</strong>
+          <% } else { %>
+            Enter a search term below
+          <% } %>
+        </p>
+      </div>
+
+      <!-- Search Bar (so they can refine) -->
+      <div class="search-bar-container" style="margin-bottom: 2rem;">
+        <form action="/search" method="GET" class="search-form">
+          <input type="text" name="q" value="<%= query %>" placeholder="Search the wiki..." required>
+          <button type="submit" class="btn btn-cyan">Search</button>
+        </form>
+      </div>
+
+      <!-- No results -->
+      <% if (query && results.length === 0) { %>
+        <div style="text-align: center; padding: 4rem 2rem; background: rgba(20,20,40,0.5); border-radius: 12px; border: 1px solid rgba(65,225,20,0.2);">
+          <p style="font-size: 3rem; margin-bottom: 1rem;">🔍</p>
+          <h2 style="color: #ddd; margin-bottom: 1rem;">No results found for "<%= query %>"</h2>
+          <p style="color: #aaa; margin-bottom: 2rem;">Try different keywords, or browse all articles below.</p>
+          <a href="/all-posts" class="btn btn-outline">📚 Browse All Articles →</a>
+        </div>
+
+      <!-- Results list -->
+      <% } else if (results.length > 0) { %>
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <% results.forEach(page => { %>
+            <a href="/pages/<%= page.slug %>" style="display: block; text-decoration: none; padding: 1.5rem; background: rgba(20,20,40,0.7); border: 1px solid rgba(65,225,20,0.2); border-radius: 10px; transition: all 0.2s;">
+
+              <!-- Title -->
+              <h3 style="color: #41e114; margin: 0 0 0.4rem 0; font-size: 1.25rem;">
+                <%= page.title %>
+              </h3>
+
+              <!-- Category + author + date -->
+              <p style="color: #888; font-size: 0.85rem; margin: 0 0 0.75rem 0;">
+                <span style="background: rgba(65,225,20,0.15); color: #a9fe75; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; margin-right: 0.5rem;">
+                  <%= page.category ? page.category.charAt(0).toUpperCase() + page.category.slice(1) : 'General' %>
+                </span>
+                By <%= page.author_display_name || 'Community' %> •
+                <%= page.created_at ? new Date(page.created_at).toLocaleDateString() : '' %>
+                <% if (page.views) { %> • 👁️ <%= page.views %> views<% } %>
+              </p>
+
+              <!-- Snippet -->
+              <p style="color: #ccc; margin: 0; line-height: 1.6; font-size: 0.95rem;">
+                <% 
+                  const raw = page.summary || page.content || '';
+                  const stripped = raw.replace(/<[^>]*>/g, '');
+                  const snippet = stripped.length > 200 ? stripped.substring(0, 200) + '...' : stripped;
+                %>
+                <%= snippet %>
+              </p>
+
+            </a>
+          <% }) %>
+        </div>
+
+        <!-- Browse more -->
+        <div style="text-align: center; margin-top: 2.5rem;">
+          <a href="/all-posts" class="btn btn-outline">📚 Browse All Articles →</a>
+        </div>
+
+      <% } %>
+
+      <%- include('partials/footer') %>
+    </div>
+  </div>
+
+  <!-- Back to Top -->
+  <a href="#top" class="back-to-top" id="backToTop">↑</a>
+  <style>
+    .back-to-top { position:fixed; bottom:30px; right:30px; background:linear-gradient(135deg,#41e114,#a9fe75); color:#000; width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold; text-decoration:none; opacity:0; visibility:hidden; z-index:1000; transition:all 0.3s; }
+    .back-to-top.visible { opacity:1; visibility:visible; }
+    .back-to-top:hover { transform:translateY(-5px); }
+    /* Hover effect on result cards */
+    a[href^="/pages/"]:hover { border-color: rgba(65,225,20,0.6) !important; background: rgba(65,225,20,0.07) !important; transform: translateX(4px); }
+  </style>
+
+  <script src="/js/chat-widget.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    const btn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.pageYOffset > 300));
+    btn.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top:0, behavior:'smooth' }); });
+  </script>
+</body>
+</html>
