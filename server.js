@@ -34,6 +34,37 @@ const discordBot = require('./discord-bot');
 
 const app = express();
 
+// ─── Maintenance Mode ─────────────────────────────────────────────────────────
+const MAINTENANCE_FILE = path.join(__dirname, 'maintenance.json');
+
+function isMaintenanceOn() {
+  try {
+    const data = JSON.parse(fs.readFileSync(MAINTENANCE_FILE, 'utf8'));
+    return data.enabled === true;
+  } catch (e) {
+    return false; // file missing = maintenance off
+  }
+}
+
+function setMaintenance(enabled) {
+  fs.writeFileSync(MAINTENANCE_FILE, JSON.stringify({ enabled }), 'utf8');
+}
+
+// Middleware: show maintenance page to non-admins when enabled
+app.use((req, res, next) => {
+  // Always allow: static assets, login, logout, admin routes
+  const bypass = ['/login', '/logout', '/register'];
+  const isStatic = /\.(css|js|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|webp)$/i.test(req.path);
+  const isAdmin  = req.path.startsWith('/admin');
+  const isBypass = bypass.includes(req.path);
+  const isAdminUser = req.session && req.session.user && req.session.user.is_admin;
+
+  if (isMaintenanceOn() && !isStatic && !isAdmin && !isBypass && !isAdminUser) {
+    return res.status(503).render('maintenance');
+  }
+  next();
+});
+
 // ✅ FIX: Trust Railway's proxy so rate limiting and IP detection work correctly
 // This also fixes the ERR_ERL_UNEXPECTED_X_FORWARDED_FOR warning in logs
 app.set('trust proxy', 1);
@@ -1062,6 +1093,18 @@ app.get('/api/stats', (req, res) => {
 });
 
 
+// ─── Maintenance Mode Toggle ──────────────────────────────────────────────────
+app.post('/admin/toggle-maintenance', requireAdmin, (req, res) => {
+  const current = isMaintenanceOn();
+  setMaintenance(!current);
+  res.json({ enabled: !current });
+});
+
+app.get('/admin/maintenance-status', requireAdmin, (req, res) => {
+  res.json({ enabled: isMaintenanceOn() });
+});
+
+
 app.get('/admin/analytics', requireAdmin, (req, res) => {
   // Get overall stats
   db.get(
@@ -1161,7 +1204,8 @@ app.get('/admin', requireAdmin, (req, res) => {
       res.render('admin', {
         user: req.session.user,
         npcs: npcRows,
-        pages: pageRows
+        pages: pageRows,
+        maintenanceOn: isMaintenanceOn()
       });
     });
   });
