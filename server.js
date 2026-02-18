@@ -1373,6 +1373,47 @@ app.delete('/admin/pages/:id', requireAdmin, (req, res) => {
   });
 });
 
+// --- Search ---
+app.get('/search', (req, res) => {
+  const query = req.query.q || '';
+
+  if (!query.trim()) {
+    return res.render('search', {
+      query: '',
+      results: [],
+      user: req.session.user || null
+    });
+  }
+
+  const searchPattern = '%' + query + '%';
+
+  db.all(`
+    SELECT p.*, u.display_name as author_display_name
+    FROM pages p
+    LEFT JOIN users u ON p.author_id = u.id
+    WHERE 
+      LOWER(p.title) LIKE LOWER(?) OR 
+      LOWER(p.content) LIKE LOWER(?) OR 
+      LOWER(p.summary) LIKE LOWER(?) OR
+      LOWER(p.category) LIKE LOWER(?)
+    ORDER BY 
+      CASE WHEN LOWER(p.title) LIKE LOWER(?) THEN 1 ELSE 2 END,
+      p.created_at DESC
+    LIMIT 20
+  `, [searchPattern, searchPattern, searchPattern, searchPattern, searchPattern],
+  (err, results) => {
+    if (err) {
+      console.error('Search error:', err);
+      results = [];
+    }
+    res.render('search', {
+      query,
+      results: results || [],
+      user: req.session.user || null
+    });
+  });
+});
+
 // Chatbot 
 app.use('/chat', chatRoutes);
 
