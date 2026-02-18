@@ -131,8 +131,9 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 app.use(generalLimiter);
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// ✅ FIX: Increased body size limit to allow longer wiki posts (default was 100kb)
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/images/npcs',     express.static('/app/data/images/npcs'));
