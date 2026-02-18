@@ -145,6 +145,7 @@
           <tr>
             <th>Title</th>
             <th>Category</th>
+            <th>Status</th>
             <th>Last Updated</th>
             <th style="text-align: center;">Actions</th>
           </tr>
@@ -154,11 +155,20 @@
             <tr>
               <td><%= page.title %></td>
               <td><%= page.category || 'None' %></td>
+              <td>
+                <span style="padding:0.2rem 0.6rem; border-radius:4px; font-size:0.8rem; font-weight:bold;
+                  background:<%= page.status==='draft' ? 'rgba(255,200,0,0.15)' : 'rgba(65,225,20,0.15)' %>;
+                  color:<%= page.status==='draft' ? '#ffc800' : '#41e114' %>;">
+                  <%= page.status==='draft' ? '📝 Draft' : '✅ Published' %>
+                </span>
+              </td>
               <td><%= new Date(page.updated_at).toLocaleDateString() %></td>
               <td style="text-align: center;">
-                <a href="/pages/<%= page.slug %>" style="color: var(--cyan); margin-right: 1rem;">View</a>
+                <% if (page.status !== 'draft') { %>
+                  <a href="/pages/<%= page.slug %>" style="color: var(--cyan); margin-right: 1rem;">View</a>
+                <% } %>
                 <a href="javascript:void(0)" onclick="editPage(<%= page.id %>)" style="color: var(--yellow); margin-right: 1rem;">Edit</a>
-                <a href="javascript:void(0)" onclick="deletePage(<%= page.id %>, '<%= page.title %>')" style="color: #ff4444;">Delete</a>
+                <a href="javascript:void(0)" onclick="deletePage(<%= page.id %>, <%= JSON.stringify(page.title) %>)" style="color: #ff4444;">Delete</a>
               </td>
             </tr>
           <% }) %>
