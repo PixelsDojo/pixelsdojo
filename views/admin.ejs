@@ -97,14 +97,23 @@
 
         <!-- Admin Tools Navigation -->
         <% if (user && user.is_admin) { %>
-          <div class="admin-tools-nav" style="margin: 1rem 0; padding: 0.8rem; background: rgba(0,255,255,0.08); border-radius: 8px; border: 1px solid rgba(0,255,255,0.2);">
-            <a href="/admin/analytics" class="btn btn-secondary" style="margin-right: 1rem; padding: 0.6rem 1.2rem;">
+          <div class="admin-tools-nav" style="margin: 1rem 0; padding: 0.8rem; background: rgba(0,255,255,0.08); border-radius: 8px; border: 1px solid rgba(0,255,255,0.2); display:flex; align-items:center; flex-wrap:wrap; gap:0.8rem;">
+            <a href="/admin/analytics" class="btn btn-secondary" style="padding: 0.6rem 1.2rem;">
               📊 View Site Analytics
             </a>
-            <a href="/admin/users" class="btn btn-secondary" style="margin-right: 1rem; padding: 0.6rem 1.2rem;">
+            <a href="/admin/users" class="btn btn-secondary" style="padding: 0.6rem 1.2rem;">
               👥 Manage Users & Invite Contributors
             </a>
-            <!-- You can add more admin tool links here later -->
+
+            <!-- Maintenance Mode Toggle -->
+            <button id="maintenanceBtn" onclick="toggleMaintenance()"
+              style="padding:0.6rem 1.4rem; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:0.95rem; transition:all 0.2s;
+                     background:<%= maintenanceOn ? 'rgba(255,80,80,0.25)' : 'rgba(65,225,20,0.15)' %>;
+                     color:<%= maintenanceOn ? '#ff5050' : '#41e114' %>;
+                     border:1px solid <%= maintenanceOn ? 'rgba(255,80,80,0.5)' : 'rgba(65,225,20,0.4)' %>;">
+              <span id="maintenanceIcon"><%= maintenanceOn ? '🔴' : '🟢' %></span>
+              <span id="maintenanceLabel"> Site: <%= maintenanceOn ? 'MAINTENANCE MODE ON' : 'Live & Public' %></span>
+            </button>
           </div>
         <% } %>
 
@@ -720,6 +729,36 @@
             }
         })
         .catch(err => alert('Error: ' + err));
+    }
+
+    // ─── Maintenance Mode Toggle ─────────────────────────────────────
+    async function toggleMaintenance() {
+        const btn = document.getElementById('maintenanceBtn');
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+
+        try {
+            const res = await fetch('/admin/toggle-maintenance', { method: 'POST' });
+            const data = await res.json();
+            const on = data.enabled;
+
+            document.getElementById('maintenanceIcon').textContent = on ? '🔴' : '🟢';
+            document.getElementById('maintenanceLabel').textContent = on ? ' Site: MAINTENANCE MODE ON' : ' Site: Live & Public';
+            btn.style.background   = on ? 'rgba(255,80,80,0.25)'   : 'rgba(65,225,20,0.15)';
+            btn.style.color        = on ? '#ff5050'                 : '#41e114';
+            btn.style.borderColor  = on ? 'rgba(255,80,80,0.5)'    : 'rgba(65,225,20,0.4)';
+
+            if (on) {
+                alert('🔴 Maintenance mode is ON.\nVisitors see the "Under Construction" page.\nYou (as admin) still have full access.');
+            } else {
+                alert('🟢 Site is back LIVE!\nAll visitors can access the site normally.');
+            }
+        } catch (err) {
+            alert('Error toggling maintenance mode: ' + err.message);
+        } finally {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        }
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
