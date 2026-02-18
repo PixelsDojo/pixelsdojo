@@ -81,8 +81,9 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com", "https://translate.googleapis.com", "https://www.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:", "http:"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-      connectSrc: ["'self'", "https://widgets.coingecko.com", "https://api.coingecko.com", "https://cdn.jsdelivr.net", "https://translate.googleapis.com", "https://translate-pa.googleapis.com"],
-      frameSrc: ["'self'", "https://translate.google.com", "https://translate.googleapis.com"],
+      connectSrc: ["'self'", "https://widgets.coingecko.com", "https://api.coingecko.com", "https://cdn.jsdelivr.net", "https://translate.googleapis.com", "https://translate-pa.googleapis.com", "https://*.googleapis.com"],
+      frameSrc: ["'self'", "https://translate.google.com", "https://translate.googleapis.com", "https://*.google.com"],
+      workerSrc: ["'self'", "blob:"],
       objectSrc: ["'none'"]
     }
   },
