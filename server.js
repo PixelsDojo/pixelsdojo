@@ -583,7 +583,7 @@ app.post('/dashboard/pages', (req, res, next) => {
   }
   next();
 }, upload.array('screenshots', 15), (req, res) => {
-  const { title, slug, content, category, difficulty, summary, pro_tips } = req.body;
+  const { title, slug, content, category, difficulty, summary, pro_tips, status } = req.body;
   if (!title || !slug || !content) return res.status(400).json({ error: 'Missing required fields' });
 
   const cleanSlug = slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -649,7 +649,7 @@ app.post(
   upload.array('screenshots', 15),
   (req, res) => {
     const id = req.params.id;
-    const { title, content, category, difficulty, summary, pro_tips } = req.body;
+    const { title, content, category, difficulty, summary, pro_tips, status } = req.body;
 
     if (!title || !content) {
       return res.status(400).json({ error: 'Title and content are required' });
