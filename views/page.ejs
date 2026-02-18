@@ -159,6 +159,32 @@
           </div>
         <% } %>
 
+
+      <!-- Share to Social Media -->
+      <div style="margin: 1.5rem 0; padding: 1rem; background: rgba(20,20,40,0.6); border: 1px solid rgba(0,255,255,0.2); border-radius: 10px;">
+        <p style="color: #aaa; font-size: 0.85rem; margin: 0 0 0.75rem 0;">Share this page:</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <a id="shareTwitter" href="#" target="_blank" rel="noopener noreferrer" style="padding: 0.5rem 1rem; background: #1da1f2; color: white; text-decoration: none; border-radius: 6px; font-size: 0.85rem; font-weight: bold;">X / Twitter</a>
+          <a id="shareFacebook" href="#" target="_blank" rel="noopener noreferrer" style="padding: 0.5rem 1rem; background: #1877f2; color: white; text-decoration: none; border-radius: 6px; font-size: 0.85rem; font-weight: bold;">Facebook</a>
+          <a id="shareWhatsapp" href="#" target="_blank" rel="noopener noreferrer" style="padding: 0.5rem 1rem; background: #25d366; color: white; text-decoration: none; border-radius: 6px; font-size: 0.85rem; font-weight: bold;">WhatsApp</a>
+          <button onclick="copyPageLink(this)" style="padding: 0.5rem 1rem; background: rgba(0,255,255,0.15); color: #00ffff; border: 1px solid #00ffff; border-radius: 6px; font-size: 0.85rem; font-weight: bold; cursor: pointer;">Copy Link</button>
+        </div>
+      </div>
+      <script>
+        (function() {
+          var url = encodeURIComponent(window.location.href);
+          var title = encodeURIComponent(document.title);
+          document.getElementById("shareTwitter").href = "https://twitter.com/intent/tweet?url=" + url + "&text=" + title;
+          document.getElementById("shareFacebook").href = "https://www.facebook.com/sharer/sharer.php?u=" + url;
+          document.getElementById("shareWhatsapp").href = "https://wa.me/?text=" + title + "%20" + url;
+        })();
+        function copyPageLink(btn) {
+          navigator.clipboard.writeText(window.location.href).then(function() {
+            btn.textContent = "Copied!";
+            setTimeout(function() { btn.textContent = "Copy Link"; }, 2000);
+          });
+        }
+      </script>
        <!-- Like / Dislike -->
 <div class="interaction-bar">
   <button class="like-btn" data-page-id="<%= page.id %>">
