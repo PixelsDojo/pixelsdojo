@@ -36,11 +36,17 @@
   <a href="/npcs?sort=name-desc" class="<%= currentSort === 'name-desc' ? 'active' : '' %>">Name Z–A</a> |
   <a href="/npcs?sort=location" class="<%= currentSort === 'location' ? 'active' : '' %>">Location A–Z</a> |
   <a href="/npcs?sort=location-desc" class="<%= currentSort === 'location-desc' ? 'active' : '' %>">Location Z–A</a> |
-  <a href="/npcs" class="<%= !currentSort || currentSort === 'display_order' ? 'active' : '' %>">Default Order</a>
+  <a href="/npcs?sort=name" class="<%= currentSort === 'name' || !currentSort ? 'active' : '' %>">Default (A-Z)</a>
 </div>
-        <div class="npc-grid">
+        <!-- Search -->
+        <div style="margin: 1rem 0;">
+          <input type="text" id="npcClientSearch" placeholder="Search NPCs by name or location..."
+            oninput="filterNpcs()"
+            style="width:100%; max-width:400px; padding:0.7rem 1rem; background:rgba(0,0,0,0.3); border:1px solid rgba(0,255,255,0.3); border-radius:8px; color:white; font-size:0.95rem;">
+        </div>
+        <div class="npc-grid" id="npcGrid">
             <% npcs.forEach(npc => { %>
-                <div class="npc-card">
+                <div class="npc-card" data-name="<%= npc.name.toLowerCase() %>" data-location="<%= (npc.location || '').toLowerCase() %>">
                     <div class="npc-image">
                         <img src="<%= npc.image_path %>" alt="<%= npc.name %>" 
                              onerror="this.src='/images/npcs/default-npc.png'">
@@ -65,5 +71,15 @@
 
       <%- include('partials/footer') %>
     <script src="/js/chat-widget.js"></script>
+    <script>
+      function filterNpcs() {
+        var term = document.getElementById("npcClientSearch").value.toLowerCase();
+        document.querySelectorAll(".npc-card").forEach(function(card) {
+          var match = card.dataset.name.includes(term) || card.dataset.location.includes(term);
+          card.style.display = match ? "" : "none";
+        });
+      }
+    </script>
 </body>
 </html>
+
