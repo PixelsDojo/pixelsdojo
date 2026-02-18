@@ -26,64 +26,22 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // Add contributor role if not present
   db.run(`ALTER TABLE users ADD COLUMN is_contributor BOOLEAN DEFAULT 0;`, (err) => {
     if (err && !err.message.includes('duplicate column name')) {
       console.error('Error adding is_contributor column:', err.message);
-    } else {
-      console.log('is_contributor column ready (already exists or added)');
-    }
+    } else { console.log('is_contributor column ready (already exists or added)'); }
   });
 
-  // NEW: Add social_links and tip_address columns
   db.run(`ALTER TABLE users ADD COLUMN social_links TEXT;`, (err) => {
     if (err && !err.message.includes('duplicate column name')) {
       console.error('Error adding social_links column:', err.message);
-    } else {
-      console.log('social_links column ready (already exists or added)');
-    }
+    } else { console.log('social_links column ready (already exists or added)'); }
   });
 
   db.run(`ALTER TABLE users ADD COLUMN tip_address TEXT;`, (err) => {
     if (err && !err.message.includes('duplicate column name')) {
       console.error('Error adding tip_address column:', err.message);
-    } else {
-      console.log('tip_address column ready (already exists or added)');
-    }
-  });
-
-  // Add missing columns to pages table
-  db.run(`ALTER TABLE pages ADD COLUMN views INTEGER DEFAULT 0;`, (err) => {
-    if (err && !err.message.includes('duplicate column name')) {
-      console.error('Error adding views column:', err.message);
-    } else {
-      console.log('views column ready (already exists or added)');
-    }
-  });
-
-  db.run(`ALTER TABLE pages ADD COLUMN upvotes INTEGER DEFAULT 0;`, (err) => {
-    if (err && !err.message.includes('duplicate column name')) {
-      console.error('Error adding upvotes column:', err.message);
-    } else {
-      console.log('upvotes column ready (already exists or added)');
-    }
-  });
-
-  db.run(`ALTER TABLE pages ADD COLUMN downvotes INTEGER DEFAULT 0;`, (err) => {
-    if (err && !err.message.includes('duplicate column name')) {
-      console.error('Error adding downvotes column:', err.message);
-    } else {
-      console.log('downvotes column ready (already exists or added)');
-    }
-  });
-
-  // Add expires_on column for time-limited events
-  db.run(`ALTER TABLE pages ADD COLUMN expires_on TEXT;`, (err) => {
-    if (err && !err.message.includes('duplicate column name')) {
-      console.error('Error adding expires_on column:', err.message);
-    } else {
-      console.log('expires_on column ready (already exists or added)');
-    }
+    } else { console.log('tip_address column ready (already exists or added)'); }
   });
 
   // Wiki Pages
@@ -94,7 +52,7 @@ db.serialize(() => {
     content TEXT,
     category TEXT,
     difficulty TEXT CHECK(difficulty IN ('Beginner', 'Intermediate', 'Advanced')) DEFAULT 'Beginner',
-    screenshots TEXT,                -- JSON string: ["path1.jpg", "path2.png"]
+    screenshots TEXT,
     summary TEXT,
     pro_tips TEXT,
     author_id INTEGER,
@@ -102,7 +60,25 @@ db.serialize(() => {
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(author_id) REFERENCES users(id)
   )`);
-  
+
+  // Add columns to pages table
+  const pageColumns = [
+    [`ALTER TABLE pages ADD COLUMN views INTEGER DEFAULT 0;`, 'views'],
+    [`ALTER TABLE pages ADD COLUMN upvotes INTEGER DEFAULT 0;`, 'upvotes'],
+    [`ALTER TABLE pages ADD COLUMN downvotes INTEGER DEFAULT 0;`, 'downvotes'],
+    [`ALTER TABLE pages ADD COLUMN expires_on TEXT;`, 'expires_on'],
+    // ✅ NEW: Draft/published status
+    [`ALTER TABLE pages ADD COLUMN status TEXT DEFAULT 'published';`, 'status'],
+  ];
+
+  pageColumns.forEach(([sql, name]) => {
+    db.run(sql, (err) => {
+      if (err && !err.message.includes('duplicate column name')) {
+        console.error(`Error adding ${name} column:`, err.message);
+      } else { console.log(`${name} column ready (already exists or added)`); }
+    });
+  });
+
   // Likes
   db.run(`CREATE TABLE IF NOT EXISTS likes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -126,7 +102,7 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // NPCs table - added UNIQUE on name to prevent duplicates
+  // NPCs
   db.run(`CREATE TABLE IF NOT EXISTS npcs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL,
@@ -138,7 +114,7 @@ db.serialize(() => {
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // Analytics: Site-wide traffic tracking
+  // Analytics
   db.run(`CREATE TABLE IF NOT EXISTS analytics (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     visitor_id TEXT,
@@ -149,7 +125,6 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // Analytics: Daily stats summary
   db.run(`CREATE TABLE IF NOT EXISTS analytics_daily (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     date TEXT UNIQUE,
@@ -160,7 +135,6 @@ db.serialize(() => {
 
   console.log('Analytics tables created');
 
-  // Create admin user (Lizzy)
   const adminPassword = bcrypt.hashSync('changeme123', 10);
   db.run(`INSERT OR IGNORE INTO users (username, email, password, display_name, bio, profile_image, is_admin)
     VALUES (?, ?, ?, ?, ?, ?, 1)`,
