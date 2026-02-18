@@ -211,7 +211,7 @@ nav a:hover {
 .hero-full {
   position: relative;
   width: 100%;
-  min-height: 600px;               /* enough height for title + tagline + buttons */
+  min-height: 380px;               /* reduced from 600px */
   overflow: visible !important;    /* critical – prevents clipping of text/buttons */
   margin: 0;
   padding: 0;
@@ -227,7 +227,7 @@ nav a:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center bottom;  /* crop from the top, keep the bottom */
   display: block;
 }
 
@@ -239,7 +239,7 @@ nav a:hover {
 .hero-content {
   position: relative;
   z-index: 3;                      /* above background */
-  padding: 5rem 2rem 4rem;         /* more top/bottom space for floating buttons */
+  padding: 2.5rem 2rem 3rem;       /* reduced top padding since hero is shorter */
   max-width: 1400px;
   margin: 0 auto;
   text-align: center;
@@ -1438,6 +1438,85 @@ header {
 .featured-card small {
     color: #999;
     font-size: 0.85rem;
+}
+
+/* ─── FEATURED COMPACT (Most Upvoted / Most Viewed) ─────────────── */
+.featured-compact {
+  background: rgba(20, 20, 40, 0.6);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.featured-compact h2 {
+  color: var(--cyan);
+  margin: 0 0 1rem 0;
+  font-size: 1.4rem;
+}
+
+.compact-card {
+  display: flex;
+  gap: 1.5rem;
+  align-items: stretch;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s;
+}
+
+.compact-card:hover {
+  transform: translateX(4px);
+}
+
+.compact-card:hover .compact-info {
+  border-color: var(--cyan);
+  background: rgba(0, 255, 255, 0.08);
+}
+
+.compact-thumb {
+  width: 220px;
+  max-width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.compact-info {
+  flex: 1;
+  padding: 1.2rem 1.5rem;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.25s;
+}
+
+.compact-info h3 {
+  color: var(--yellow);
+  margin: 0 0 0.6rem 0;
+  font-size: 1.3rem;
+  line-height: 1.3;
+}
+
+.compact-meta {
+  color: #999;
+  font-size: 0.9rem;
+  margin: 0 0 0.8rem 0;
+}
+
+.compact-snippet {
+  color: #c8c8e8;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* ─── QUICK ACCESS - 3x2 GRID WITH SQUARE BLOCKS ───────────────── */
