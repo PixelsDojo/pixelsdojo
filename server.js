@@ -34,6 +34,10 @@ const discordBot = require('./discord-bot');
 
 const app = express();
 
+// ✅ FIX: Trust Railway's proxy so rate limiting and IP detection work correctly
+// This also fixes the ERR_ERL_UNEXPECTED_X_FORWARDED_FOR warning in logs
+app.set('trust proxy', 1);
+
 // Auto-create persistent folders
 const uploadDirs = [
   '/app/data/images/npcs',
@@ -140,7 +144,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: false, // TEMPORARILY DISABLED - set to 'auto' after confirming HTTPS works
+    secure: 'auto', // ✅ FIX: auto detects HTTPS on Railway, HTTP locally
     httpOnly: true, // Prevent XSS attacks
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     sameSite: 'lax' // CSRF protection
@@ -1049,36 +1053,7 @@ app.get('/api/stats', (req, res) => {
   );
 });
 
-// Contributor Dashboard – only own pages
-app.get('/dashboard', (req, res) => {
-  if (!req.session.user) {
-    return res.redirect('/login?redirect=/dashboard');
-  }
 
-  // Contributors and admins can access, but only see their own pages
-  const userId = req.session.user.id;
-
-  db.all(
-    `SELECT * FROM pages 
-     WHERE author_id = ? 
-     ORDER BY updated_at DESC`,
-    [userId],
-    (err, userPages) => {
-      if (err) {
-        console.error('Dashboard pages error:', err);
-        userPages = [];
-      }
-
-      res.render('dashboard', {
-        user: req.session.user,
-        pages: userPages,
-        isAdmin: !!req.session.user.is_admin  // so you can show extra stuff if admin
-      });
-    }
-  );
-});
-
-// ─── Admin Analytics Dashboard ───
 app.get('/admin/analytics', requireAdmin, (req, res) => {
   // Get overall stats
   db.get(
