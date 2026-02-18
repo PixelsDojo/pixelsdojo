@@ -20,7 +20,13 @@
       </div>
 
       <!-- 🌍 Translate -->
-      <div id="google_translate_element"></div>
+      <div id="translate-widget">
+        <a id="translate-link" href="#" target="_blank" rel="noopener noreferrer"
+           style="display:inline-flex; align-items:center; gap:0.4rem; padding:5px 10px; background:rgba(65,225,20,0.1); border:1px solid rgba(65,225,20,0.4); border-radius:6px; font-size:0.82rem; color:#41e114; text-decoration:none; transition:all 0.2s;"
+           onmouseover="this.style.background='rgba(65,225,20,0.2)'" onmouseout="this.style.background='rgba(65,225,20,0.1)'">
+          🌍 Translate
+        </a>
+      </div>
 
       <div class="user-nav" style="display: flex; gap: 0.8rem; flex-wrap: nowrap; align-items: center;">
         <% if (user) { %>
@@ -56,34 +62,17 @@
   });
 </script>
 
-<!-- 🌍 Google Translate -->
-<style>
-  #google_translate_element { display: flex; align-items: center; }
-  /* Hide the default Google bar that appears at top of page */
-  .goog-te-banner-frame, .skiptranslate { display: none !important; }
-  body { top: 0 !important; }
-  /* Style the select dropdown Google injects */
-  .goog-te-combo {
-    background: rgba(65, 225, 20, 0.1) !important;
-    border: 1px solid rgba(65, 225, 20, 0.4) !important;
-    border-radius: 6px !important;
-    padding: 5px 8px !important;
-    font-size: 0.82rem !important;
-    cursor: pointer !important;
-    color: #41e114 !important;
-    outline: none !important;
-  }
-  .goog-te-gadget { color: transparent !important; font-size: 0 !important; }
-  .goog-te-gadget a { display: none !important; }
-</style>
 <script>
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-      pageLanguage: 'en',
-      layout: google.translate.TranslateElement.FloatPosition.TOP_LEFT,
-      autoDisplay: false,
-      multilanguagePage: true
-    }, 'google_translate_element');
-  }
+  // Set translate link to Google Translate with current page URL
+  (function() {
+    var link = document.getElementById('translate-link');
+    if (link) {
+      var pageUrl = encodeURIComponent(window.location.href);
+      link.href = 'https://translate.google.com/translate?sl=en&tl=auto&u=' + pageUrl;
+      // Update on navigation
+      link.addEventListener('click', function() {
+        this.href = 'https://translate.google.com/translate?sl=en&tl=auto&u=' + encodeURIComponent(window.location.href);
+      });
+    }
+  })();
 </script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
