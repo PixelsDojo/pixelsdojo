@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixels Dojo — Back Soon!</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: var(--dark-bg, #0a0a1a);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated pixel grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: gridDrift 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes gridDrift {
+      from { transform: translateY(0); }
+      to   { transform: translateY(40px); }
+    }
+
+    /* Floating pixel blobs */
+    .pixel-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+      animation: blobFloat 8s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    .blob-1 { width: 400px; height: 400px; background: #00ffff; top: -100px; left: -100px; animation-duration: 9s; }
+    .blob-2 { width: 300px; height: 300px; background: #edff84; bottom: -80px; right: -80px; animation-duration: 7s; }
+    .blob-3 { width: 250px; height: 250px; background: #a855f7; top: 50%; left: 50%; animation-duration: 11s; }
+
+    @keyframes blobFloat {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, -30px) scale(1.1); }
+    }
+
+    .maintenance-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(10, 10, 30, 0.85);
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 3rem 3.5rem;
+      max-width: 620px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(0, 255, 255, 0.1), 0 20px 60px rgba(0,0,0,0.6);
+      backdrop-filter: blur(12px);
+    }
+
+    .site-logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      margin-bottom: 1.5rem;
+      border: 3px solid rgba(0,255,255,0.4);
+      animation: logoPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,255,0.3); }
+      50%       { box-shadow: 0 0 0 12px rgba(0,255,255,0); }
+    }
+
+    .wrench-emoji {
+      font-size: 3.5rem;
+      display: block;
+      margin-bottom: 1rem;
+      animation: wrenchWiggle 2s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+
+    @keyframes wrenchWiggle {
+      0%, 100% { transform: rotate(-10deg); }
+      50%       { transform: rotate(10deg); }
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--yellow, #edff84);
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.05em;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--cyan, #00ffff);
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    .message {
+      color: #c8c8e8;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .status-bar {
+      background: rgba(0,255,255,0.06);
+      border: 1px solid rgba(0,255,255,0.2);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #edff84;
+      animation: statusPulse 1.5s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes statusPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .status-text {
+      color: #edff84;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid;
+    }
+
+    .social-link.discord {
+      background: rgba(88,101,242,0.15);
+      color: #7289da;
+      border-color: rgba(88,101,242,0.35);
+    }
+    .social-link.twitter {
+      background: rgba(29,161,242,0.12);
+      color: #1da1f2;
+      border-color: rgba(29,161,242,0.3);
+    }
+    .social-link:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.2);
+    }
+
+    .admin-hint {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.78rem;
+      color: #555;
+    }
+
+    .admin-hint a {
+      color: #666;
+      text-decoration: none;
+    }
+
+    .admin-hint a:hover { color: var(--cyan, #00ffff); }
+  </style>
+</head>
+<body>
+  <div class="pixel-blob blob-1"></div>
+  <div class="pixel-blob blob-2"></div>
+  <div class="pixel-blob blob-3"></div>
+
+  <div class="maintenance-card">
+
+    <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo" class="site-logo"
+         onerror="this.style.display='none'">
+
+    <span class="wrench-emoji">🔧</span>
+
+    <h1>We're Working On It!</h1>
+    <p class="subtitle">Pixels Dojo will be back very soon</p>
+
+    <p class="message">
+      We're making some improvements to the wiki to bring you an even better experience.
+      Hang tight — the dojo will reopen shortly!
+    </p>
+
+    <div class="status-bar">
+      <div class="status-dot"></div>
+      <span class="status-text">Maintenance in progress — back soon ⚡</span>
+    </div>
+
+    <div class="social-links">
+      <a href="https://discord.gg/aqeBVdeu" target="_blank" rel="noopener noreferrer" class="social-link discord">
+        💬 Join us on Discord
+      </a>
+      <a href="https://x.com/pixelsdojo" target="_blank" rel="noopener noreferrer" class="social-link twitter">
+        🐦 Follow us on X for updates
+      </a>
+    </div>
+
+    <div class="admin-hint">
+      Admin? <a href="/login">Log in</a> to access the site during maintenance.
+    </div>
+
+  </div>
+</body>
+</html>
