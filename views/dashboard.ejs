@@ -246,9 +246,11 @@
           <input type="file" id="screenshots" name="screenshots" accept="image/*" multiple>
         </div>
 
+        <input type="hidden" id="postStatus" name="status" value="published">
         <div style="margin-top: 2rem; text-align: right;">
           <button type="button" onclick="closePageModal()" style="background: #666; margin-right: 1rem;" class="btn">Cancel</button>
-          <button type="submit" class="btn">Save Guide</button>
+          <button type="button" onclick="saveAsDraft()" style="background: rgba(255,200,0,0.2); color: #ffc800; border: 1px solid #ffc800; margin-right: 0.5rem;" class="btn">📝 Save as Draft</button>
+          <button type="submit" class="btn">✅ Publish</button>
         </div>
       </form>
     </div>
@@ -381,6 +383,11 @@
     }
 
     // Handle form submission
+    function saveAsDraft() {
+      document.getElementById('postStatus').value = 'draft';
+      document.getElementById('pageForm').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    }
+
     document.getElementById('pageForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
