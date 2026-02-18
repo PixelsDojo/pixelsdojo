@@ -152,8 +152,8 @@
                         <td><%= new Date(page.created_at).toLocaleDateString() %></td>
                         <td class="actions">
                           <button onclick="window.open('/pages/<%= page.slug %>','_blank')" class="btn-action btn-view">👁️ View</button>
-                          <button onclick="editPage(<%= page.id %>,'<%= page.title.replace(/'/g,&quot;\'&quot;) %>')" class="btn-action btn-edit">✏️ Edit</button>
-                          <button onclick="deletePage(<%= page.id %>,'<%= page.title.replace(/'/g,&quot;\'&quot;) %>')" class="btn-action btn-delete">🗑️ Delete</button>
+                          <button onclick="editPage(<%= page.id %>, '<%= page.title.replace(/'/g, \"\\\'\") %>')" class="btn-action btn-edit">✏️ Edit</button>
+                          <button onclick="deletePage(<%= page.id %>, '<%= page.title.replace(/'/g, \"\\\'\") %>')" class="btn-action btn-delete">🗑️ Delete</button>
                         </td>
                       </tr>
                     <% }); %>
