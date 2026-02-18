@@ -40,9 +40,9 @@
         <a href="/category/community">Community</a>
         <hr>
         <a href="https://forms.gle/Ea4doC8FbfnJ7DGv8" target="_blank" rel="noopener noreferrer"
-           style="display:block; margin-top:0.5rem; padding:0.7rem 1rem; background:linear-gradient(135deg,#edff84,#ffd700); color:#000; font-weight:bold; text-decoration:none; border-radius:8px; text-align:center; transition:all 0.2s;"
+           style="display:block; margin-top:0.5rem; margin-bottom:1.5rem; padding:0.7rem 1rem; background:linear-gradient(135deg,#edff84,#ffd700); color:#000; font-weight:bold; text-decoration:none; border-radius:8px; text-align:center; transition:all 0.2s;"
            onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-          💡 Suggest a Topic
+          💡 Suggestions or Corrections — Submit Here
         </a>
         <div class="sidebar-logo">
           <img src="/images/pixeldojo_logo_portrait.png" alt="Pixels Dojo Logo" class="sidebar-logo-img">
@@ -199,9 +199,13 @@
               <div class="compact-info">
                 <h3><%= mostUpvoted.title %></h3>
                 <p class="compact-meta">
-                  ⭐ <%= mostUpvoted.upvotes || 0 %> upvotes • 
+                  ⭐ <%= mostUpvoted.upvotes || 0 %> upvotes &nbsp;•&nbsp; 
                   <%= new Date(mostUpvoted.created_at).toLocaleDateString() %>
+                  <% if (mostUpvoted.author_display_name) { %> &nbsp;•&nbsp; By <%= mostUpvoted.author_display_name %><% } %>
                 </p>
+                <% if (mostUpvoted.summary || mostUpvoted.content) { %>
+                  <p class="compact-snippet"><%= mostUpvoted.summary || mostUpvoted.content.replace(/<[^>]*>/g, '').substring(0, 200) %>...</p>
+                <% } %>
               </div>
             </a>
           <% } else { %>
@@ -229,9 +233,13 @@
               <div class="compact-info">
                 <h3><%= mostViewed.title %></h3>
                 <p class="compact-meta">
-                  👁️ <%= mostViewed.views || 0 %> views • 
+                  👁️ <%= mostViewed.views || 0 %> views &nbsp;•&nbsp; 
                   <%= new Date(mostViewed.created_at).toLocaleDateString() %>
+                  <% if (mostViewed.author_display_name) { %> &nbsp;•&nbsp; By <%= mostViewed.author_display_name %><% } %>
                 </p>
+                <% if (mostViewed.summary || mostViewed.content) { %>
+                  <p class="compact-snippet"><%= mostViewed.summary || mostViewed.content.replace(/<[^>]*>/g, '').substring(0, 200) %>...</p>
+                <% } %>
               </div>
             </a>
           <% } else { %>
