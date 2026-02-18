@@ -272,6 +272,7 @@ app.get('/', (req, res) => {
       SELECT p.*, u.display_name as author_display_name
       FROM pages p 
       LEFT JOIN users u ON p.author_id = u.id
+      WHERE p.status = 'published' OR p.status IS NULL
       ORDER BY p.upvotes DESC 
       LIMIT 1
     `, [], (err, mostUpvoted) => {
@@ -282,6 +283,7 @@ app.get('/', (req, res) => {
         SELECT p.*, u.display_name as author_display_name
         FROM pages p 
         LEFT JOIN users u ON p.author_id = u.id
+        WHERE p.status = 'published' OR p.status IS NULL
         ORDER BY p.views DESC 
         LIMIT 1
       `, [], (err, mostViewed) => {
@@ -297,7 +299,7 @@ app.get('/', (req, res) => {
             SELECT p.*, u.display_name as author_display_name
             FROM pages p 
             LEFT JOIN users u ON p.author_id = u.id
-            WHERE p.category = ?
+            WHERE p.category = ? AND (p.status = 'published' OR p.status IS NULL)
             ORDER BY p.created_at DESC 
             LIMIT 4
           `, [cat], (err, posts) => {
@@ -417,7 +419,7 @@ app.get('/events', (req, res) => {
       users.display_name as author_display_name
     FROM pages 
     LEFT JOIN users ON pages.author_id = users.id
-    WHERE pages.category = 'events'
+    WHERE pages.category = 'events' AND (pages.status = 'published' OR pages.status IS NULL)
     ORDER BY pages.expires_on DESC, pages.created_at DESC
   `;
   
@@ -442,7 +444,7 @@ app.get('/amas', (req, res) => {
       users.display_name as author_display_name
     FROM pages 
     LEFT JOIN users ON pages.author_id = users.id
-    WHERE pages.category = 'amas'
+    WHERE pages.category = 'amas' AND (pages.status = 'published' OR pages.status IS NULL)
     ORDER BY pages.created_at DESC
   `;
   
@@ -718,6 +720,7 @@ app.get('/all-posts', (req, res) => {
     SELECT p.*, u.display_name as author_display_name
     FROM pages p
     LEFT JOIN users u ON p.author_id = u.id
+    WHERE p.status = 'published' OR p.status IS NULL
     ORDER BY p.created_at DESC
   `, [], (err, allPages) => {
     if (err) {
@@ -1308,6 +1311,16 @@ app.get('/pages/:slug', (req, res) => {
         return res.status(404).send('Page not found');
       }
 
+      // Block drafts from public — only the author or an admin can preview
+      const viewer = req.session.user || null;
+      if (page.status === 'draft') {
+        const isAuthor = viewer && viewer.id === page.author_id;
+        const isAdmin  = viewer && viewer.is_admin;
+        if (!isAuthor && !isAdmin) {
+          return res.status(404).send('Page not found');
+        }
+      }
+
       try {
         page.screenshots = JSON.parse(page.screenshots || '[]');
       } catch (e) {
@@ -1355,7 +1368,7 @@ app.get('/category/:cat', (req, res) => {
             u.tip_address as author_tip_address
      FROM pages p
      LEFT JOIN users u ON p.author_id = u.id
-     WHERE p.category = ?
+     WHERE p.category = ? AND (p.status = 'published' OR p.status IS NULL)
      ORDER BY p.created_at DESC`,
     [cat],
     (err, pages) => {
@@ -1396,10 +1409,11 @@ app.get('/search', (req, res) => {
     FROM pages p
     LEFT JOIN users u ON p.author_id = u.id
     WHERE 
+      (p.status = 'published' OR p.status IS NULL) AND (
       LOWER(p.title) LIKE LOWER(?) OR 
       LOWER(p.content) LIKE LOWER(?) OR 
       LOWER(p.summary) LIKE LOWER(?) OR
-      LOWER(p.category) LIKE LOWER(?)
+      LOWER(p.category) LIKE LOWER(?))
     ORDER BY 
       CASE WHEN LOWER(p.title) LIKE LOWER(?) THEN 1 ELSE 2 END,
       p.created_at DESC
