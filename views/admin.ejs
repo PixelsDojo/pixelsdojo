@@ -200,7 +200,8 @@
             <% if (npcs.length === 0) { %>
                 <p style="text-align: center; color: #999; margin-top: 2rem;">No NPCs yet. Click "Add New NPC" to get started!</p>
             <% } %>
-        </section>
+          </div> <!-- end npcs tab -->
+        </div> <!-- end tabs container -->
     </div>
 
     <!-- Edit NPC Modal -->
@@ -533,7 +534,7 @@
         document.getElementById('edit_display_order').value = display_order;
         document.getElementById('edit_current_image_path').value = currentImagePath || '/images/npcs/default-npc.png';
 
-        document.getElementById('editForm').action = '/admin/npcs/' + id;
+        document.getElementById('editForm').action = '/admin/npcs/' + id + '/update';
         document.getElementById('editModal').style.display = 'block';
     }
 
@@ -657,6 +658,27 @@
             }
         })
         .catch(err => alert('Error: ' + err));
+    }
+
+    // ─── Tab Switching ───────────────────────────────────────────────
+    function switchTab(tab) {
+      document.getElementById('tabcontent-pages').style.display = tab === 'pages' ? 'block' : 'none';
+      document.getElementById('tabcontent-npcs').style.display = tab === 'npcs' ? 'block' : 'none';
+      document.getElementById('tab-pages').style.background = tab === 'pages' ? 'var(--cyan)' : 'rgba(0,255,255,0.1)';
+      document.getElementById('tab-pages').style.color = tab === 'pages' ? '#000' : 'var(--cyan)';
+      document.getElementById('tab-npcs').style.background = tab === 'npcs' ? 'var(--cyan)' : 'rgba(0,255,255,0.1)';
+      document.getElementById('tab-npcs').style.color = tab === 'npcs' ? '#000' : 'var(--cyan)';
+    }
+
+    // ─── Pages Search Filter ─────────────────────────────────────────
+    function filterPages() {
+      const term = document.getElementById('pageSearch').value.toLowerCase();
+      document.querySelectorAll('#pagesTableBody tr').forEach(row => {
+        const title = row.dataset.title || '';
+        const slug = row.dataset.slug || '';
+        const cat = row.dataset.category || '';
+        row.style.display = (title.includes(term) || slug.includes(term) || cat.includes(term)) ? '' : 'none';
+      });
     }
 
     // ─── NPC Search Filter ───────────────────────────────────────────
