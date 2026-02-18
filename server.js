@@ -258,6 +258,7 @@ app.get('/', (req, res) => {
     SELECT p.*, u.display_name as author_display_name
     FROM pages p 
     LEFT JOIN users u ON p.author_id = u.id
+    WHERE p.status = 'published' OR p.status IS NULL
     ORDER BY p.created_at DESC 
     LIMIT 6
   `, [], (err, recentPages) => {
@@ -328,7 +329,7 @@ app.get('/', (req, res) => {
 
 // Public list of NPCs – default alphabetical by name
 app.get('/npcs', (req, res) => {
-  const sort = req.query.sort || 'name';  // default to alphabetical
+  const sort = req.query.sort || 'name';  // ✅ default to alphabetical
 
   let orderBy = 'name ASC';
 
@@ -361,9 +362,9 @@ app.get('/npcs', (req, res) => {
 
 // ========== NPCs & MAP COMBINED PAGE (NEW) ==========
 app.get('/npcs-map', (req, res) => {
-  const sort = req.query.sort || 'display_order';
+  const sort = req.query.sort || 'name';  // ✅ default to alphabetical
   
-  let orderBy = 'display_order ASC, id ASC';
+  let orderBy = 'name ASC';
   switch(sort) {
     case 'name':
       orderBy = 'name ASC';
@@ -558,7 +559,7 @@ app.get('/dashboard', (req, res) => {
   db.all(
     `SELECT * FROM pages 
      WHERE author_id = ? 
-     ORDER BY updated_at DESC`,
+     ORDER BY status ASC, updated_at DESC`,
     [userId],
     (err, userPages) => {
       if (err) {
@@ -595,31 +596,33 @@ app.post('/dashboard/pages', (req, res, next) => {
   const screenshotsJson = JSON.stringify(screenshots);
 
   db.run(
-    `INSERT INTO pages (slug, title, content, category, difficulty, screenshots, summary, pro_tips, author_id, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-    [cleanSlug, title, content, category || null, difficulty || 'Beginner', screenshotsJson, summary || null, pro_tips || null, req.session.user.id],
+    `INSERT INTO pages (slug, title, content, category, difficulty, screenshots, summary, pro_tips, author_id, status, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+    [cleanSlug, title, content, category || null, difficulty || 'Beginner', screenshotsJson, summary || null, pro_tips || null, req.session.user.id, status || 'published'],
     function (err) {
       if (err) {
         console.error('Page creation error:', err.message);
         return res.status(500).json({ error: 'Error saving page: ' + err.message });
       }
       
-      // Announce new article to Discord
-      try {
-        discordBot.announceNewArticle({
-          title: title,
-          slug: cleanSlug,
-          category: category || 'General',
-          difficulty: difficulty || 'Beginner',
-          summary: summary || null,
-          author: req.session.user.display_name || req.session.user.username
-        });
-      } catch (discordErr) {
-        console.error('Discord announcement error:', discordErr);
-        // Don't fail the request if Discord fails
+      // Only announce published articles to Discord
+      if ((status || 'published') !== 'draft') {
+        try {
+          discordBot.announceNewArticle({
+            title: title,
+            slug: cleanSlug,
+            category: category || 'General',
+            difficulty: difficulty || 'Beginner',
+            summary: summary || null,
+            author: req.session.user.display_name || req.session.user.username
+          });
+        } catch (discordErr) {
+          console.error('Discord announcement error:', discordErr);
+        }
       }
       
-      res.json({ success: true, message: 'Page created successfully!', pageId: this.lastID });
+      const msg = (status || 'published') === 'draft' ? 'Draft saved!' : 'Page created successfully!';
+      res.json({ success: true, message: msg, pageId: this.lastID });
     }
   );
 });
@@ -664,10 +667,10 @@ app.post(
         db.run(
           `UPDATE pages 
            SET title = ?, slug = ?, content = ?, category = ?, difficulty = ?, 
-               screenshots = ?, summary = ?, pro_tips = ?, updated_at = CURRENT_TIMESTAMP 
+               screenshots = ?, summary = ?, pro_tips = ?, status = ?, updated_at = CURRENT_TIMESTAMP 
            WHERE id = ?`,
           [title, cleanSlug, content, category || null, difficulty || 'Beginner',
-           screenshotsJson, summary || null, pro_tips || null, id],
+           screenshotsJson, summary || null, pro_tips || null, status || 'published', id],
           function (err) {
             if (err) {
               console.error('Contributor update error:', err.message);
