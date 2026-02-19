@@ -1106,81 +1106,76 @@ app.get('/admin/maintenance-status', requireAdmin, (req, res) => {
 
 
 app.get('/admin/analytics', requireAdmin, (req, res) => {
-  // Get overall stats
+  // All-time stats
   db.get(
-    `SELECT 
-      COUNT(DISTINCT visitor_id) as totalUniqueVisitors,
-      COUNT(*) as totalPageViews
-     FROM analytics`,
+    `SELECT COUNT(DISTINCT visitor_id) as totalUniqueVisitors, COUNT(*) as totalPageViews FROM analytics`,
     [],
     (err, overallStats) => {
-      if (err) {
-        console.error('Analytics error:', err);
-        return res.status(500).send('Error loading analytics');
-      }
+      if (err) return res.status(500).send('Error loading analytics');
+      overallStats = overallStats || { totalUniqueVisitors: 0, totalPageViews: 0 };
 
-      // Get this month's stats
+      // Today's stats
       db.get(
-        `SELECT 
-          COUNT(DISTINCT visitor_id) as monthlyVisitors,
-          COUNT(*) as monthlyPageViews
-         FROM analytics 
-         WHERE date(created_at) >= date('now', 'start of month')`,
+        `SELECT COUNT(DISTINCT visitor_id) as todayVisitors, COUNT(*) as todayPageViews
+         FROM analytics WHERE date(created_at) = date('now')`,
         [],
-        (err, monthlyStats) => {
-          if (err) {
-            console.error('Monthly stats error:', err);
-            monthlyStats = { monthlyVisitors: 0, monthlyPageViews: 0 };
-          }
+        (err, todayStats) => {
+          todayStats = todayStats || { todayVisitors: 0, todayPageViews: 0 };
 
-          // Get popular pages
-          db.all(
-            `SELECT page_path, COUNT(*) as views 
-             FROM analytics 
-             GROUP BY page_path 
-             ORDER BY views DESC 
-             LIMIT 10`,
+          // This week's stats (last 7 days)
+          db.get(
+            `SELECT COUNT(DISTINCT visitor_id) as weeklyVisitors, COUNT(*) as weeklyPageViews
+             FROM analytics WHERE date(created_at) >= date('now', '-6 days')`,
             [],
-            (err, popularPages) => {
-              if (err) {
-                console.error('Popular pages error:', err);
-                popularPages = [];
-              }
+            (err, weeklyStats) => {
+              weeklyStats = weeklyStats || { weeklyVisitors: 0, weeklyPageViews: 0 };
 
-              // Get recent activity (last 20 visits)
-              db.all(
-                `SELECT page_path, created_at 
-                 FROM analytics 
-                 ORDER BY created_at DESC 
-                 LIMIT 20`,
+              // This month's stats
+              db.get(
+                `SELECT COUNT(DISTINCT visitor_id) as monthlyVisitors, COUNT(*) as monthlyPageViews
+                 FROM analytics WHERE date(created_at) >= date('now', 'start of month')`,
                 [],
-                (err, recentActivity) => {
-                  if (err) {
-                    console.error('Recent activity error:', err);
-                    recentActivity = [];
-                  }
+                (err, monthlyStats) => {
+                  monthlyStats = monthlyStats || { monthlyVisitors: 0, monthlyPageViews: 0 };
 
-                  // Get daily stats for chart (last 30 days)
+                  // Popular pages
                   db.all(
-                    `SELECT date, page_views 
-                     FROM analytics_daily 
-                     ORDER BY date DESC 
-                     LIMIT 30`,
+                    `SELECT page_path, COUNT(*) as views FROM analytics
+                     GROUP BY page_path ORDER BY views DESC LIMIT 10`,
                     [],
-                    (err, dailyStats) => {
-                      if (err) {
-                        console.error('Daily stats error:', err);
-                        dailyStats = [];
-                      }
+                    (err, popularPages) => {
+                      if (err) popularPages = [];
 
-                      res.render('admin-analytics', {
-                        user: req.session.user,
-                        overallStats,
-                        monthlyStats,
-                        popularPages,
-                        recentActivity,
-                        dailyStats: dailyStats.reverse() // Chronological order for chart
-                      });
+                      // Recent activity
+                      db.all(
+                        `SELECT page_path, created_at FROM analytics
+                         ORDER BY created_at DESC LIMIT 20`,
+                        [],
+                        (err, recentActivity) => {
+                          if (err) recentActivity = [];
+
+                          // Daily chart data
+                          db.all(
+                            `SELECT date, page_views FROM analytics_daily
+                             ORDER BY date DESC LIMIT 30`,
+                            [],
+                            (err, dailyStats) => {
+                              if (err) dailyStats = [];
+
+                              res.render('admin-analytics', {
+                                user: req.session.user,
+                                overallStats,
+                                todayStats,
+                                weeklyStats,
+                                monthlyStats,
+                                popularPages,
+                                recentActivity,
+                                dailyStats: dailyStats.reverse()
+                              });
+                            }
+                          );
+                        }
+                      );
                     }
                   );
                 }
