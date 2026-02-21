@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 :root {
     --neon-purple: #6500ff;
     --purple:     #8500ff;
@@ -37,12 +39,13 @@ a:hover {
 }
 
 h1, h2, h3 {
+    font-family: 'Press Start 2P', monospace;
     text-shadow: 0 0 12px rgba(237, 255, 132, 0.5);
 }
 
-h1 { font-size: 2.8rem; margin-bottom: 1.5rem; }
-h2 { font-size: 2.2rem; margin: 2.5rem 0 1.2rem; }
-h3 { font-size: 1.7rem; margin: 2rem 0 1rem; }
+h1 { font-size: 1.8rem; margin-bottom: 1.5rem; line-height: 1.4; }
+h2 { font-size: 1.3rem; margin: 2.5rem 0 1.2rem; line-height: 1.5; }
+h3 { font-size: 1rem; margin: 2rem 0 1rem; line-height: 1.5; }
 
 /* ─── Header ───────────────────────────────────────────────── */
 
