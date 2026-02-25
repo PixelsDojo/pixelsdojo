@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Best Tweets — Pixels Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    .tweets-hero {
+      background: linear-gradient(135deg, var(--dark-bg) 0%, #16213e 60%, #0a0e1a 100%);
+      border-bottom: 2px solid rgba(65,225,20,0.25);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .tweets-hero::before {
+      content: '';
+      position: absolute; top: -20%; left: -10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(65,225,20,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .tweets-hero-eyebrow {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.55rem; letter-spacing: 0.15em;
+      color: var(--cyan); margin-bottom: 1rem;
+    }
+    .tweets-hero-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(1rem, 2.5vw, 1.6rem);
+      color: var(--yellow); line-height: 1.6;
+      margin-bottom: 0.75rem;
+      text-shadow: 0 0 20px rgba(237,255,132,0.3);
+    }
+    .tweets-hero-sub {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem; max-width: 560px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.7;
+    }
+    .competition-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(65,225,20,0.08);
+      border: 1px solid rgba(65,225,20,0.3);
+      color: var(--cyan); font-size: 0.78rem;
+      padding: 0.4rem 1rem; border-radius: 50px;
+    }
+
+    /* ── Page body ── */
+    .tweets-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    /* ── Week section ── */
+    .week-section {
+      margin-bottom: 3rem;
+    }
+
+    .week-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      padding: 1rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid rgba(65,225,20,0.2);
+      border-radius: 12px;
+      margin-bottom: 0;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .week-header:hover {
+      border-color: var(--cyan);
+      background: rgba(0,255,255,0.04);
+    }
+    .week-header.open {
+      border-radius: 12px 12px 0 0;
+      border-bottom-color: transparent;
+    }
+    .week-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.65rem;
+      color: var(--yellow);
+      flex: 1;
+    }
+    .week-dates {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.4);
+    }
+    .week-count {
+      background: rgba(65,225,20,0.1);
+      border: 1px solid rgba(65,225,20,0.25);
+      color: var(--cyan);
+      font-size: 0.68rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 50px;
+    }
+    .week-chevron {
+      color: var(--cyan);
+      font-size: 0.9rem;
+      transition: transform 0.25s;
+    }
+    .week-header.open .week-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* ── Tweet grid ── */
+    .week-body {
+      display: none;
+      background: rgba(17,24,39,0.6);
+      border: 1px solid rgba(65,225,20,0.2);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      padding: 1.5rem;
+    }
+    .week-body.open { display: block; }
+
+    /* 3-2 masonry layout */
+    .tweet-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    /* 4th and 5th tweet span into 2-col bottom row */
+    .tweet-grid .tweet-embed:nth-child(4),
+    .tweet-grid .tweet-embed:nth-child(5) {
+      grid-column: span 1;
+    }
+
+    /* When exactly 4 or 5, push last row to centre */
+    .tweet-grid.count-4,
+    .tweet-grid.count-5 {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    .tweet-grid.count-4 .tweet-embed,
+    .tweet-grid.count-5 .tweet-embed {
+      grid-column: span 2;
+    }
+    .tweet-grid.count-4 .tweet-embed:nth-child(4) {
+      grid-column: 2 / span 2;
+    }
+    .tweet-grid.count-5 .tweet-embed:nth-child(4) { grid-column: 2 / span 2; }
+    .tweet-grid.count-5 .tweet-embed:nth-child(5) { grid-column: 4 / span 2; }
+
+    .tweet-embed {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 0.5rem;
+      min-height: 200px;
+    }
+
+    /* Twitter embed override — make it fill the card */
+    .tweet-embed .twitter-tweet {
+      margin: 0 !important;
+      width: 100% !important;
+    }
+
+    /* ── Featured winner badge ── */
+    .tweet-winner {
+      position: relative;
+    }
+    .tweet-winner::before {
+      content: '🏆 WINNER';
+      position: absolute;
+      top: 0.5rem; left: 0.5rem;
+      z-index: 2;
+      background: var(--yellow);
+      color: #000;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.45rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    /* ── Empty state ── */
+    .tweets-empty {
+      text-align: center;
+      padding: 3rem;
+      color: rgba(255,255,255,0.3);
+    }
+    .tweets-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    @media (max-width: 900px) {
+      .tweet-grid,
+      .tweet-grid.count-4,
+      .tweet-grid.count-5 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .tweet-grid .tweet-embed,
+      .tweet-grid.count-4 .tweet-embed,
+      .tweet-grid.count-5 .tweet-embed,
+      .tweet-grid.count-4 .tweet-embed:nth-child(4),
+      .tweet-grid.count-5 .tweet-embed:nth-child(4),
+      .tweet-grid.count-5 .tweet-embed:nth-child(5) {
+        grid-column: span 1;
+      }
+    }
+    @media (max-width: 540px) {
+      .tweet-grid,
+      .tweet-grid.count-4,
+      .tweet-grid.count-5 { grid-template-columns: 1fr; }
+      .tweet-grid .tweet-embed,
+      .tweet-grid.count-4 .tweet-embed,
+      .tweet-grid.count-5 .tweet-embed,
+      .tweet-grid.count-4 .tweet-embed:nth-child(4),
+      .tweet-grid.count-5 .tweet-embed:nth-child(4),
+      .tweet-grid.count-5 .tweet-embed:nth-child(5) {
+        grid-column: span 1;
+      }
+      .week-title { font-size: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<%- include('partials/header') %>
+
+<!-- Hero -->
+<div class="tweets-hero">
+  <div class="tweets-hero-eyebrow">✦ Community Spotlight ✦</div>
+  <h1 class="tweets-hero-title">Best Tweets of the Week</h1>
+  <p class="tweets-hero-sub">Every week we feature the best Pixels community content from X. Write great stuff, win 200 PIXELS. Mon–Fri, every week.</p>
+  <span class="competition-badge">⚡ 200 PIXELS per winning tweet · Mon–Fri</span>
+</div>
+
+<!-- Weekly sections -->
+<div class="tweets-body">
+
+  <% if (weeks && weeks.length > 0) { %>
+    <% weeks.forEach(function(week, wi) { %>
+    <div class="week-section">
+      <div class="week-header <%= wi === 0 ? 'open' : '' %>" onclick="toggleWeek(this)">
+        <div class="week-title">Week <%= week.number %></div>
+        <div class="week-dates"><%= week.dates %></div>
+        <span class="week-count"><%= week.tweets.length %> tweet<%= week.tweets.length !== 1 ? 's' : '' %></span>
+        <span class="week-chevron">▼</span>
+      </div>
+      <div class="week-body <%= wi === 0 ? 'open' : '' %>">
+        <% if (week.tweets && week.tweets.length > 0) { %>
+          <div class="tweet-grid count-<%= week.tweets.length %>">
+            <% week.tweets.forEach(function(tweet, ti) { %>
+              <div class="tweet-embed <%= tweet.is_winner ? 'tweet-winner' : '' %>">
+                <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true">
+                  <a href="<%= tweet.url %>"></a>
+                </blockquote>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <div class="tweets-empty">
+            <div class="tweets-empty-icon">🐦</div>
+            <p>No tweets featured yet this week.</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+    <% }); %>
+  <% } else { %>
+    <div class="tweets-empty" style="padding:5rem 2rem;">
+      <div class="tweets-empty-icon">🐦</div>
+      <p style="font-family:'Press Start 2P',monospace;font-size:0.7rem;color:var(--yellow);margin-bottom:1rem;">No weeks yet</p>
+      <p>Check back soon — the first featured tweets are coming!</p>
+    </div>
+  <% } %>
+
+</div>
+
+<%- include('partials/footer') %>
+
+<!-- Twitter embed script — loads once, renders all blockquotes -->
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<script>
+  function toggleWeek(header) {
+    var body = header.nextElementSibling;
+    var isOpen = header.classList.contains('open');
+    header.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+</script>
+
+</body>
+</html>

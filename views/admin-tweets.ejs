@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Featured Tweets — Pixels Dojo Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { background: #0a0e1a; color: #e4e4e4; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+
+    h1 { font-family: 'Press Start 2P', monospace; font-size: 0.9rem; color: var(--yellow); margin-bottom: 0.4rem; }
+    .sub { color: rgba(255,255,255,0.4); font-size: 0.85rem; margin-bottom: 2.5rem; }
+
+    .back-link { color: var(--cyan); text-decoration: none; font-size: 0.82rem; display: inline-block; margin-bottom: 2rem; opacity: 0.7; }
+    .back-link:hover { opacity: 1; }
+
+    /* ── Add tweet form ── */
+    .add-panel {
+      background: #111827;
+      border: 1px solid rgba(0,255,255,0.2);
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin-bottom: 2.5rem;
+    }
+    .panel-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.6rem; color: var(--cyan);
+      margin-bottom: 1.5rem; letter-spacing: 0.08em;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .form-group input[type="text"],
+    .form-group input[type="number"] {
+      width: 100%; padding: 0.7rem 1rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px; color: #fff;
+      font-size: 0.88rem; font-family: inherit;
+      box-sizing: border-box; transition: border-color 0.2s;
+    }
+    .form-group input:focus { outline: none; border-color: var(--cyan); }
+    .winner-toggle { display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; }
+    .winner-toggle input { width: 18px; height: 18px; accent-color: var(--yellow); }
+    .winner-toggle label { font-size: 0.85rem; color: rgba(255,255,255,0.7); margin: 0; }
+
+    .add-btn {
+      background: var(--yellow); color: #000;
+      border: none; border-radius: 10px;
+      padding: 0.85rem 2rem; font-weight: 800;
+      font-size: 0.9rem; cursor: pointer;
+      transition: all 0.2s; margin-top: 0.5rem;
+    }
+    .add-btn:hover { background: #ffe066; transform: translateY(-2px); }
+
+    /* ── Tweet list ── */
+    .week-group { margin-bottom: 2rem; }
+    .week-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.55rem; color: var(--yellow);
+      padding: 0.5rem 1rem;
+      background: rgba(237,255,132,0.06);
+      border-left: 3px solid var(--yellow);
+      margin-bottom: 0.75rem;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .tweet-row {
+      display: flex; align-items: center; gap: 1rem;
+      background: #111827;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 0.9rem 1.2rem;
+      margin-bottom: 0.5rem;
+      transition: border-color 0.15s;
+    }
+    .tweet-row:hover { border-color: rgba(0,255,255,0.2); }
+    .tweet-row.is-winner { border-color: rgba(237,255,132,0.3); background: rgba(237,255,132,0.04); }
+
+    .tweet-url {
+      flex: 1; font-size: 0.8rem;
+      color: var(--cyan); word-break: break-all;
+      text-decoration: none;
+    }
+    .tweet-url:hover { text-decoration: underline; }
+
+    .winner-badge {
+      background: var(--yellow); color: #000;
+      font-size: 0.6rem; font-weight: 800;
+      padding: 0.2rem 0.5rem; border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .row-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+    .btn-sm {
+      padding: 0.35rem 0.8rem; border-radius: 6px;
+      font-size: 0.75rem; font-weight: 700;
+      cursor: pointer; border: none; transition: all 0.15s;
+    }
+    .btn-winner { background: rgba(237,255,132,0.15); color: var(--yellow); border: 1px solid rgba(237,255,132,0.3); }
+    .btn-winner:hover { background: var(--yellow); color: #000; }
+    .btn-delete { background: rgba(255,85,85,0.12); color: #ff5555; border: 1px solid rgba(255,85,85,0.25); }
+    .btn-delete:hover { background: #ff5555; color: #fff; }
+
+    .empty-state { text-align: center; padding: 3rem; color: rgba(255,255,255,0.3); font-size: 0.85rem; }
+
+    .toast {
+      position: fixed; bottom: 2rem; right: 2rem;
+      background: #111827; border: 1px solid var(--cyan);
+      color: #fff; padding: 1rem 1.5rem;
+      border-radius: 10px; font-size: 0.85rem;
+      opacity: 0; transform: translateY(10px);
+      transition: all 0.3s; pointer-events: none; z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<%- include('partials/header') %>
+
+<div class="wrap">
+  <a href="/admin" class="back-link">← Back to Admin</a>
+  <h1>Featured Tweets 🐦</h1>
+  <p class="sub">Add up to 5 tweets per week. Newest week shows first. Mark a winner with 🏆.</p>
+
+  <!-- Add form -->
+  <div class="add-panel">
+    <div class="panel-title">➕ Add Tweet</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Week Number</label>
+        <input type="number" id="weekNumber" value="1" min="1" placeholder="1">
+      </div>
+      <div class="form-group">
+        <label>Week Dates (shown in header)</label>
+        <input type="text" id="weekDates" placeholder="22–28 Feb 2026">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Tweet URL</label>
+      <input type="text" id="tweetUrl" placeholder="https://x.com/username/status/123456789">
+    </div>
+    <div class="winner-toggle">
+      <input type="checkbox" id="isWinner">
+      <label for="isWinner">🏆 Mark as weekly winner</label>
+    </div>
+    <br>
+    <button class="add-btn" onclick="addTweet()">Add Tweet →</button>
+  </div>
+
+  <!-- Tweet list grouped by week -->
+  <div id="tweetList">
+    <% 
+      var byWeek = {};
+      tweets.forEach(function(t) {
+        if (!byWeek[t.week_number]) byWeek[t.week_number] = { dates: t.week_dates, items: [] };
+        byWeek[t.week_number].items.push(t);
+      });
+      var weekNums = Object.keys(byWeek).sort(function(a,b){ return b - a; });
+    %>
+
+    <% if (weekNums.length === 0) { %>
+      <div class="empty-state">No tweets yet — add the first one above! 🐦</div>
+    <% } %>
+
+    <% weekNums.forEach(function(wn) { %>
+      <% var wk = byWeek[wn]; %>
+      <div class="week-group" id="week-<%= wn %>">
+        <div class="week-label">Week <%= wn %> — <%= wk.dates %> (<%= wk.items.length %>/5 tweets)</div>
+        <% wk.items.forEach(function(t) { %>
+          <div class="tweet-row <%= t.is_winner ? 'is-winner' : '' %>" id="tweet-<%= t.id %>">
+            <a class="tweet-url" href="<%= t.tweet_url %>" target="_blank"><%= t.tweet_url %></a>
+            <% if (t.is_winner) { %><span class="winner-badge">🏆 WINNER</span><% } %>
+            <div class="row-actions">
+              <button class="btn-sm btn-winner" onclick="toggleWinner(<%= t.id %>)">🏆</button>
+              <button class="btn-sm btn-delete" onclick="deleteTweet(<%= t.id %>)">✕</button>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<%- include('partials/footer') %>
+
+<script>
+  function showToast(msg, ok) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.borderColor = ok === false ? '#ff5555' : 'var(--cyan)';
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 3000);
+  }
+
+  function addTweet() {
+    var weekNumber = document.getElementById('weekNumber').value;
+    var weekDates  = document.getElementById('weekDates').value.trim();
+    var tweetUrl   = document.getElementById('tweetUrl').value.trim();
+    var isWinner   = document.getElementById('isWinner').checked;
+
+    if (!weekDates || !tweetUrl) {
+      showToast('⚠️ Week dates and tweet URL are required', false); return;
+    }
+    if (!tweetUrl.includes('x.com') && !tweetUrl.includes('twitter.com')) {
+      showToast('⚠️ Please paste a valid X / Twitter URL', false); return;
+    }
+
+    fetch('/admin/tweets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        week_number: weekNumber,
+        week_dates:  weekDates,
+        tweet_url:   tweetUrl,
+        is_winner:   isWinner
+      })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        showToast('✅ Tweet added!');
+        setTimeout(function() { window.location.reload(); }, 800);
+      } else {
+        showToast('❌ ' + (data.error || 'Error adding tweet'), false);
+      }
+    });
+  }
+
+  function deleteTweet(id) {
+    if (!confirm('Remove this tweet from the featured list?')) return;
+    fetch('/admin/tweets/' + id, { method: 'DELETE' })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        var el = document.getElementById('tweet-' + id);
+        if (el) el.remove();
+        showToast('🗑️ Tweet removed');
+      }
+    });
+  }
+
+  function toggleWinner(id) {
+    fetch('/admin/tweets/' + id + '/toggle-winner', { method: 'POST' })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        showToast(data.is_winner ? '🏆 Marked as winner!' : 'Winner badge removed');
+        setTimeout(function() { window.location.reload(); }, 600);
+      }
+    });
+  }
+
+  // Pressing Enter in URL field submits
+  document.getElementById('tweetUrl').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') addTweet();
+  });
+</script>
+</body>
+</html>
