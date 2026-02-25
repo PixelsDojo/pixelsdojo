@@ -264,7 +264,7 @@
             <% week.tweets.forEach(function(tweet, ti) { %>
               <div class="tweet-embed <%= tweet.is_winner ? 'tweet-winner' : '' %>">
                 <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true">
-                  <a href="<%= tweet.url %>"></a>
+                  <a href="<%= tweet.tweet_url %>"></a>
                 </blockquote>
               </div>
             <% }); %>
