@@ -119,13 +119,13 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://widgets.coingecko.com", "https://translate.google.com", "https://translate.googleapis.com", "https://translate-pa.googleapis.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://widgets.coingecko.com", "https://translate.google.com", "https://translate.googleapis.com", "https://translate-pa.googleapis.com", "https://platform.twitter.com", "https://syndication.twitter.com"],
       scriptSrcAttr: ["'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com", "https://translate.googleapis.com", "https://www.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:", "http:"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-      connectSrc: ["'self'", "https://widgets.coingecko.com", "https://api.coingecko.com", "https://cdn.jsdelivr.net", "https://translate.googleapis.com", "https://translate-pa.googleapis.com", "https://*.googleapis.com"],
-      frameSrc: ["'self'", "https://translate.google.com", "https://translate.googleapis.com", "https://*.google.com"],
+      connectSrc: ["'self'", "https://widgets.coingecko.com", "https://api.coingecko.com", "https://cdn.jsdelivr.net", "https://translate.googleapis.com", "https://translate-pa.googleapis.com", "https://*.googleapis.com", "https://platform.twitter.com", "https://syndication.twitter.com", "https://api.twitter.com"],
+      frameSrc: ["'self'", "https://translate.google.com", "https://translate.googleapis.com", "https://*.google.com", "https://platform.twitter.com", "https://syndication.twitter.com", "https://twitter.com"],
       workerSrc: ["'self'", "blob:"],
       objectSrc: ["'none'"]
     }
