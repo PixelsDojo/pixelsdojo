@@ -264,7 +264,7 @@
             <% week.tweets.forEach(function(tweet, ti) { %>
               <div class="tweet-embed <%= tweet.is_winner ? 'tweet-winner' : '' %>">
                 <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true">
-                  <a href="<%= tweet.tweet_url %>"></a>
+                  <a href="<%= tweet.tweet_url.replace('x.com','twitter.com') %>"></a>
                 </blockquote>
               </div>
             <% }); %>
@@ -290,8 +290,28 @@
 
 <%- include('partials/footer') %>
 
-<!-- Twitter embed script — loads once, renders all blockquotes -->
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<!-- Twitter embed script -->
+<script>
+  window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+    t._e = [];
+    t.ready = function(f) { t._e.push(f); };
+    return t;
+  }(document, "script", "twitter-wjs"));
+
+  // Once loaded, render any blockquotes that may have been missed
+  if (window.twttr && window.twttr.ready) {
+    window.twttr.ready(function(twttr) {
+      twttr.widgets.load();
+    });
+  }
+</script>
 
 <script>
   function toggleWeek(header) {
