@@ -28,6 +28,7 @@ const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 const cookieParser = require('cookie-parser');
 const validator = require('validator');
+const compression = require('compression');
 
 // Discord bot
 const discordBot = require('./discord-bot');
@@ -103,6 +104,17 @@ const upload = multer({
 
 // Middleware
 // Security: Helmet for HTTP headers
+// ─── Compression — gzip all responses (big speed win) ────────────────────────
+app.use(compression({
+  level: 6,          // 1 (fast) to 9 (smallest) — 6 is the sweet spot
+  threshold: 1024,   // only compress responses > 1kb
+  filter: function(req, res) {
+    // Don't compress Server-Sent Events
+    if (req.headers['accept'] === 'text/event-stream') return false;
+    return compression.filter(req, res);
+  }
+}));
+
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -166,11 +178,27 @@ app.use(generalLimiter);
 // ✅ FIX: Increased body size limit to allow longer wiki posts with screenshots (default was 100kb)
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
+// ─── Static files with cache headers ─────────────────────────────────────────
+// Images/fonts cached for 30 days — CSS/JS cached for 1 day (forces refresh on deploy)
+const staticOpts = {
+  maxAge: '30d',
+  setHeaders: function(res, filePath) {
+    // CSS and JS: 1 day so changes deploy quickly
+    if (filePath.endsWith('.css') || filePath.endsWith('.js')) {
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+    }
+    // Images and fonts: 30 days
+    if (/\.(png|jpg|jpeg|gif|webp|svg|ico|woff|woff2|ttf)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
+    }
+  }
+};
 
-app.use('/images/npcs',     express.static('/app/data/images/npcs'));
-app.use('/images/profiles', express.static('/app/data/images/profiles'));
-app.use('/images/pages',    express.static('/app/data/images/pages'));
+app.use(express.static(path.join(__dirname, 'public'), staticOpts));
+
+app.use('/images/npcs',     express.static('/app/data/images/npcs',     staticOpts));
+app.use('/images/profiles', express.static('/app/data/images/profiles', staticOpts));
+app.use('/images/pages',    express.static('/app/data/images/pages',    staticOpts));
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'pixels-dojo-secret-key-change-this-in-production',
