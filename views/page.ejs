@@ -23,16 +23,6 @@
       </ul>
     </nav>
 
-  <nav>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/category/<%= page.category %>">
-        <%= page.category ? page.category.charAt(0).toUpperCase() + page.category.slice(1) : 'Uncategorized' %>
-      </a></li>
-      <li><a href="/pages/<%= page.slug %>"><%= page.title %></a></li>
-    </ul>
-  </nav>
-
   <div class="main-wrapper">
     <!-- Sidebar -->
     <aside class="sidebar">
