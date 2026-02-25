@@ -449,13 +449,17 @@
       }
     });
 
-    // Close modal on outside click
-    window.onclick = function(event) {
-      const modal = document.getElementById('pageModal');
-      if (event.target == modal) {
-        closePageModal();
+    // Close modal on outside click — with unsaved work protection
+    document.getElementById('pageModal').addEventListener('click', function(e) {
+      if (e.target !== this) return;
+      var titleVal  = document.getElementById('title').value.trim();
+      var quillText = quill ? quill.getText().trim() : '';
+      var hasContent = titleVal.length > 0 || quillText.length > 0;
+      if (hasContent) {
+        if (!confirm('You have unsaved work — are you sure you want to close?')) return;
       }
-    }
+      closePageModal();
+    });
   </script>
 </body>
 </html>
