@@ -1629,3 +1629,124 @@ app.get('/test-ama-scraper', requireAdmin, async (req, res) => {
     `);
   }
 });
+
+// ═══════════════════════════════════════════════════════════════════
+// 🐦 FEATURED TWEETS — Weekly community spotlight
+// ═══════════════════════════════════════════════════════════════════
+
+// Create tweets table on startup if it doesn't exist
+db.run(`
+  CREATE TABLE IF NOT EXISTS featured_tweets (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    week_number INTEGER NOT NULL,
+    week_dates  TEXT NOT NULL,
+    tweet_url   TEXT NOT NULL,
+    is_winner   INTEGER DEFAULT 0,
+    display_order INTEGER DEFAULT 0,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`, function(err) {
+  if (err) console.error('Tweet table error:', err.message);
+  else console.log('✅ Featured tweets table ready');
+});
+
+// GET /tweets — public page
+app.get('/tweets', function(req, res) {
+  db.all(
+    'SELECT DISTINCT week_number, week_dates FROM featured_tweets ORDER BY week_number DESC',
+    [],
+    function(err, weekRows) {
+      if (err) {
+        console.error('Tweet weeks error:', err.message);
+        return res.render('tweets', { user: req.session.user || null, weeks: [] });
+      }
+      if (!weekRows || weekRows.length === 0) {
+        return res.render('tweets', { user: req.session.user || null, weeks: [] });
+      }
+      // For each week, fetch its tweets
+      var weeks = [];
+      var pending = weekRows.length;
+      weekRows.forEach(function(week) {
+        db.all(
+          'SELECT * FROM featured_tweets WHERE week_number = ? ORDER BY display_order ASC, id ASC',
+          [week.week_number],
+          function(err, tweets) {
+            weeks.push({
+              number: week.week_number,
+              dates:  week.week_dates,
+              tweets: tweets || []
+            });
+            pending--;
+            if (pending === 0) {
+              // Sort weeks descending by number
+              weeks.sort(function(a, b) { return b.number - a.number; });
+              res.render('tweets', { user: req.session.user || null, weeks: weeks });
+            }
+          }
+        );
+      });
+    }
+  );
+});
+
+// GET /admin/tweets — admin management page
+app.get('/admin/tweets', requireAdmin, function(req, res) {
+  db.all(
+    'SELECT * FROM featured_tweets ORDER BY week_number DESC, display_order ASC',
+    [],
+    function(err, tweets) {
+      if (err) tweets = [];
+      res.render('admin-tweets', {
+        user:   req.session.user,
+        tweets: tweets || []
+      });
+    }
+  );
+});
+
+// POST /admin/tweets — add a tweet (accepts JSON)
+app.post('/admin/tweets', requireAdmin, express.json(), function(req, res) {
+  var week_number   = parseInt(req.body.week_number) || 1;
+  var week_dates    = (req.body.week_dates || '').trim();
+  var tweet_url     = (req.body.tweet_url || '').trim();
+  var is_winner     = req.body.is_winner ? 1 : 0;
+  var display_order = parseInt(req.body.display_order) || 0;
+
+  if (!tweet_url || !week_dates) {
+    return res.status(400).json({ error: 'Tweet URL and week dates are required' });
+  }
+
+  // Clean the URL — accept full tweet URL or tweet ID
+  tweet_url = tweet_url.replace(/\?.*$/, ''); // strip query params
+
+  db.run(
+    'INSERT INTO featured_tweets (week_number, week_dates, tweet_url, is_winner, display_order) VALUES (?, ?, ?, ?, ?)',
+    [week_number, week_dates, tweet_url, is_winner, display_order],
+    function(err) {
+      if (err) {
+        console.error('Add tweet error:', err.message);
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ success: true, id: this.lastID });
+    }
+  );
+});
+
+// DELETE /admin/tweets/:id — remove a tweet
+app.delete('/admin/tweets/:id', requireAdmin, express.json(), function(req, res) {
+  db.run('DELETE FROM featured_tweets WHERE id = ?', [req.params.id], function(err) {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ success: true });
+  });
+});
+
+// POST /admin/tweets/:id/toggle-winner
+app.post('/admin/tweets/:id/toggle-winner', requireAdmin, express.json(), function(req, res) {
+  db.get('SELECT is_winner FROM featured_tweets WHERE id = ?', [req.params.id], function(err, row) {
+    if (err || !row) return res.status(404).json({ error: 'Not found' });
+    db.run('UPDATE featured_tweets SET is_winner = ? WHERE id = ?', [row.is_winner ? 0 : 1, req.params.id], function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ success: true, is_winner: !row.is_winner });
+    });
+  });
+});
