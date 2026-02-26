@@ -1687,18 +1687,24 @@ app.get('/test-ama-scraper', requireAdmin, async (req, res) => {
 // Create tweets table on startup if it doesn't exist
 db.run(`
   CREATE TABLE IF NOT EXISTS featured_tweets (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    week_number INTEGER NOT NULL,
-    week_dates  TEXT NOT NULL,
-    tweet_url   TEXT NOT NULL,
-    is_winner   INTEGER DEFAULT 0,
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    week_number   INTEGER NOT NULL,
+    week_dates    TEXT NOT NULL,
+    tweet_url     TEXT NOT NULL,
+    tweet_username TEXT DEFAULT '',
+    tweet_snippet  TEXT DEFAULT '',
+    is_winner     INTEGER DEFAULT 0,
     display_order INTEGER DEFAULT 0,
-    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at    DATETIME DEFAULT CURRENT_TIMESTAMP
   )
 `, function(err) {
   if (err) console.error('Tweet table error:', err.message);
   else console.log('✅ Featured tweets table ready');
 });
+
+// Add new columns to existing deployments (safe — ignored if already exist)
+db.run("ALTER TABLE featured_tweets ADD COLUMN tweet_username TEXT DEFAULT ''", function() {});
+db.run("ALTER TABLE featured_tweets ADD COLUMN tweet_snippet TEXT DEFAULT ''", function() {});
 
 // GET /tweets — public page
 app.get('/tweets', function(req, res) {
@@ -1756,11 +1762,13 @@ app.get('/admin/tweets', requireAdmin, function(req, res) {
 
 // POST /admin/tweets — add a tweet (accepts JSON)
 app.post('/admin/tweets', requireAdmin, express.json(), function(req, res) {
-  var week_number   = parseInt(req.body.week_number) || 1;
-  var week_dates    = (req.body.week_dates || '').trim();
-  var tweet_url     = (req.body.tweet_url || '').trim();
-  var is_winner     = req.body.is_winner ? 1 : 0;
-  var display_order = parseInt(req.body.display_order) || 0;
+  var week_number    = parseInt(req.body.week_number) || 1;
+  var week_dates     = (req.body.week_dates || '').trim();
+  var tweet_url      = (req.body.tweet_url || '').trim();
+  var tweet_username = (req.body.tweet_username || '').trim().replace(/^@/, '');
+  var tweet_snippet  = (req.body.tweet_snippet || '').trim();
+  var is_winner      = req.body.is_winner ? 1 : 0;
+  var display_order  = parseInt(req.body.display_order) || 0;
 
   if (!tweet_url || !week_dates) {
     return res.status(400).json({ error: 'Tweet URL and week dates are required' });
@@ -1770,8 +1778,8 @@ app.post('/admin/tweets', requireAdmin, express.json(), function(req, res) {
   tweet_url = tweet_url.replace(/\?.*$/, ''); // strip query params
 
   db.run(
-    'INSERT INTO featured_tweets (week_number, week_dates, tweet_url, is_winner, display_order) VALUES (?, ?, ?, ?, ?)',
-    [week_number, week_dates, tweet_url, is_winner, display_order],
+    'INSERT INTO featured_tweets (week_number, week_dates, tweet_url, tweet_username, tweet_snippet, is_winner, display_order) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    [week_number, week_dates, tweet_url, tweet_username, tweet_snippet, is_winner, display_order],
     function(err) {
       if (err) {
         console.error('Add tweet error:', err.message);
