@@ -16,7 +16,7 @@
         <li><a href="/category/startup">Start Here</a></li>
         <li><a href="/category/earn">Earn $PIXEL</a></li>
         <li><a href="/category/mastery">Mastery</a></li>
-        <li><a href="/tweets">Best Tweets</a></li>
+        <li><a href="/tweets">Dojo Picks</a></li>
         <li><a href="/npcs-map">NPCs & Map</a></li>
         <li><a href="/events">Events</a></li>
         <li><a href="/amas">AMAs</a></li>
@@ -69,24 +69,10 @@
             <h1 class="hero-title">PIXELS DOJO</h1>
             <p class="hero-tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
 
-            <div class="main-buttons">
-              <a href="/category/startup" class="main-button">
-                <div class="icon">🌱</div>
-                <h3>Start Here</h3>
-                <p>Beginner guides & first steps</p>
-              </a>
-
-              <a href="/category/earn" class="main-button">
-                <div class="icon">💰</div>
-                <h3>Earn $PIXEL</h3>
-                <p>Strategies & mechanisms</p>
-              </a>
-
-              <a href="/category/mastery" class="main-button">
-                <div class="icon">👑</div>
-                <h3>Mastery</h3>
-                <p>VIP • NFTs • Advanced</p>
-              </a>
+            <div class="hero-pill-buttons">
+              <a href="/category/startup" class="hero-pill">🌱 Start Here</a>
+              <a href="/category/earn" class="hero-pill">💰 Earn $PIXEL</a>
+              <a href="/category/mastery" class="hero-pill">👑 Mastery</a>
             </div>
           </div>
         </section>
@@ -98,6 +84,30 @@
             <button type="submit" class="btn btn-cyan">Search</button>
           </form>
         </div>
+
+        <!-- ── DOJO PICKS — This Week's Best Posts ─────────────────── -->
+        <% if (currentWeekTweets && currentWeekTweets.length > 0) { %>
+        <section class="dojo-picks-block">
+          <div class="dojo-picks-header">
+            <div class="dojo-picks-eyebrow">✦ Community Spotlight ✦</div>
+            <h2 class="dojo-picks-title">This Week's Dojo Picks</h2>
+            <a href="/tweets" class="dojo-picks-viewall">See all picks →</a>
+          </div>
+          <div class="dojo-picks-grid">
+            <% currentWeekTweets.slice(0,3).forEach(function(tweet) { %>
+              <div class="dojo-pick-card <%= tweet.is_winner ? 'pick-winner' : '' %>">
+                <% if (tweet.is_winner) { %><div class="pick-winner-badge">🏆 Winner</div><% } %>
+                <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true">
+                  <a href="<%= tweet.tweet_url.replace('x.com','twitter.com') %>"></a>
+                </blockquote>
+              </div>
+            <% }); %>
+          </div>
+          <div class="dojo-picks-footer">
+            <a href="/tweets" class="dojo-picks-cta">View All Dojo Picks →</a>
+          </div>
+        </section>
+        <% } %>
 
         <!-- Category Grid -->
         <section class="category-grid">
@@ -290,6 +300,22 @@
       </div>
     </div>
 
+    <!-- Twitter widget for Dojo Picks embeds -->
+    <script>
+      window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s); js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+        t._e = [];
+        t.ready = function(f) { t._e.push(f); };
+        return t;
+      }(document, "script", "twitter-wjs"));
+      if (window.twttr && window.twttr.ready) {
+        window.twttr.ready(function(twttr) { twttr.widgets.load(); });
+      }
+    </script>
     <script src="/js/chat-widget.js"></script>
     <script src="/js/main.js"></script>
     <%- include('partials/back-to-top') %>
