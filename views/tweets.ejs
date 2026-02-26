@@ -220,17 +220,25 @@
       .week-title { font-size: 0.5rem; }
     }
     /* ── Winner share bar ── */
+    .tweet-winner {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
     .winner-share-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 0.5rem;
-      background: rgba(237,255,132,0.07);
-      border: 1px solid rgba(237,255,132,0.25);
-      border-radius: 8px 8px 0 0;
-      padding: 0.5rem 0.75rem;
-      margin: -0.5rem -0.5rem 0.5rem;
+      background: rgba(237,255,132,0.08);
+      border: 1px solid rgba(237,255,132,0.3);
+      border-radius: 8px;
+      padding: 0.5rem 0.85rem;
+      margin-bottom: 0.6rem;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .winner-share-label {
