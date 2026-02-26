@@ -95,12 +95,12 @@
           </div>
           <div class="dojo-picks-grid">
             <% currentWeekTweets.slice(0,3).forEach(function(tweet) { %>
-              <div class="dojo-pick-card <%= tweet.is_winner ? 'pick-winner' : '' %>">
+              <a href="<%= tweet.tweet_url %>" target="_blank" rel="noopener noreferrer" class="dojo-pick-card <%= tweet.is_winner ? 'pick-winner' : '' %>">
                 <% if (tweet.is_winner) { %><div class="pick-winner-badge">🏆 Winner</div><% } %>
-                <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true">
-                  <a href="<%= tweet.tweet_url.replace('x.com','twitter.com') %>"></a>
-                </blockquote>
-              </div>
+                <div class="pick-handle">@<%= (tweet.tweet_username && tweet.tweet_username.length > 0) ? tweet.tweet_username : 'community' %></div>
+                <p class="pick-snippet"><%= (tweet.tweet_snippet && tweet.tweet_snippet.length > 0) ? tweet.tweet_snippet : 'Click to view this week\'s featured post →' %></p>
+                <div class="pick-cta">Read on X →</div>
+              </a>
             <% }); %>
           </div>
           <div class="dojo-picks-footer">
@@ -300,22 +300,6 @@
       </div>
     </div>
 
-    <!-- Twitter widget for Dojo Picks embeds -->
-    <script>
-      window.twttr = (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
-        if (d.getElementById(id)) return t;
-        js = d.createElement(s); js.id = id;
-        js.src = "https://platform.twitter.com/widgets.js";
-        fjs.parentNode.insertBefore(js, fjs);
-        t._e = [];
-        t.ready = function(f) { t._e.push(f); };
-        return t;
-      }(document, "script", "twitter-wjs"));
-      if (window.twttr && window.twttr.ready) {
-        window.twttr.ready(function(twttr) { twttr.widgets.load(); });
-      }
-    </script>
     <script src="/js/chat-widget.js"></script>
     <script src="/js/main.js"></script>
     <%- include('partials/back-to-top') %>
