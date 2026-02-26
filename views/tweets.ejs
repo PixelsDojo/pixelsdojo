@@ -219,6 +219,75 @@
       }
       .week-title { font-size: 0.5rem; }
     }
+    /* ── Winner share bar ── */
+    .winner-share-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      background: rgba(237,255,132,0.07);
+      border: 1px solid rgba(237,255,132,0.25);
+      border-radius: 8px 8px 0 0;
+      padding: 0.5rem 0.75rem;
+      margin: -0.5rem -0.5rem 0.5rem;
+    }
+
+    .winner-share-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.42rem;
+      color: var(--yellow);
+      letter-spacing: 0.05em;
+    }
+
+    .winner-share-btns {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .winner-share-x,
+    .winner-copy-link {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.3rem 0.75rem;
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      white-space: nowrap;
+      border: none;
+      font-family: inherit;
+    }
+
+    .winner-share-x {
+      background: #000;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .winner-share-x:hover {
+      background: #1a1a1a;
+      color: #fff;
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    .winner-copy-link {
+      background: rgba(237,255,132,0.12);
+      color: var(--yellow);
+      border: 1px solid rgba(237,255,132,0.3);
+    }
+    .winner-copy-link:hover {
+      background: var(--yellow);
+      color: #000;
+    }
+    .winner-copy-link.copied {
+      background: var(--cyan);
+      color: #000;
+      border-color: var(--cyan);
+    }
+
+    @media (max-width: 540px) {
+      .winner-share-bar { flex-direction: column; align-items: flex-start; }
+    }
   </style>
 </head>
 <body>
@@ -263,6 +332,17 @@
           <div class="tweet-grid count-<%= week.tweets.length %>">
             <% week.tweets.forEach(function(tweet, ti) { %>
               <div class="tweet-embed <%= tweet.is_winner ? 'tweet-winner' : '' %>">
+                <% if (tweet.is_winner) { %>
+                  <div class="winner-share-bar">
+                    <span class="winner-share-label">🏆 Winner</span>
+                    <div class="winner-share-btns">
+                      <a class="winner-share-x" 
+                         href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent('I won this week\'s Dojo Picks on @pixelsdojo! 🏆\n\nCheck it out → https://pixelsdojo.xyz/tweets') %>"
+                         target="_blank" rel="noopener noreferrer">Share on X</a>
+                      <button class="winner-copy-link" onclick="copyPicksLink(this)">Copy Link</button>
+                    </div>
+                  </div>
+                <% } %>
                 <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true">
                   <a href="<%= tweet.tweet_url.replace('x.com','twitter.com') %>"></a>
                 </blockquote>
@@ -319,6 +399,38 @@
     var isOpen = header.classList.contains('open');
     header.classList.toggle('open', !isOpen);
     body.classList.toggle('open', !isOpen);
+  }
+</script>
+
+<script>
+  function copyPicksLink(btn) {
+    var url = 'https://pixelsdojo.xyz/tweets';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function() {
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = 'Copy Link';
+          btn.classList.remove('copied');
+        }, 2500);
+      });
+    } else {
+      // Fallback for older browsers
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'Copy Link';
+        btn.classList.remove('copied');
+      }, 2500);
+    }
   }
 </script>
 
