@@ -353,13 +353,22 @@ nav a:hover {
   background: var(--card-bg);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 12px;
-  overflow: hidden;
+  padding: 1.1rem 1.25rem 1rem;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 0.5rem;
-  min-height: 180px;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s ease;
   position: relative;
+  min-height: 100px;
+}
+
+.dojo-pick-card:hover {
+  border-color: rgba(65,225,20,0.4);
+  background: rgba(65,225,20,0.04);
+  transform: translateY(-2px);
+  color: inherit;
 }
 
 .dojo-pick-card.pick-winner {
@@ -369,20 +378,40 @@ nav a:hover {
 
 .pick-winner-badge {
   position: absolute;
-  top: 0.4rem; left: 0.4rem;
-  z-index: 2;
+  top: 0.5rem; right: 0.6rem;
   background: var(--yellow);
   color: #000;
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.42rem;
+  font-size: 0.38rem;
   padding: 0.2rem 0.45rem;
   border-radius: 4px;
   line-height: 1.6;
 }
 
-.dojo-pick-card .twitter-tweet {
-  margin: 0 !important;
-  width: 100% !important;
+.pick-handle {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 0.02em;
+}
+
+.pick-snippet {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.5;
+  margin: 0;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pick-cta {
+  font-size: 0.72rem;
+  color: var(--cyan);
+  opacity: 0.5;
+  margin-top: 0.25rem;
 }
 
 .dojo-picks-footer {
