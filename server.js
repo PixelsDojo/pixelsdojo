@@ -371,12 +371,34 @@ app.get('/', (req, res) => {
 
             completed++;
             if (completed === categories.length) {
-              res.render('index', {
-                user: req.session.user || null,
-                recentPages,
-                mostUpvoted,
-                mostViewed,
-                categoryData,  // { startup: [...], earn: [...], mastery: [...] }
+              // Fetch the latest week's Dojo Picks for the homepage block
+              // Uses MAX(week_number) — always shows most recent week
+              db.get('SELECT MAX(week_number) as latest FROM featured_tweets', [], function(err, wRow) {
+                var latestWeek = (wRow && wRow.latest) ? wRow.latest : null;
+                if (!latestWeek) {
+                  return res.render('index', {
+                    user: req.session.user || null,
+                    recentPages,
+                    mostUpvoted,
+                    mostViewed,
+                    categoryData,
+                    currentWeekTweets: []
+                  });
+                }
+                db.all(
+                  'SELECT * FROM featured_tweets WHERE week_number = ? ORDER BY is_winner DESC, display_order ASC, id ASC',
+                  [latestWeek],
+                  function(err2, currentWeekTweets) {
+                    res.render('index', {
+                      user: req.session.user || null,
+                      recentPages,
+                      mostUpvoted,
+                      mostViewed,
+                      categoryData,
+                      currentWeekTweets: currentWeekTweets || []
+                    });
+                  }
+                );
               });
             }
           });
