@@ -214,8 +214,8 @@ nav a:hover {
 .hero-full {
   position: relative;
   width: 100%;
-  min-height: 380px;               /* reduced from 600px */
-  overflow: visible !important;    /* critical – prevents clipping of text/buttons */
+  min-height: 420px;               /* shrunk from 380px/600px */
+  overflow: visible !important;
   margin: 0;
   padding: 0;
 }
@@ -262,73 +262,162 @@ nav a:hover {
   text-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
-/* Buttons – grid layout (your old working style) */
-.main-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 1rem;
+/* ── Pill buttons (replaced big cards) ─────────────────────── */
+.hero-pill-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-/* Individual button */
-.main-button {
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   background: rgba(15, 52, 96, 0.75);
   backdrop-filter: blur(6px);
-  padding: 2rem 1.5rem;
-  border-radius: 14px;
-  border: 2px solid var(--cyan);   /* lime green now */
-  text-align: center;
+  border: 2px solid var(--cyan);
   color: white;
-  transition: all 0.4s ease;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-  min-height: 200px;               /* more vertical room for text */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: visible !important;    /* no clipping */
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.65rem 1.6rem;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  white-space: nowrap;
 }
 
-.main-button:hover {
-  transform: translateY(-10px) scale(1.04);
-  border-color: var(--purple);
-  box-shadow: 0 16px 48px rgba(133,0,255,0.5);
-}
-
-/* Icon */
-.main-button .icon {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-/* Title */
-.main-button h3 {
+.hero-pill:hover {
+  background: rgba(65, 225, 20, 0.15);
+  border-color: var(--yellow);
   color: var(--yellow);
-  font-size: 1.6rem;
-  margin-bottom: 0.6rem;
-  font-weight: bold;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(133,0,255,0.4);
 }
 
-/* Description */
-.main-button p {
-  font-size: 1.05rem;
-  color: #d0d0ff;
+/* Keep old .main-buttons classes harmless in case used elsewhere */
+.main-buttons { display: none; }
+
+/* ── Dojo Picks homepage block ──────────────────────────────── */
+.dojo-picks-block {
+  margin: 0 0 2.5rem;
+  background: linear-gradient(135deg, rgba(10,14,26,0.8) 0%, rgba(17,24,39,0.9) 100%);
+  border: 1px solid rgba(65,225,20,0.25);
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem 1.5rem;
+}
+
+.dojo-picks-header {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.dojo-picks-eyebrow {
+  font-size: 0.7rem;
+  color: var(--cyan);
+  opacity: 0.6;
+  flex-basis: 100%;
+  letter-spacing: 0.1em;
+}
+
+.dojo-picks-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(0.55rem, 1.5vw, 0.8rem);
+  color: var(--yellow);
   margin: 0;
-  line-height: 1.4;
+  flex: 1;
+  text-shadow: 0 0 16px rgba(237,255,132,0.3);
 }
 
-/* Force text to be fully visible – no truncation */
-.main-buttons,
-.main-button,
-.main-button * {
-  overflow: visible !important;
-  text-overflow: clip !important;
-  white-space: normal !important;
-  word-break: break-word !important;
-  hyphens: auto;
+.dojo-picks-viewall {
+  font-size: 0.82rem;
+  color: var(--cyan);
+  opacity: 0.7;
+  text-decoration: none;
+  white-space: nowrap;
 }
+.dojo-picks-viewall:hover { opacity: 1; color: var(--yellow); }
+
+.dojo-picks-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.dojo-pick-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0.5rem;
+  min-height: 180px;
+  position: relative;
+}
+
+.dojo-pick-card.pick-winner {
+  border-color: rgba(237,255,132,0.35);
+  background: rgba(237,255,132,0.03);
+}
+
+.pick-winner-badge {
+  position: absolute;
+  top: 0.4rem; left: 0.4rem;
+  z-index: 2;
+  background: var(--yellow);
+  color: #000;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.42rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  line-height: 1.6;
+}
+
+.dojo-pick-card .twitter-tweet {
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+.dojo-picks-footer {
+  text-align: center;
+  margin-top: 1.25rem;
+}
+
+.dojo-picks-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(65,225,20,0.08);
+  border: 1px solid rgba(65,225,20,0.3);
+  color: var(--cyan);
+  padding: 0.55rem 1.4rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s;
+}
+.dojo-picks-cta:hover {
+  background: rgba(65,225,20,0.18);
+  border-color: var(--cyan);
+  color: white;
+}
+
+@media (max-width: 900px) {
+  .dojo-picks-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 540px) {
+  .dojo-picks-grid { grid-template-columns: 1fr; }
+  .hero-pill { font-size: 0.9rem; padding: 0.6rem 1.3rem; }
+}
+
 
 /* ─── Search ───────────────────────────────────────────────── */
 
@@ -1895,7 +1984,7 @@ footer {
 
 @media (max-width: 768px) {
     .hero-full {
-        min-height: 350px !important;
+        min-height: 300px !important;
     }
     
     .quick-grid {
