@@ -145,6 +145,16 @@
       <label>Tweet URL</label>
       <input type="text" id="tweetUrl" placeholder="https://x.com/username/status/123456789">
     </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>@Username <span style="opacity:0.4;font-size:0.7rem;">(shown on homepage card)</span></label>
+        <input type="text" id="tweetUsername" placeholder="pixelsdojo">
+      </div>
+      <div class="form-group">
+        <label>Snippet <span style="opacity:0.4;font-size:0.7rem;">(1–2 sentence preview)</span></label>
+        <input type="text" id="tweetSnippet" placeholder="Great tip about farming strategy...">
+      </div>
+    </div>
     <div class="winner-toggle">
       <input type="checkbox" id="isWinner">
       <label for="isWinner">🏆 Mark as weekly winner</label>
@@ -201,10 +211,12 @@
   }
 
   function addTweet() {
-    var weekNumber = document.getElementById('weekNumber').value;
-    var weekDates  = document.getElementById('weekDates').value.trim();
-    var tweetUrl   = document.getElementById('tweetUrl').value.trim();
-    var isWinner   = document.getElementById('isWinner').checked;
+    var weekNumber    = document.getElementById('weekNumber').value;
+    var weekDates     = document.getElementById('weekDates').value.trim();
+    var tweetUrl      = document.getElementById('tweetUrl').value.trim();
+    var tweetUsername = document.getElementById('tweetUsername').value.trim();
+    var tweetSnippet  = document.getElementById('tweetSnippet').value.trim();
+    var isWinner      = document.getElementById('isWinner').checked;
 
     if (!weekDates || !tweetUrl) {
       showToast('⚠️ Week dates and tweet URL are required', false); return;
@@ -217,10 +229,12 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        week_number: weekNumber,
-        week_dates:  weekDates,
-        tweet_url:   tweetUrl,
-        is_winner:   isWinner
+        week_number:    weekNumber,
+        week_dates:     weekDates,
+        tweet_url:      tweetUrl,
+        tweet_username: tweetUsername,
+        tweet_snippet:  tweetSnippet,
+        is_winner:      isWinner
       })
     })
     .then(function(r) { return r.json(); })
