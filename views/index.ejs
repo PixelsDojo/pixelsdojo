@@ -159,7 +159,7 @@
                 <% recentPages.slice(0, 16).forEach(page => { %>
                   <a href="/pages/<%= page.slug %>" class="recent-card">
                     <% 
-                      let thumbnail = '/images/placeholder.jpg';
+                      let thumbnail = '/images/ama-placeholder.webp';
                       try {
                         const shots = JSON.parse(page.screenshots || '[]');
                         if (shots.length > 0) thumbnail = shots[0];
@@ -170,7 +170,7 @@
                         src="<%= thumbnail %>" 
                         alt="<%= page.title %>" 
                         loading="lazy"
-                        onerror="this.src='/images/placeholder.jpg'"
+                        onerror="this.src='/images/ama-placeholder.webp'"
                       >
                     </div>
                     <div class="card-content">
@@ -195,7 +195,7 @@
           <h2>⭐ Most Upvoted Guide</h2>
           <% if (mostUpvoted) { %>
             <% 
-              let upvotedThumb = '/images/placeholder.jpg';
+              let upvotedThumb = '/images/ama-placeholder.webp';
               try {
                 if (mostUpvoted.screenshots) {
                   const shots = typeof mostUpvoted.screenshots === 'string' 
@@ -206,7 +206,7 @@
               } catch (e) {}
             %>
             <a href="/pages/<%= mostUpvoted.slug %>" class="compact-card">
-              <img src="<%= upvotedThumb %>" alt="<%= mostUpvoted.title %>" class="compact-thumb" onerror="this.src='/images/placeholder.jpg'">
+              <img src="<%= upvotedThumb %>" alt="<%= mostUpvoted.title %>" class="compact-thumb" onerror="this.src='/images/ama-placeholder.webp'">
               <div class="compact-info">
                 <h3><%= mostUpvoted.title %></h3>
                 <p class="compact-meta">
@@ -229,7 +229,7 @@
           <h2>🔥 Most Viewed Guide</h2>
           <% if (mostViewed) { %>
             <% 
-              let viewedThumb = '/images/placeholder.jpg';
+              let viewedThumb = '/images/ama-placeholder.webp';
               try {
                 if (mostViewed.screenshots) {
                   const shots = typeof mostViewed.screenshots === 'string' 
@@ -240,7 +240,7 @@
               } catch (e) {}
             %>
             <a href="/pages/<%= mostViewed.slug %>" class="compact-card">
-              <img src="<%= viewedThumb %>" alt="<%= mostViewed.title %>" class="compact-thumb" onerror="this.src='/images/placeholder.jpg'">
+              <img src="<%= viewedThumb %>" alt="<%= mostViewed.title %>" class="compact-thumb" onerror="this.src='/images/ama-placeholder.webp'">
               <div class="compact-info">
                 <h3><%= mostViewed.title %></h3>
                 <p class="compact-meta">
