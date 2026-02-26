@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Featured Tweets — Pixels Dojo Admin</title>
+  <title>Manage Dojo Picks — Pixels Dojo Admin</title>
   <link rel="stylesheet" href="/css/style.css">
   <style>
     body { background: #0a0e1a; color: #e4e4e4; }
@@ -125,12 +125,12 @@
 
 <div class="wrap">
   <a href="/admin" class="back-link">← Back to Admin</a>
-  <h1>Featured Tweets 🐦</h1>
-  <p class="sub">Add up to 5 tweets per week. Newest week shows first. Mark a winner with 🏆.</p>
+  <h1>Dojo Picks ⚡</h1>
+  <p class="sub">Add up to 5 posts per week. Newest week shows first. Mark a winner with 🏆.</p>
 
   <!-- Add form -->
   <div class="add-panel">
-    <div class="panel-title">➕ Add Tweet</div>
+    <div class="panel-title">➕ Add Post / Tweet URL</div>
     <div class="form-row">
       <div class="form-group">
         <label>Week Number</label>
@@ -150,7 +150,7 @@
       <label for="isWinner">🏆 Mark as weekly winner</label>
     </div>
     <br>
-    <button class="add-btn" onclick="addTweet()">Add Tweet →</button>
+    <button class="add-btn" onclick="addTweet()">Add Pick →</button>
   </div>
 
   <!-- Tweet list grouped by week -->
@@ -165,7 +165,7 @@
     %>
 
     <% if (weekNums.length === 0) { %>
-      <div class="empty-state">No tweets yet — add the first one above! 🐦</div>
+      <div class="empty-state">No picks yet — add the first one above! ⚡</div>
     <% } %>
 
     <% weekNums.forEach(function(wn) { %>
