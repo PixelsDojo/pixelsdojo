@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Best Tweets — Pixels Dojo</title>
+  <title>Dojo Picks — Pixels Dojo</title>
   <link rel="stylesheet" href="/css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
@@ -231,7 +231,7 @@
       <li><a href="/category/startup">Start Here</a></li>
       <li><a href="/category/earn">Earn $PIXEL</a></li>
       <li><a href="/category/mastery">Mastery</a></li>
-      <li><a href="/tweets">Best Tweets</a></li>
+      <li><a href="/tweets">Dojo Picks</a></li>
       <li><a href="/npcs-map">NPCs & Map</a></li>
       <li><a href="/events">Events</a></li>
       <li><a href="/amas">AMAs</a></li>
@@ -241,9 +241,9 @@
 <!-- Hero -->
 <div class="tweets-hero">
   <div class="tweets-hero-eyebrow">✦ Community Spotlight ✦</div>
-  <h1 class="tweets-hero-title">Best Tweets of the Week</h1>
-  <p class="tweets-hero-sub">Every week we feature the best Pixels community content from X. Write great stuff, win 200 PIXELS. Mon–Fri, every week.</p>
-  <span class="competition-badge">⚡ 200 PIXELS per winning tweet · Mon–Fri</span>
+  <h1 class="tweets-hero-title">Dojo Picks</h1>
+  <p class="tweets-hero-sub">Every week we feature the best Pixels community content from X. Write great stuff, win PIXELS. Mon–Fri, every week.</p>
+  <span class="competition-badge">⚡ PIXELS prizes per winning post · Mon–Fri</span>
 </div>
 
 <!-- Weekly sections -->
@@ -255,7 +255,7 @@
       <div class="week-header <%= wi === 0 ? 'open' : '' %>" onclick="toggleWeek(this)">
         <div class="week-title">Week <%= week.number %></div>
         <div class="week-dates"><%= week.dates %></div>
-        <span class="week-count"><%= week.tweets.length %> tweet<%= week.tweets.length !== 1 ? 's' : '' %></span>
+        <span class="week-count"><%= week.tweets.length %> pick<%= week.tweets.length !== 1 ? 's' : '' %></span>
         <span class="week-chevron">▼</span>
       </div>
       <div class="week-body <%= wi === 0 ? 'open' : '' %>">
@@ -271,8 +271,8 @@
           </div>
         <% } else { %>
           <div class="tweets-empty">
-            <div class="tweets-empty-icon">🐦</div>
-            <p>No tweets featured yet this week.</p>
+            <div class="tweets-empty-icon">⚡</div>
+            <p>No picks featured yet this week.</p>
           </div>
         <% } %>
       </div>
@@ -281,8 +281,8 @@
   <% } else { %>
     <div class="tweets-empty" style="padding:5rem 2rem;">
       <div class="tweets-empty-icon">🐦</div>
-      <p style="font-family:'Press Start 2P',monospace;font-size:0.7rem;color:var(--yellow);margin-bottom:1rem;">No weeks yet</p>
-      <p>Check back soon — the first featured tweets are coming!</p>
+      <p style="font-family:'Press Start 2P',monospace;font-size:0.7rem;color:var(--yellow);margin-bottom:1rem;">No picks yet</p>
+      <p>Check back soon — the first Dojo Picks are coming!</p>
     </div>
   <% } %>
 
