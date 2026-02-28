@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Pixels Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    .legal-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+    .legal-eyebrow {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+    .legal-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--yellow);
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+    .legal-updated {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(65,225,20,0.15);
+    }
+    .legal-section {
+      margin-bottom: 2.5rem;
+    }
+    .legal-section h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.65rem;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(65,225,20,0.1);
+    }
+    .legal-section p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.8;
+      margin-bottom: 0.75rem;
+    }
+    .legal-section ul {
+      padding-left: 1.5rem;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+    .legal-section ul li { margin-bottom: 0.4rem; }
+    .legal-contact {
+      background: rgba(65,225,20,0.05);
+      border: 1px solid rgba(65,225,20,0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 3rem;
+    }
+    .legal-contact p {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.6);
+      margin: 0;
+      line-height: 1.7;
+    }
+    .legal-contact a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+    .legal-contact a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<%- include('partials/header') %>
+
+<div class="legal-page">
+
+  <div class="legal-eyebrow">✦ Legal ✦</div>
+  <h1 class="legal-title">Privacy Policy</h1>
+  <p class="legal-updated">Last updated: 28 February 2026 &nbsp;·&nbsp; Lizzyland (Pty) Ltd</p>
+
+  <div class="legal-section">
+    <h2>1. Who We Are</h2>
+    <p>Pixels Dojo is operated by Lizzyland, a company based in South Africa. We run a wiki, community platform, and merch store for players of Pixels Online. This privacy policy explains how we collect, use, and protect your personal information when you use our website at <strong>pixelsdojo.xyz</strong>.</p>
+    <p>If you have any questions about this policy, please contact us at <a href="mailto:hello@pixelsdojo.xyz" style="color:var(--cyan);">hello@pixelsdojo.xyz</a>.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>2. Information We Collect</h2>
+    <p>We collect information you provide directly to us, including:</p>
+    <ul>
+      <li><strong>Account information</strong> — username, email address, and password when you register</li>
+      <li><strong>Profile information</strong> — display name, bio, social links, and profile image you choose to add</li>
+      <li><strong>Content you create</strong> — articles, comments, and other contributions to the wiki</li>
+      <li><strong>Order information</strong> — name, shipping address, and email when you purchase merch</li>
+      <li><strong>Wallet address</strong> — your Ronin wallet address when you use our NFT merch feature (we do not store private keys)</li>
+      <li><strong>Usage data</strong> — pages visited, time spent, and general interaction data to improve the site</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>3. How We Use Your Information</h2>
+    <p>We use the information we collect to:</p>
+    <ul>
+      <li>Provide, maintain, and improve Pixels Dojo</li>
+      <li>Process merch orders and communicate order status</li>
+      <li>Verify NFT ownership for our NFT merch printing service</li>
+      <li>Send important updates about the site or your account</li>
+      <li>Detect and prevent fraud or abuse</li>
+      <li>Comply with our legal obligations</li>
+    </ul>
+    <p>We do not sell your personal information to third parties. Ever.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>4. Blockchain & Wallet Data</h2>
+    <p>When you connect your Ronin wallet to use our NFT merch feature, we read your public wallet address and the NFTs it contains. This information is publicly available on the blockchain. We use it solely to verify NFT ownership and display your assets — we never access, request, or store your private keys or seed phrases.</p>
+    <p>Blockchain transactions are public and permanent by nature. We are not responsible for data stored on the blockchain itself.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>5. Third-Party Services</h2>
+    <p>We work with trusted third parties to provide our services:</p>
+    <ul>
+      <li><strong>Printful</strong> — for merch production and fulfilment. Your shipping address is shared with Printful to process your order.</li>
+      <li><strong>Sky Mavis / Ronin</strong> — for blockchain data and wallet verification.</li>
+      <li><strong>PayFast</strong> — for South African card and EFT payments.</li>
+      <li><strong>Railway</strong> — our hosting provider. Your data is stored on their servers.</li>
+      <li><strong>Google Fonts</strong> — for typography (may log your IP address).</li>
+    </ul>
+    <p>Each of these providers has their own privacy policy governing how they handle your data.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>6. Cookies & Analytics</h2>
+    <p>We use session cookies to keep you logged in and remember your preferences. We may collect basic analytics data (pages visited, general location) to understand how the site is used and improve it. We do not use advertising cookies or sell data to advertisers.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>7. Data Retention</h2>
+    <p>We keep your account information for as long as your account is active. If you delete your account, we will delete your personal data within 30 days, except where we are required to retain it for legal purposes (such as transaction records).</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>8. Your Rights</h2>
+    <p>Under South African POPIA (Protection of Personal Information Act) and applicable laws, you have the right to:</p>
+    <ul>
+      <li>Access the personal information we hold about you</li>
+      <li>Correct inaccurate information</li>
+      <li>Request deletion of your data</li>
+      <li>Object to how we process your data</li>
+      <li>Withdraw consent at any time</li>
+    </ul>
+    <p>To exercise any of these rights, contact us at <a href="mailto:hello@pixelsdojo.xyz" style="color:var(--cyan);">hello@pixelsdojo.xyz</a>.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>9. Security</h2>
+    <p>We take reasonable steps to protect your personal information from unauthorised access, disclosure, or loss. However, no internet transmission is completely secure. Please use a strong password and keep your wallet credentials safe — we will never ask for your seed phrase.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>10. Children</h2>
+    <p>Pixels Dojo is not directed at children under 13. If you believe a child has provided us with personal information, please contact us and we will delete it promptly.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>11. Changes to This Policy</h2>
+    <p>We may update this privacy policy from time to time. We will notify registered users of significant changes by email or via the site. Continued use of Pixels Dojo after changes are posted means you accept the updated policy.</p>
+  </div>
+
+  <div class="legal-contact">
+    <p>📬 <strong style="color:var(--yellow);">Questions or requests?</strong><br>
+    Contact Lizzyland at <a href="mailto:hello@pixelsdojo.xyz">hello@pixelsdojo.xyz</a><br>
+    We aim to respond within 5 business days.</p>
+  </div>
+
+</div>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>
