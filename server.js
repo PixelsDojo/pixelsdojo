@@ -1706,6 +1706,18 @@ db.run(`
 db.run("ALTER TABLE featured_tweets ADD COLUMN tweet_username TEXT DEFAULT ''", function() {});
 db.run("ALTER TABLE featured_tweets ADD COLUMN tweet_snippet TEXT DEFAULT ''", function() {});
 
+// ─── LEGAL PAGES ─────────────────────────────────────────────────────────────
+
+app.get('/privacy', function(req, res) {
+  res.render('privacy', { user: req.session.user || null });
+});
+
+app.get('/terms', function(req, res) {
+  res.render('terms', { user: req.session.user || null });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 // GET /tweets — public page
 app.get('/tweets', function(req, res) {
   db.all(
