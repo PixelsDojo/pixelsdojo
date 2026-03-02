@@ -187,39 +187,63 @@
           });
         }
       </script>
-
        <!-- Like / Dislike -->
 <div class="interaction-bar">
-  <button class="like-btn" data-page-id="<%= page.id %>">
+  <button class="like-btn" data-page-id="<%= page.id %>" id="likeBtn">
     👍 <span class="like-count"><%= page.upvotes || 0 %></span>
   </button>
-  <button class="dislike-btn" data-page-id="<%= page.id %>">
+  <button class="dislike-btn" data-page-id="<%= page.id %>" id="dislikeBtn">
     👎 <span class="dislike-count"><%= page.downvotes || 0 %></span>
   </button>
 </div>
 <script>
-  document.querySelectorAll('.like-btn, .dislike-btn').forEach(btn => {
-    btn.addEventListener('click', async function() {
-      const pageId = this.dataset.pageId;
-      const type = this.classList.contains('like-btn') ? 'like' : 'dislike';
-      try {
-        const res = await fetch(`/pages/${pageId}/vote`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type })
-        });
-        const data = await res.json();
-        if (data.upvotes !== undefined) {
-          document.querySelector('.like-count').textContent = data.upvotes;
-          document.querySelector('.dislike-count').textContent = data.downvotes;
-        }
-      } catch(e) {
-        console.error('Vote failed:', e);
-      }
-    });
-  });
-</script>
+(function() {
+  const pageId = '<%= page.id %>';
+  const storageKey = 'voted_' + pageId;
+  const likeBtn = document.getElementById('likeBtn');
+  const dislikeBtn = document.getElementById('dislikeBtn');
 
+  // Check if already voted this session
+  const alreadyVoted = sessionStorage.getItem(storageKey);
+  if (alreadyVoted === 'like') {
+    likeBtn.style.opacity = '0.5';
+    likeBtn.title = 'You already liked this';
+    dislikeBtn.style.opacity = '0.5';
+  } else if (alreadyVoted === 'dislike') {
+    dislikeBtn.style.opacity = '0.5';
+    dislikeBtn.title = 'You already disliked this';
+    likeBtn.style.opacity = '0.5';
+  }
+
+  async function vote(type) {
+    if (sessionStorage.getItem(storageKey)) {
+      return; // Already voted, do nothing
+    }
+    try {
+      const res = await fetch(`/pages/${pageId}/vote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type })
+      });
+      const data = await res.json();
+      if (data.upvotes !== undefined) {
+        document.querySelector('.like-count').textContent = data.upvotes;
+        document.querySelector('.dislike-count').textContent = data.downvotes;
+        sessionStorage.setItem(storageKey, type);
+        likeBtn.style.opacity = '0.5';
+        dislikeBtn.style.opacity = '0.5';
+        if (type === 'like') likeBtn.title = 'Thanks for the like!';
+        else dislikeBtn.title = 'Feedback noted!';
+      }
+    } catch(e) {
+      console.error('Vote failed:', e);
+    }
+  }
+
+  likeBtn.addEventListener('click', () => vote('like'));
+  dislikeBtn.addEventListener('click', () => vote('dislike'));
+})();
+</script>
 
         <!-- Placeholder for comments / discussion -->
         <section class="comments-section">
