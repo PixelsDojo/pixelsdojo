@@ -595,14 +595,6 @@ nav a:hover {
 
 /* ─── Content Sections ─────────────────────────────────────── */
 
-/* Constrain images inside article content at ALL screen sizes */
-.content-body img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 6px;
-}
-
 .content-section {
     background: var(--card-bg);
     padding: 2rem;
