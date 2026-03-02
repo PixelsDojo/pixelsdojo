@@ -1456,23 +1456,48 @@ app.get('/pages/:slug', (req, res) => {
           [page.author_id],
           (err, countResult) => {
             page.author_post_count = (countResult && countResult.post_count) || 0;
-            
-            res.render('page', { 
-              page,
-              user: req.session.user || null,
-              likes: 0,
-              dislikes: 0
-            });
+
+            // Fetch comments
+            db.all(
+              `SELECT c.id, c.content, c.created_at,
+                      u.display_name, u.username, u.profile_image
+               FROM comments c
+               JOIN users u ON c.user_id = u.id
+               WHERE c.page_id = ?
+               ORDER BY c.created_at ASC`,
+              [page.id],
+              (err, comments) => {
+                res.render('page', { 
+                  page,
+                  user: req.session.user || null,
+                  likes: 0,
+                  dislikes: 0,
+                  comments: comments || []
+                });
+              }
+            );
           }
         );
       } else {
         page.author_post_count = 0;
-        res.render('page', { 
-          page,
-          user: req.session.user || null,
-          likes: 0,
-          dislikes: 0
-        });
+        db.all(
+          `SELECT c.id, c.content, c.created_at,
+                  u.display_name, u.username, u.profile_image
+           FROM comments c
+           JOIN users u ON c.user_id = u.id
+           WHERE c.page_id = ?
+           ORDER BY c.created_at ASC`,
+          [page.id],
+          (err, comments) => {
+            res.render('page', { 
+              page,
+              user: req.session.user || null,
+              likes: 0,
+              dislikes: 0,
+              comments: comments || []
+            });
+          }
+        );
       }
     }
   );
@@ -1556,6 +1581,94 @@ app.get('/search', (req, res) => {
 
 // Chatbot 
 app.use('/chat', chatRoutes);
+
+// ─── Comments ─────────────────────────────────────────────────────────────────
+
+// GET comments for a page
+app.get('/pages/:id/comments', (req, res) => {
+  const pageId = parseInt(req.params.id);
+  if (!pageId || isNaN(pageId)) return res.status(400).json({ error: 'Invalid page ID' });
+
+  db.all(
+    `SELECT c.id, c.content, c.created_at,
+            u.display_name, u.username, u.profile_image
+     FROM comments c
+     JOIN users u ON c.user_id = u.id
+     WHERE c.page_id = ?
+     ORDER BY c.created_at ASC`,
+    [pageId],
+    (err, comments) => {
+      if (err) {
+        console.error('Fetch comments error:', err.message);
+        return res.status(500).json({ error: 'Could not load comments' });
+      }
+      res.json(comments || []);
+    }
+  );
+});
+
+// POST a new comment (must be logged in)
+app.post('/pages/:id/comments', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'You must be logged in to comment' });
+  }
+
+  const pageId = parseInt(req.params.id);
+  const content = (req.body.content || '').trim();
+
+  if (!pageId || isNaN(pageId)) return res.status(400).json({ error: 'Invalid page ID' });
+  if (!content) return res.status(400).json({ error: 'Comment cannot be empty' });
+  if (content.length > 1000) return res.status(400).json({ error: 'Comment too long (max 1000 characters)' });
+
+  db.run(
+    `INSERT INTO comments (page_id, user_id, content) VALUES (?, ?, ?)`,
+    [pageId, req.session.user.id, content],
+    function(err) {
+      if (err) {
+        console.error('Post comment error:', err.message);
+        return res.status(500).json({ error: 'Failed to post comment' });
+      }
+      // Return the new comment with user info
+      db.get(
+        `SELECT c.id, c.content, c.created_at,
+                u.display_name, u.username, u.profile_image
+         FROM comments c
+         JOIN users u ON c.user_id = u.id
+         WHERE c.id = ?`,
+        [this.lastID],
+        (err, comment) => {
+          if (err || !comment) return res.status(500).json({ error: 'Comment saved but could not retrieve it' });
+          res.json({ success: true, comment });
+        }
+      );
+    }
+  );
+});
+
+// DELETE a comment (owner or admin only)
+app.delete('/comments/:id', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'Not logged in' });
+
+  const commentId = parseInt(req.params.id);
+  if (!commentId || isNaN(commentId)) return res.status(400).json({ error: 'Invalid comment ID' });
+
+  // Check ownership
+  db.get('SELECT user_id FROM comments WHERE id = ?', [commentId], (err, row) => {
+    if (err || !row) return res.status(404).json({ error: 'Comment not found' });
+
+    const isOwner = row.user_id === req.session.user.id;
+    const isAdmin = !!req.session.user.is_admin;
+
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({ error: 'You can only delete your own comments' });
+    }
+
+    db.run('DELETE FROM comments WHERE id = ?', [commentId], function(err) {
+      if (err) return res.status(500).json({ error: 'Delete failed' });
+      res.json({ success: true });
+    });
+  });
+});
 
 // Improved error handler – JSON for API calls, HTML for browser pages
 app.use((err, req, res, next) => {
@@ -1738,6 +1851,22 @@ db.run(`
 // Add new columns to existing deployments (safe — ignored if already exist)
 db.run("ALTER TABLE featured_tweets ADD COLUMN tweet_username TEXT DEFAULT ''", function() {});
 db.run("ALTER TABLE featured_tweets ADD COLUMN tweet_snippet TEXT DEFAULT ''", function() {});
+
+// ─── Comments Table ───────────────────────────────────────────────────────────
+db.run(`
+  CREATE TABLE IF NOT EXISTS comments (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    page_id    INTEGER NOT NULL,
+    user_id    INTEGER NOT NULL,
+    content    TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (page_id) REFERENCES pages(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  )
+`, function(err) {
+  if (err) console.error('Comments table error:', err.message);
+  else console.log('✅ Comments table ready');
+});
 
 // ─── LEGAL PAGES ─────────────────────────────────────────────────────────────
 
