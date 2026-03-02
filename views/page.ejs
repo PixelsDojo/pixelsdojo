@@ -187,15 +187,39 @@
           });
         }
       </script>
+
        <!-- Like / Dislike -->
 <div class="interaction-bar">
   <button class="like-btn" data-page-id="<%= page.id %>">
-    👍 <%= page.upvotes || 0 %>
+    👍 <span class="like-count"><%= page.upvotes || 0 %></span>
   </button>
   <button class="dislike-btn" data-page-id="<%= page.id %>">
-    👎 <%= page.downvotes || 0 %>
+    👎 <span class="dislike-count"><%= page.downvotes || 0 %></span>
   </button>
 </div>
+<script>
+  document.querySelectorAll('.like-btn, .dislike-btn').forEach(btn => {
+    btn.addEventListener('click', async function() {
+      const pageId = this.dataset.pageId;
+      const type = this.classList.contains('like-btn') ? 'like' : 'dislike';
+      try {
+        const res = await fetch(`/pages/${pageId}/vote`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type })
+        });
+        const data = await res.json();
+        if (data.upvotes !== undefined) {
+          document.querySelector('.like-count').textContent = data.upvotes;
+          document.querySelector('.dislike-count').textContent = data.downvotes;
+        }
+      } catch(e) {
+        console.error('Vote failed:', e);
+      }
+    });
+  });
+</script>
+
 
         <!-- Placeholder for comments / discussion -->
         <section class="comments-section">
