@@ -252,8 +252,18 @@
         </div>
 
         <div class="form-group">
-          <label for="screenshots">Screenshots (optional)</label>
+          <label for="main_image">🖼️ Main Post Image (optional)</label>
+          <input type="file" id="main_image" name="main_image" accept="image/*">
+          <small style="color: #aaa;">This is the featured image shown with your post on the article page and listings.</small>
+          <div id="mainImagePreview" style="margin-top:0.75rem; display:none;">
+            <img id="mainImageThumb" src="" alt="Preview" style="max-width:200px; max-height:150px; border-radius:6px; border:1px solid rgba(0,255,255,0.3);">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="screenshots">Additional Screenshots (optional)</label>
           <input type="file" id="screenshots" name="screenshots" accept="image/*" multiple>
+          <small style="color: #aaa;">Extra images used inside your article content.</small>
         </div>
 
         <input type="hidden" id="postStatus" name="status" value="published">
@@ -313,6 +323,7 @@
       document.getElementById('modalTitle').textContent = 'Create New Guide';
       document.getElementById('pageForm').reset();
       document.getElementById('pageId').value = '';
+      document.getElementById('mainImagePreview').style.display = 'none';
       quill.setContents([]);
       document.getElementById('slug').disabled = false;
       document.getElementById('pageModal').style.display = 'block';
@@ -433,6 +444,23 @@
       } catch (error) {
         console.error('Form submission error:', error);
         alert('Failed to save guide');
+      }
+    });
+
+    // Main image preview
+    document.getElementById('main_image').addEventListener('change', function() {
+      const file = this.files[0];
+      const preview = document.getElementById('mainImagePreview');
+      const thumb = document.getElementById('mainImageThumb');
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          thumb.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
       }
     });
 
