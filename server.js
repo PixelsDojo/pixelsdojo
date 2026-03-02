@@ -1142,6 +1142,39 @@ app.get('/api/stats', (req, res) => {
   );
 });
 
+// ─── Like / Dislike a page ────────────────────────────────────────────────────
+app.post('/pages/:id/vote', (req, res) => {
+  const pageId = parseInt(req.params.id);
+  const { type } = req.body; // 'like' or 'dislike'
+
+  if (!pageId || isNaN(pageId)) {
+    return res.status(400).json({ error: 'Invalid page ID' });
+  }
+  if (type !== 'like' && type !== 'dislike') {
+    return res.status(400).json({ error: 'Invalid vote type' });
+  }
+
+  const column = type === 'like' ? 'upvotes' : 'downvotes';
+
+  db.run(
+    `UPDATE pages SET ${column} = COALESCE(${column}, 0) + 1 WHERE id = ?`,
+    [pageId],
+    function(err) {
+      if (err) {
+        console.error('Vote error:', err.message);
+        return res.status(500).json({ error: 'Vote failed' });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Page not found' });
+      }
+      // Return updated counts
+      db.get('SELECT upvotes, downvotes FROM pages WHERE id = ?', [pageId], (err, row) => {
+        if (err || !row) return res.status(500).json({ error: 'Could not fetch updated counts' });
+        res.json({ success: true, upvotes: row.upvotes || 0, downvotes: row.downvotes || 0 });
+      });
+    }
+  );
+});
 
 // ─── Maintenance Mode Toggle ──────────────────────────────────────────────────
 app.post('/admin/toggle-maintenance', requireAdmin, (req, res) => {
