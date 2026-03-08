@@ -2321,3 +2321,40 @@ body { top: 0 !important; }
   .card-image { height: 140px !important; }
   .card-image img { height: 140px !important; }
 }
+
+/* ── Mobile: stack all guide cards vertically ── */
+@media (max-width: 768px) {
+
+  .featured-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.7rem !important;
+    padding: 0.8rem !important;
+  }
+  .featured-card img {
+    width: 100% !important;
+    height: 160px !important;
+    border-radius: 6px !important;
+  }
+  .featured-card h3 {
+    font-size: 0.68rem !important;
+    margin: 0.3rem 0 !important;
+  }
+  .featured-card p {
+    font-size: 0.82rem !important;
+    margin: 0 !important;
+  }
+
+  .compact-card {
+    flex-direction: column !important;
+    gap: 0.7rem !important;
+  }
+  .compact-thumb {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 160px !important;
+  }
+  .compact-info h3 {
+    font-size: 0.68rem !important;
+  }
+}
