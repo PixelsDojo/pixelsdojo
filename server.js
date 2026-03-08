@@ -543,6 +543,62 @@ app.get('/amas', (req, res) => {
   });
 });
 
+// ─── Topics Page ──────────────────────────────────────────────
+// Add this route to server.js near your other GET routes (e.g. after /all-posts)
+
+const TOPICS = [
+  { slug: 'farming',         label: 'Farming',          icon: '🌾', keywords: ['farm', 'farming', 'crops', 'harvest', 'soil', 'seeds', 'plant'] },
+  { slug: 'mining',          label: 'Mining',            icon: '⛏️',  keywords: ['mine', 'mining', 'ore', 'minerals', 'dig', 'excavat'] },
+  { slug: 'forestry',        label: 'Forestry',          icon: '🌲', keywords: ['forest', 'forestry', 'wood', 'lumber', 'trees', 'chop', 'timber'] },
+  { slug: 'cooking',         label: 'Cooking',           icon: '🍳', keywords: ['cook', 'cooking', 'recipe', 'food', 'meal', 'kitchen', 'chef'] },
+  { slug: 'metalwork',       label: 'Metal Work',        icon: '⚙️',  keywords: ['metal', 'metalwork', 'smelt', 'forge', 'anvil', 'iron', 'steel', 'copper'] },
+  { slug: 'woodwork',        label: 'Wood Work',         icon: '🪵', keywords: ['woodwork', 'carpentry', 'plank', 'furniture', 'saw', 'wood work'] },
+  { slug: 'stone-shaping',   label: 'Stone Shaping',     icon: '🪨', keywords: ['stone', 'shaping', 'masonry', 'brick', 'cobble', 'rock'] },
+  { slug: 'milling',         label: 'Milling',           icon: '🌀', keywords: ['mill', 'milling', 'grind', 'flour', 'windmill'] },
+  { slug: 'textile',         label: 'Textile Making',    icon: '🧵', keywords: ['textile', 'weav', 'fabric', 'cloth', 'thread', 'fiber', 'wool', 'loom'] },
+  { slug: 'composting',      label: 'Composting',        icon: '♻️',  keywords: ['compost', 'composting', 'fertilizer', 'organic', 'waste'] },
+  { slug: 'hearth-hall',     label: 'Hearth Hall',       icon: '🏛️',  keywords: ['hearth', 'hall', 'hearth hall', 'community hall'] },
+  { slug: 'animal-care',     label: 'Animal Care',       icon: '🐄', keywords: ['animal care', 'livestock', 'pet', 'feed animal', 'stable', 'barn'] },
+  { slug: 'animal-breeding', label: 'Animal Breeding',   icon: '🐣', keywords: ['breed', 'breeding', 'hatch', 'egg', 'offspring', 'animal breed'] },
+  { slug: 'fishing',         label: 'Fishing',           icon: '🎣', keywords: ['fish', 'fishing', 'rod', 'bait', 'catch', 'pond', 'river'] },
+  { slug: 'sushi',           label: 'Sushi',             icon: '🍣', keywords: ['sushi', 'sashimi', 'roll', 'rice ball', 'nori'] },
+  { slug: 'merchant-ships',  label: 'Merchant Ships',    icon: '⛵', keywords: ['merchant', 'ship', 'shipping', 'trade', 'cargo', 'vessel', 'dock'] },
+  { slug: 'neon-zone',       label: 'Neon Zone',         icon: '🌆', keywords: ['neon', 'zone', 'neon zone', 'city', 'urban'] },
+  { slug: 'guilds',          label: 'Guilds',            icon: '🏰', keywords: ['guild', 'guilds', 'faction', 'clan', 'alliance'] },
+  { slug: 'start-quests',    label: 'Start Quests',      icon: '⚡', keywords: ['quest', 'quests', 'mission', 'starter quest', 'first quest', 'beginner quest'] },
+];
+
+app.get('/topics', (req, res) => {
+  db.all(
+    `SELECT p.slug, p.title, p.content, p.summary, u.display_name as author_display_name
+     FROM pages p
+     LEFT JOIN users u ON p.author_id = u.id
+     WHERE p.status = 'published' OR p.status IS NULL
+     ORDER BY p.title ASC`,
+    [],
+    (err, allPages) => {
+      if (err) allPages = [];
+
+      // For each topic, filter articles that contain any of the keywords
+      const topics = TOPICS.map(topic => {
+        const articles = allPages.filter(page => {
+          const searchText = [
+            page.title || '',
+            page.summary || '',
+            (page.content || '').replace(/<[^>]*>/g, '') // strip HTML tags
+          ].join(' ').toLowerCase();
+
+          return topic.keywords.some(kw => searchText.includes(kw.toLowerCase()));
+        });
+
+        return { ...topic, articles };
+      });
+
+      res.render('topics', { user: req.session.user || null, topics });
+    }
+  );
+});
+
 // Admin: Create new NPC
 app.post('/admin/npcs', requireAdmin, upload.single('image'), (req, res) => {
   const { name, location, description, display_order } = req.body;
