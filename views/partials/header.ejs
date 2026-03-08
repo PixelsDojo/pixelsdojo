@@ -1,77 +1,97 @@
 <header>
   <div class="header-container">
+
+    <!-- COL 1: Logo + Tagline -->
     <div class="logo-section">
-      <img src="/images/pixeldojo_logo_round_.webp" alt="Pixels Dojo" class="logo">
+      <img src="/images/pixeldojo_logo_round_.png" alt="Pixels Dojo" class="logo">
       <div class="logo-text">
         <h1>PIXELS DOJO</h1>
         <p class="tagline">Master TerraVilla • Earn $PIXEL • Join the Community</p>
       </div>
     </div>
 
-    <div class="right-section" style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.8rem;">
-      <div class="price-widget" id="price-widget-container" style="opacity: 0; transition: opacity 0.4s ease;">
-        <script async defer src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
-        <coingecko-coin-price-marquee-widget 
-          coin-ids="pixels" 
-          currency="usd" 
-          background-color="transparent" 
-          font-color="#edff84">
-        </coingecko-coin-price-marquee-widget>
-      </div>
-
-      <!-- 🌍 Translate -->
-      <div id="translate-widget">
-        <a id="translate-link" href="#" target="_blank" rel="noopener noreferrer"
-           style="display:inline-flex; align-items:center; gap:0.4rem; padding:5px 10px; background:rgba(65,225,20,0.1); border:1px solid rgba(65,225,20,0.4); border-radius:6px; font-size:0.82rem; color:#41e114; text-decoration:none; transition:all 0.2s;"
-           onmouseover="this.style.background='rgba(65,225,20,0.2)'" onmouseout="this.style.background='rgba(65,225,20,0.1)'">
-          🌍 Translate
-        </a>
-      </div>
-
-      <div class="user-nav" style="display: flex; gap: 0.8rem; flex-wrap: nowrap; align-items: center;">
-        <% if (user) { %>
-          <span>Welcome, <%= user.display_name || user.username %>!</span>
-
-          <!-- Profile link: for ALL logged-in users -->
-          <a href="/profile" class="btn btn-small">Profile</a>
-
-          <!-- Dashboard: for contributors AND admins -->
-          <% if (user.is_contributor || user.is_admin) { %>
-            <a href="/dashboard" class="btn btn-small btn-dashboard">My Dashboard</a>
-          <% } %>
-
-          <!-- Admin Panel: only for admins -->
-          <% if (user.is_admin) { %>
-            <a href="/admin" class="btn btn-small btn-admin">Admin Panel</a>
-          <% } %>
-
-          <a href="/logout" class="btn btn-small btn-logout">Logout</a>
-        <% } else { %>
-          <a href="/login" class="btn btn-small">Login</a>
-          <a href="/register" class="btn btn-small">Register</a>
-        <% } %>
-      </div>
+    <!-- COL 2: Translate -->
+    <div class="header-translate">
+      <a id="translate-link" href="#" target="_blank" rel="noopener noreferrer" class="translate-btn">
+        🌍 Translate
+      </a>
     </div>
+
+    <!-- COL 3: Auth Buttons -->
+    <div class="header-auth">
+      <% if (user) { %>
+        <span class="welcome-text">Hi, <%= user.display_name || user.username %>!</span>
+        <a href="/profile" class="btn btn-small">Profile</a>
+        <% if (user.is_contributor || user.is_admin) { %>
+          <a href="/dashboard" class="btn btn-small btn-dashboard">Dashboard</a>
+        <% } %>
+        <% if (user.is_admin) { %>
+          <a href="/admin" class="btn btn-small btn-admin">Admin</a>
+        <% } %>
+        <a href="/logout" class="btn btn-small btn-logout">Logout</a>
+      <% } else { %>
+        <a href="/login" class="btn btn-small">Login</a>
+        <a href="/register" class="btn btn-small">Register</a>
+      <% } %>
+    </div>
+
+    <!-- COL 4: PIXEL Price -->
+    <div class="header-price" id="price-widget-container" style="opacity:0; transition: opacity 0.4s ease;">
+      <script async defer src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
+      <coingecko-coin-price-marquee-widget
+        coin-ids="pixels"
+        currency="usd"
+        background-color="transparent"
+        font-color="#edff84">
+      </coingecko-coin-price-marquee-widget>
+    </div>
+
   </div>
 </header>
+
+<nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+    ☰ Menu <span class="nav-arrow">▾</span>
+  </button>
+  <ul id="navMenu">
+    <li><a href="/">Home</a></li>
+    <li><a href="/category/startup">Start Here</a></li>
+    <li><a href="/category/earn">Earn $PIXEL</a></li>
+    <li><a href="/category/mastery">Mastery</a></li>
+    <li><a href="/topics">📖 Topics</a></li>
+    <li><a href="/tweets">Dojo Picks</a></li>
+    <li><a href="/npcs-map">NPCs & Map</a></li>
+    <li><a href="/events">Events</a></li>
+    <li><a href="/amas">AMAs</a></li>
+  </ul>
+</nav>
+
 
 <script>
   window.addEventListener('load', () => {
     const widget = document.getElementById('price-widget-container');
     if (widget) widget.style.opacity = '1';
   });
-</script>
 
-<script>
-  // Set translate link to Google Translate with current page URL
   (function() {
+    // Translate link
     var link = document.getElementById('translate-link');
     if (link) {
       var pageUrl = encodeURIComponent(window.location.href);
       link.href = 'https://translate.google.com/translate?sl=en&tl=auto&u=' + pageUrl;
-      // Update on navigation
       link.addEventListener('click', function() {
         this.href = 'https://translate.google.com/translate?sl=en&tl=auto&u=' + encodeURIComponent(window.location.href);
+      });
+    }
+
+    // Mobile nav pill toggle
+    var btn = document.getElementById('navToggle');
+    var menu = document.getElementById('navMenu');
+    if (btn && menu) {
+      btn.addEventListener('click', function() {
+        var open = menu.classList.toggle('nav-open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
       });
     }
   })();
