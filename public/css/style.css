@@ -2260,3 +2260,64 @@ body { top: 0 !important; }
     min-height: 38px !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE — compact headings + guide cards
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Shrink Press Start 2P headings — they're huge on mobile */
+  h1 { font-size: 1rem !important; line-height: 1.4 !important; margin-bottom: 0.8rem !important; }
+  h2 { font-size: 0.75rem !important; line-height: 1.5 !important; margin: 1.2rem 0 0.6rem !important; }
+  h3 { font-size: 0.65rem !important; line-height: 1.5 !important; margin: 1rem 0 0.5rem !important; }
+
+  /* Featured compact section — stack image above info */
+  .compact-card {
+    flex-direction: column !important;
+    gap: 0.8rem !important;
+  }
+  .compact-thumb {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 160px !important;
+    object-fit: cover !important;
+  }
+  .compact-info {
+    padding: 0.8rem 1rem !important;
+  }
+  .compact-info h3 {
+    font-size: 0.7rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+  .compact-snippet {
+    font-size: 0.85rem !important;
+    -webkit-line-clamp: 2 !important;
+  }
+  .featured-compact {
+    padding: 1rem !important;
+    margin: 0.8rem 0 !important;
+  }
+  .featured-compact h2 {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.8rem !important;
+  }
+
+  /* Quick access grid — 2 cols on mobile */
+  .quick-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+  .quick-block {
+    padding: 1rem 0.8rem !important;
+    min-height: 90px !important;
+  }
+  .quick-block h3 { font-size: 0.6rem !important; }
+
+  /* Card grids — single column */
+  .card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.8rem !important;
+  }
+  .card-image { height: 140px !important; }
+  .card-image img { height: 140px !important; }
+}
