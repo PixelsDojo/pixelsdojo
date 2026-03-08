@@ -2437,3 +2437,65 @@ body { top: 0 !important; }
     margin-bottom: 0.8rem !important;
   }
 }
+
+/* ── Footer — compact, social top-aligned, slimmer button ── */
+footer {
+  padding: 1.4rem 1.5rem 1rem !important;
+  margin-top: 2.5rem !important;
+}
+.footer-row {
+  align-items: center !important;
+  gap: 1rem !important;
+}
+.footer-block {
+  padding: 1rem 1.2rem !important;
+  justify-content: flex-start !important;
+}
+.profile-pic {
+  width: 58px !important;
+  height: 58px !important;
+}
+.profile-name {
+  font-size: 0.95rem !important;
+  margin-bottom: 0.25rem !important;
+}
+.profile-blurb, .profile-info p:not(.profile-name) {
+  font-size: 0.78rem !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+}
+.social-block {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+.social-block h4 {
+  margin: 0 0 0.5rem 0 !important;
+  font-size: 0.8rem !important;
+}
+.social-icons {
+  gap: 0.9rem !important;
+  margin-top: 0 !important;
+  justify-content: flex-start !important;
+}
+.social-icon {
+  width: 28px !important;
+  height: 28px !important;
+}
+.contribute-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-top: 0.7rem !important;
+  padding: 0.45rem 1.1rem !important;
+  font-size: 0.8rem !important;
+  border-radius: 6px !important;
+  white-space: nowrap !important;
+}
+.footer-logo {
+  max-width: 100px !important;
+}
+.footer-copyright {
+  margin-top: 1rem !important;
+  padding-top: 0.8rem !important;
+  font-size: 0.78rem !important;
+}
