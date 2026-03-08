@@ -21,17 +21,17 @@
     <div class="header-auth">
       <% if (user) { %>
         <span class="welcome-text">Hi, <%= user.display_name || user.username %>!</span>
-        <a href="/profile" class="btn btn-small">Profile</a>
+        <a href="/profile" class="hdr-btn">Profile</a>
         <% if (user.is_contributor || user.is_admin) { %>
-          <a href="/dashboard" class="btn btn-small btn-dashboard">Dashboard</a>
+          <a href="/dashboard" class="hdr-btn hdr-btn-dashboard">Dashboard</a>
         <% } %>
         <% if (user.is_admin) { %>
-          <a href="/admin" class="btn btn-small btn-admin">Admin</a>
+          <a href="/admin" class="hdr-btn hdr-btn-admin">Admin</a>
         <% } %>
-        <a href="/logout" class="btn btn-small btn-logout">Logout</a>
+        <a href="/logout" class="hdr-btn hdr-btn-logout">Logout</a>
       <% } else { %>
-        <a href="/login" class="btn btn-small">Login</a>
-        <a href="/register" class="btn btn-small">Register</a>
+        <a href="/login" class="hdr-btn">Login</a>
+        <a href="/register" class="hdr-btn">Register</a>
       <% } %>
     </div>
 
@@ -58,7 +58,7 @@
     <li><a href="/category/startup">Start Here</a></li>
     <li><a href="/category/earn">Earn $PIXEL</a></li>
     <li><a href="/category/mastery">Mastery</a></li>
-    <li><a href="/topics">Topics</a></li>
+    <li><a href="/topics">📖 Topics</a></li>
     <li><a href="/tweets">Dojo Picks</a></li>
     <li><a href="/npcs-map">NPCs & Map</a></li>
     <li><a href="/events">Events</a></li>
