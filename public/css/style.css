@@ -2358,3 +2358,82 @@ body { top: 0 !important; }
     font-size: 0.68rem !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE — index.ejs card + grid fixes (final)
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Category grid — single column */
+  .category-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* Recent guides grid — single column, no min-width blowout */
+  .recent-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.8rem !important;
+  }
+
+  /* Recent card — stack image on top, content below */
+  .recent-card {
+    flex-direction: column !important;
+  }
+  .card-image {
+    width: 100% !important;
+    height: 160px !important;
+  }
+  .card-image img {
+    width: 100% !important;
+    height: 160px !important;
+    object-fit: cover !important;
+    border-right: none !important;
+    border-bottom: 2px solid var(--neon-purple) !important;
+  }
+  .card-content h3 {
+    font-size: 0.65rem !important;
+    margin-bottom: 0.4rem !important;
+    line-height: 1.5 !important;
+  }
+  .card-content .snippet {
+    font-size: 0.82rem !important;
+    -webkit-line-clamp: 2 !important;
+  }
+  .card-content {
+    padding: 0.8rem !important;
+  }
+
+  /* Most upvoted/viewed compact cards — stack vertically */
+  .compact-card {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  .compact-thumb {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 180px !important;
+    border-radius: 8px 8px 0 0 !important;
+  }
+  .compact-info {
+    padding: 0.9rem 1rem !important;
+    border-radius: 0 0 8px 8px !important;
+  }
+  .compact-info h3 {
+    font-size: 0.65rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 0.4rem !important;
+  }
+  .compact-snippet {
+    font-size: 0.82rem !important;
+    -webkit-line-clamp: 2 !important;
+  }
+  .featured-compact {
+    padding: 1rem !important;
+    margin: 0.8rem 0 !important;
+  }
+  .featured-compact > h2 {
+    font-size: 0.7rem !important;
+    margin-bottom: 0.8rem !important;
+  }
+}
